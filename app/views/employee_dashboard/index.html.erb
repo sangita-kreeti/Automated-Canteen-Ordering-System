@@ -1,0 +1,112 @@
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <div class="card border-primary">
+        <div class="card-header text-center">
+          <h3 class="card-title">Employee Details</h3>
+        </div>
+        <div class="card-body text-center">
+          <p class="card-text"><strong><i class="bi bi-person-fill"></i> Employee Name:</strong> <%= current_user.name %></p>
+          <p class="card-text"><strong><i class="bi bi-telephone-fill"></i> Employee Phone Number:</strong> <%= current_user.phone_no %></p>
+          <p class="card-text">
+            <strong><i class="bi bi-building"></i> Company Name:</strong> 
+            <% if current_user.company_id.zero? %>
+              Other
+            <% else %>
+              <%= current_user.company.name %>
+            <% end %>
+          </p>
+          <div class="position-relative">
+            <div class="notification-icon position-absolute top-0 end-0 mt-3">
+              <i class="bi bi-bell"></i>
+              <span class="badge bg-danger rounded-circle" id="notification-count" data-current-user-id="<%= current_user.id %>">0</span>
+            </div>
+          </div>
+          <div class="d-flex justify-content-center mt-3">
+            <%= button_to 'Edit', edit_path(current_user), method: :get, class: 'btn btn-primary mr-2' %>
+            <%= button_to 'Logout', logout_path, class: 'btn btn-success' %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="container mt-5">
+  <div class="row mt-4">
+    <div class="col-md-6">
+      <div class="card border-primary">
+        <div class="card-body">
+          <h3 class="card-title">Order Here</h3>
+          <% if @current_user.approved? %>
+            <%= link_to orders_path, method: :get, class: 'btn btn-primary', id: 'order-food-button' do %>
+              <i class="bi bi-cart-plus-fill"></i> Order Food
+            <% end %>
+          <% else %>
+            <button class="btn btn-primary" disabled>
+              <i class="bi bi-cart-plus-fill"></i> Order Food
+            </button>
+          <% end %>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-6">
+      <div class="card border-primary">
+        <div class="card-body">
+          <h3 class="card-title">Food Gallery</h3>
+          <%= link_to gallery_path, method: :get, class: 'btn btn-primary' do %>
+            <i class="bi bi-images"></i> Gallery
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row mt-4">
+    <div class="col-md-6">
+      <div class="card border-primary">
+        <div class="card-body">
+          <h3 class="card-title">Chat with Chef</h3>
+          <%= link_to select_users_channels_path, method: :get, class: 'btn btn-primary' do %>
+            <i class="bi bi-chat-dots"></i> Start Chat
+          <% end %>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-6">
+      <div class="card border-primary">
+        <div class="card-body">
+          <h3 class="card-title">Order Histories</h3>
+          <%= link_to order_history_path, class: 'btn btn-primary' do %>
+            <i class="bi bi-clock-history"></i> See Order History
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('turbolinks:load', function() {
+    const orderFoodButton = document.getElementById('order-food-button');
+    if (orderFoodButton) {
+      orderFoodButton.addEventListener('click', function(event) {
+        if (!<%= @current_user.approved? %>) {
+          event.preventDefault(); // Prevent the default action (following the link)
+        }
+      });
+    }
+  });
+</script>
+
+
+
+
+
+
+
+
+

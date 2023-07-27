@@ -1,0 +1,61 @@
+<div class="container py-5 shadow-lg mx-auto mt-5">
+  <section class="bg-image" style="background-image: url(<%= asset_path('background/background.png') %>);">
+    <div class="row align-items-center">
+      <div class="col-lg-6">
+        <div class="text-center mb-5">
+          <h1 class="display-3 fw-bold">Welcome to the Automated Canteen Ordering System!</h1>
+          <h3 class="text-primary">Order delicious food online and collect it faster.</h3>
+        </div>
+      </div>
+      <div class="col-lg-6">
+        <div class="card shadow p-3">
+          <div class="card-body">
+            <h2 class="text-center mb-4">Register Here</h2>
+              <%= form_with model: @user do |f| %>
+
+                <div class="mb-3">
+                  <%= f.label :username, class: "form-label" %>
+                  <%= f.text_field :username, class: "form-control", placeholder: "Enter your username" %>
+                  <% if @user.errors.has_key?(:email) %>
+                    <p class="text-danger"><%= @user.errors.full_messages_for(:username).first %></p>
+                  <% end %>
+                </div>
+                
+                <div class="mb-3">
+                  <%= f.label :email, class: "form-label" %>
+                  <%= f.text_field :email, class: "form-control", placeholder: "Enter your email" %>
+                  <% if @user.errors.has_key?(:email) %>
+                    <p class="text-danger"><%= @user.errors.full_messages_for(:email).first %></p>
+                  <% end %>
+                </div>
+                
+                <div class="mb-3">
+                  <%= f.label :password, class: "form-label" %>
+                  <%= f.password_field :password, class: "form-control", placeholder: "Enter your password" %>
+                  <% if @user.errors[:password].any? %>
+                    <small class="text-danger"><%= @user.errors[:password].first %></small>
+                  <% end %>
+                </div>
+
+                <div class="text-center">
+                  <%= f.submit "Sign Up", class: "btn btn-primary btn-block" %>
+                </div>
+              <% end %>
+            <h3 class="text-center mt-4">Or Sign up with</h3>
+            <div class="d-flex justify-content-center">
+              <%= link_to '/auth/google_oauth2', class: "btn btn-google btn-block", method: :post do %>
+              <i class="fab fa-google fa-2x" style="color: #dd4b39;"></i>
+              <% end %>
+
+              <%= link_to '/auth/facebook', class: "btn btn-facebook btn-block", method: :post do %>
+              <i class="fab fa-facebook-f fa-2x" style="color: #3b5998;"></i>
+              <% end %>
+            </div>
+            <hr class="my-4">
+            <p class="text-center">Already registered? <a href="<%= login_path %>">Login here</a>.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>

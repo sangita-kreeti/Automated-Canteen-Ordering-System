@@ -1,0 +1,54 @@
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-6 card shadow p-2">
+      <h1 class="text-center">Complete Your Profile</h1>
+      <%= form_for @user, url: user_path(@user), method: :patch do |f| %>
+        <div class="form-group mb-4">
+          <strong><%= f.label :role %></strong>
+          <%= f.select :role, [['Select a role', ''], ['Employee', 'employee'], ['Chef', 'chef']], {}, { class: "form-control", id: "role-select" } %>
+        </div>
+
+        <div class="form-group mb-4" id="company-field">
+          <strong><%= f.label :associated_company_id %></strong>
+          <% options = @companies.map { |company| [company.name, company.id] } %>
+          <%= f.select :company_id, options.push(['Other', 'other']), { prompt: "Select a company" }, class: "form-control" %>
+        </div>
+
+        <div class="form-group mb-4" id="food-store-field" style="display: none;">
+          <strong><%= f.label :food_store_id %></strong>
+          <%= f.collection_select :food_store_id, @food_stores, :id, :name, { prompt: "Select a food store" }, class: "form-control" %>
+        </div>
+
+        <div class="form-group mb-4">
+          <strong><%= f.label :name %></strong>
+          <%= f.text_field :name, class: "form-control", placeholder: "Enter your name" %>
+        </div>
+        <div class="form-group mb-4">
+          <strong><%= f.label :phone_no %></strong>
+          <%= f.text_field :phone_no, class: "form-control", placeholder: "Enter your phone number" %>
+        </div>
+        <div class="form-group mt-3">
+          <%= f.submit "Update Profile", class: "btn btn-primary btn-block" %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    var roleSelect = document.getElementById("role-select");
+    var companyField = document.getElementById("company-field");
+    var foodStoreField = document.getElementById("food-store-field");
+
+    roleSelect.addEventListener("change", function() {
+      if (roleSelect.value === "chef") {
+        companyField.style.display = "none";
+        foodStoreField.style.display = "block";
+      } else {
+        companyField.style.display = "block";
+        foodStoreField.style.display = "none";
+      }
+    });
+  });
+</script>

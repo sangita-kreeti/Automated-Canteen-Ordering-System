@@ -1,0 +1,41 @@
+<!-- app/views/orders/search_results.html.erb -->
+
+<% if @food_menus.any? %>
+  <% @food_menus.each do |food_menu| %>
+    <div class="col-md-6">
+                  <div class="card mb-3 shadow">
+                     <% if food_menu.food_store.present? %>
+                     <div class="card-header text-center">
+                        <h5 class="card-text mb-0">
+                           <i class="bi bi-shop"></i> <%= food_menu.food_store.name %>
+                        </h5>
+                     </div>
+                     <% end %>
+                     <div class="card-body text-center">
+                        <h6 class="card-title"><%= food_menu.title %></h6>
+                        <p class="card-text food-price" data-price="<%= food_menu.price %>">₹<%= food_menu.price %></p>
+                        <p class="card-text">Category: <%= food_menu.food_category.name %></p>
+                        <% if current_user.role == "employee" && current_user.company.present? %>
+                        <% distance = @distances.find { |data| data[0] == food_menu.food_store }&.dig(1) %>
+                        <% if distance.present? %>
+                        <p class="card-text">Distance: <%= distance %> Km</p>
+                        <% else %>
+                        <p class="card-text">Distance: N/A</p>
+                        <% end %>
+                        <% else %>
+                        <p class="card-text">Distance: N/A</p>
+                        <% end %>
+                        <div class="input-group input-group-sm mb-3">
+                           <input type="number" class="form-control quantity-input" value="0" min="1">
+                           <textarea class="form-control description-input" rows="2" placeholder="Special ingredients"></textarea>
+                           <button class="btn btn-primary add-to-cart-btn" data-food-item-id="<%= food_menu.id %>" data-food-store-name="<%= food_menu.food_store.name %>">
+                           <i class="bi bi-cart-plus"></i> 
+                           </button>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+  <% end %>
+<% else %>
+  <p>No results found.</p>
+<% end %>

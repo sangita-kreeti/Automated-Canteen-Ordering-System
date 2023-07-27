@@ -1,0 +1,40 @@
+<div class="container py-5 shadow-lg mx-auto mt-5">
+  <section class="bg-image" style="background-image: url(<%= asset_path('background/lbackground.jpg') %>);">
+    
+    <div class="col-lg-6">
+      <div class="card shadow p-3">
+        <div class="card-body">
+          <h2 class="text-center mb-4">Login</h2>
+          <%= form_with model: @user do |f| %>
+            <div class="mb-3">
+              <%= f.label :username, class: "form-label" %>
+              <%= f.text_field :username, class: "form-control", placeholder: "Enter your username" %>
+            </div>
+                            
+            <div class="mb-3">
+              <%= f.label :password, class: "form-label" %>
+              <%= f.password_field :password, class: "form-control", placeholder: "Enter your password" %>
+            </div>
+
+            <div class="text-center">
+              <%= f.submit "Log In", class: "btn btn-primary btn-block" %>
+            </div>
+          <% end %>
+
+          <h3 class="text-center mt-4">Or Login With</h3>
+          <div class="d-flex justify-content-center">
+            <%= link_to '/auth/google_oauth2', class: "btn btn-google btn-block", method: :post do %>
+              <i class="fab fa-google fa-2x" style="color: #dd4b39;"></i>
+            <% end %>
+
+            <%= link_to '/auth/facebook', class: "btn btn-facebook btn-block", method: :post do %>
+            <i class="fab fa-facebook-f fa-2x" style="color: #3b5998;"></i>
+            <% end %>
+          </div>
+          <hr class="my-4">
+          <p class="text-center">New User? <a href="<%= root_path %>"> Sign Up</a></p>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>

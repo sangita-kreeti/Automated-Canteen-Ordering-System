@@ -1,0 +1,83 @@
+<div class="container mt-5">
+  <h1 class="text-center mb-4">Gallery</h1>
+
+  <div class="table-responsive">
+    <table class="table table-bordered border-primary text-center">
+      <thead>
+        <tr>
+          <th>Photo</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @photos.each do |photo| %>
+          <tr>
+            <td>
+              <% if photo.image.attached? %>
+                <a href="#" class="thumbnail" data-bs-toggle="modal" data-bs-target="#photo-modal-<%= photo.id %>">
+                  <%= image_tag photo.image, size: "50x50" %>
+                </a>
+              <% end %>
+            </td>
+            <td>
+              <div class="d-flex justify-content-center">
+                <%= link_to 'Delete', photo_path(photo), method: :delete, data: { confirm: 'Are you sure you want to delete this photo?' }, class: 'btn btn-danger btn-sm' %>
+              </div>
+            </td>
+          </tr>
+          <div class="modal fade" id="photo-modal-<%= photo.id %>" tabindex="-1" role="dialog" aria-labelledby="photo-modal-label-<%= photo.id %>" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                  <% if photo.image.attached? %>
+                    <%= image_tag photo.image, size: "800x800", class: "img-fluid" %>
+                  <% else %>
+                    <p>No image available</p>
+                  <% end %>
+                </div>
+              </div>
+            </div>
+          </div>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+   
+</div>
+  <div class="text-center">
+    <%= link_to 'Upload Photo', new_photo_path, class: 'btn btn-primary' %>
+    <%= link_to 'Back to Chef Dashboard', chef_dashboard_index_path, class: 'btn btn-secondary' %>
+  </div>
+</div>
+
+
+<ul class="pagination justify-content-center mt-3">
+    <% if @photos.current_page > 1 %>
+      <li class="page-item">
+        <%= link_to '&laquo; Previous'.html_safe, { page: @photos.current_page - 1 }, class: 'page-link' %>
+      </li>
+    <% end %>
+    <% (1..@photos.total_pages).each do |page| %>
+      <% if page == @photos.current_page %>
+        <li class="page-item active">
+          <span class="page-link">
+            <%= page %>
+            <span class="visually-hidden">(current)</span>
+          </span>
+        </li>
+      <% else %>
+        <li class="page-item">
+          <%= link_to page, { page: page }, class: 'page-link' %>
+        </li>
+      <% end %>
+    <% end %>
+    <% if @photos.current_page < @photos.total_pages %>
+      <li class="page-item">
+        <%= link_to 'Next &raquo;'.html_safe, { page: @photos.current_page + 1 }, class: 'page-link' %>
+      </li>
+    <% end %>
+  </ul>
+  

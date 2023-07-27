@@ -1,0 +1,109 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <div class="container">
+    <h2 class="mr-3">Name: <%= current_user.name %></h2>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+  <ul class="navbar-nav ml-auto">
+    <li class="nav-item dropdown">
+      <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+        <i class="bi bi-person-fill mr-2" style="font-size: 1.5rem; color: blue;"></i>
+        Profile
+      </a>
+      <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+        <p class="dropdown-item-text">
+          <strong>Name:</strong> <%= current_user.name %>
+        </p>
+        <p class="dropdown-item-text">
+          <strong>Phone Number:</strong> <%= current_user.phone_no %>
+        </p>
+        <p class="dropdown-item-text">
+          <strong>Role:</strong> <%= current_user.role.capitalize %>
+        </p>
+        <%= link_to "Logout", logout_path, method: :delete, class: "dropdown-item" %>
+      </div>
+    </li>
+  </ul>
+</div>
+
+  </div>
+</nav>
+
+
+<div class="container border rounded mt-5 p-4">
+  <h1 class="text-center mb-4">Admin Dashboard</h1>
+
+  <div class="row">
+    <div class="col-md-6 mb-4">
+      <div class="card h-100">
+        <div class="card-body">
+          <h3 class="card-title">Company Management</h3>
+          <%= link_to companies_path, class: 'btn btn-info btn-block' do %>
+            <i class="bi bi-building"></i> Manage Companies
+          <% end %>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-6 mb-4">
+      <div class="card h-100">
+        <div class="card-body">
+          <h3 class="card-title">Food Store Management</h3>
+          <%= link_to food_stores_path, class: 'btn btn-success btn-block' do %>
+            <i class="bi bi-shop"></i> Food Store Management
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row mb-4">
+    <div class="col-md-6 mb-4">
+      <div class="card h-100">
+        <div class="card-body">
+          <h3 class="card-title">Employee Management</h3>
+          <%= link_to employees_path, class: 'btn btn-info btn-block' do %>
+            <i class="bi bi-people"></i> Manage Employees
+          <% end %>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-6 mb-4">
+      <div class="card h-100">
+        <div class="card-body">
+          <h3 class="card-title">Chefs Management</h3>
+          <%= link_to chefs_path, class: 'btn btn-info btn-block' do %>
+            <i class="bi bi-people"></i> Manage Chefs
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row mb-4">
+    <div class="col-md-6 mb-4">
+      <div class="card h-100">
+        <div class="card-body">
+          <h3 class="card-title">Food Order Status Management</h3>
+          <%= link_to order_status_path, class: 'btn btn-secondary btn-block' do %>
+            <i class="bi bi-list-check"></i> Food Order Status
+          <% end %>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-6 mb-4">
+      <div class="card h-100">
+        <div class="card-body">
+          <h3 class="card-title">Food Categories Management</h3>
+          <%= link_to food_categories_path, class: 'btn btn-info btn-block' do %>
+            <i class="bi bi-tags"></i> Manage Food Categories
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+

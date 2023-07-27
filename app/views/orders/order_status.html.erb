@@ -1,0 +1,54 @@
+<div class="container mt-5">
+  <div class="row mt-4">
+    <div class="col-md-12">
+      <div class="card border-primary">
+        <div class="card-body">
+          <h3 class="card-title">Food Order Status Management</h3>
+          <% if @orders.any? %>
+            <table class="table table-bordered">
+              <thead>
+                <tr>
+                  <th>Order ID</th>
+                  <th>Company Name</th>
+                  <th>Food Items</th>
+                  <th>Quantities</th>
+                  <th>Price</th>
+                  <th>Status</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% @orders.each do |order| %>
+                  <tr>
+                    <td><%= order.id %></td>
+                    <td><%= order.company_name.nil? ? 'Other' : order.company_name %></td>
+                    <td><%= order.food_item_names.join(", ") %></td>
+                    <td><%= order.quantities.join(", ") %></td>
+                    <td><%= order.prices.join(", ") %></td>
+                    <td><%= order.status %></td>
+                    <td>
+                      <%= button_to 'Approved', method: :patch, class: 'btn btn-success' do %>
+                        <i class="bi bi-check-lg"></i> Approved
+                      <% end %>
+                      <%= button_to 'Preparing', method: :patch, class: 'btn btn-warning' do %>
+                        <i class="bi bi-hourglass-split"></i> Preparing
+                      <% end %>
+                      <%= button_to 'Finished', method: :patch, class: 'btn btn-info' do %>
+                        <i class="bi bi-check2-all"></i> Finished
+                      <% end %>
+                      <%= button_to 'Delivered', method: :patch, class: 'btn btn-primary' do %>
+                        <i class="bi bi-truck"></i> Delivered
+                      <% end %>
+                    </td>
+                  </tr>
+                <% end %>
+              </tbody>
+            </table>
+          <% else %>
+            <p>No orders available.</p>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

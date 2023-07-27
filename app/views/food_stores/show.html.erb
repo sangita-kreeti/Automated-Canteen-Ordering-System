@@ -1,0 +1,17 @@
+<div class="container">
+  <h1>Food Store Details</h1>
+
+  <div class="card">
+    <div class="card-body">
+      <h5 class="card-title">Food Store Name: <%= @food_store.name %></h5>
+      <p class="card-text">Address: <%= @food_store.address %></p>
+      <p class="card-text">Latitude: <%= @food_store.latitude %></p>
+      <p class="card-text">Longitude: <%= @food_store.longitude %></p>
+    </div>
+  </div>
+
+  <div class="mt-3">
+    <%= link_to 'Edit', edit_food_store_path(@food_store), class: 'btn btn-primary' %>
+    <%= link_to 'Back', food_stores_path, class: 'btn btn-secondary' %>
+  </div>
+</div>

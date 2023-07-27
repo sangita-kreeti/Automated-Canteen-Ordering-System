@@ -1,0 +1,80 @@
+<div class="container mt-4">
+  <h1>Company List</h1>
+
+  <div class="table-responsive">
+    <table class="table table-bordered table-striped">
+      <thead>
+        <tr>
+          <th>Company ID</th>
+          <th>Name</th>
+          <th>Address</th>
+          <th>Latitude</th>
+          <th>Longitude</th>
+          <th>Action</th>
+          <th>Action</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @companies.each do |company| %>
+          <tr>
+            <td><%= company.id %></td>
+            <td><%= company.name %></td>
+            <td><%= company.address %></td>
+            <td><%= company.latitude %></td>
+            <td><%= company.longitude %></td>
+            <td>
+              <%= link_to company_path(company), class: 'btn btn-sm btn-secondary' do %>
+                <i class="bi bi-eye-fill"></i> Show
+              <% end %>
+            </td>
+            <td>
+              <%= link_to edit_company_path(company), class: 'btn btn-sm btn-primary' do %>
+                <i class="bi bi-pencil-fill"></i> Edit
+              <% end %>
+            </td>
+            <td>
+              <%= button_to company_path(company), method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-sm btn-danger', form: { class: 'd-inline' } do %>
+                <i class="bi bi-trash-fill"></i> Delete
+              <% end %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="d-flex">
+    <%= link_to 'Create New Company', new_company_path, class: 'btn btn-primary me-2' %>
+    <%= link_to 'Back to Admin Dashboard', admin_dashboard_index_path, class: 'btn btn-secondary' %>
+  </div>
+
+
+</div>
+
+<ul class="pagination justify-content-center mt-3">
+    <% if @companies.current_page > 1 %>
+      <li class="page-item">
+        <%= link_to '&laquo; Previous'.html_safe, { page: @companies.current_page - 1 }, class: 'page-link' %>
+      </li>
+    <% end %>
+    <% (1..@companies.total_pages).each do |page| %>
+      <% if page == @companies.current_page %>
+        <li class="page-item active">
+          <span class="page-link">
+            <%= page %>
+            <span class="visually-hidden">(current)</span>
+          </span>
+        </li>
+      <% else %>
+        <li class="page-item">
+          <%= link_to page, { page: page }, class: 'page-link' %>
+        </li>
+      <% end %>
+    <% end %>
+    <% if @companies.current_page < @companies.total_pages %>
+      <li class="page-item">
+        <%= link_to 'Next &raquo;'.html_safe, { page: @companies.current_page + 1 }, class: 'page-link' %>
+      </li>
+    <% end %>
+  </ul>

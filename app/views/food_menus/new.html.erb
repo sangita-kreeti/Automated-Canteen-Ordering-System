@@ -1,0 +1,25 @@
+<div class="container border border-primary p-4">
+  <h1 class="text-center mb-4">Upload Food Menu</h1>
+
+  <%= form_with(model: @food_menu, url: food_menus_path, multipart: true) do |form| %>
+    <div class="form-group">
+      <%= form.label :food_category_id, 'Food Category', class: 'h5' %>
+      <%= form.collection_select :food_category_id, @food_categories, :id, :name, prompt: 'Select a category', class: 'form-control form-control-lg' %>
+    </div>
+
+    <div class="form-group">
+      <%= form.label :title, 'Title', class: 'h5' %>
+      <%= form.text_field :title, class: 'form-control form-control-lg' %>
+    </div>
+
+    <div class="form-group">
+      <%= form.label :price, 'Price', class: 'h5' %>
+      <%= form.text_field :price, class: 'form-control form-control-lg' %>
+    </div>
+
+    <div class="d-flex justify-content-between mt-4">
+      <%= form.submit 'Upload', class: 'btn btn-primary' %>
+      <%= link_to 'Back to Food Menus', food_menus_path, class: 'btn btn-secondary' %>
+    </div>
+  <% end %>
+</div>

@@ -1,0 +1,72 @@
+<h1>Details of Registered Employees</h1>
+<div class="container">
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Phone Number</th>
+        <th>Associated Company</th>
+        <th>Status</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @employees.each do |employee| %>
+        <tr>
+          <td><%= employee.name %></td>
+          <td><%= employee.email %></td>
+          <td><%= employee.phone_no %></td>
+          <td><%= Company.find_by(id: employee.company_id)&.name %></td>
+          <td>
+            <% if employee.approved? %>
+              <span class="badge bg-success">Approved</span>
+            <% else %>
+              <span class="badge bg-warning text-dark">Pending</span>
+            <% end %>
+          </td>
+          <td>
+            <% if employee.approved? %>
+              <button class="btn btn-sm btn-secondary" disabled>Approve</button>
+              <button class="btn btn-sm btn-danger" disabled>Reject</button>
+            <% else %>
+              <%= link_to "Approve", approved_employee_path(employee), method: :patch, class: "btn btn-sm btn-primary" %>
+              <%= link_to "Reject", reject_employee_path(employee), method: :patch, class: "btn btn-sm btn-danger" %>
+            <% end %>
+
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+  <%= link_to 'Back to Admin Dashboard', admin_dashboard_index_path, class: 'btn btn-secondary' %>
+</div>
+
+
+<ul class="pagination justify-content-center mt-3">
+    <% if @employees.current_page > 1 %>
+      <li class="page-item">
+        <%= link_to '&laquo; Previous'.html_safe, { page: @employees.current_page - 1 }, class: 'page-link' %>
+      </li>
+    <% end %>
+    <% (1..@employees.total_pages).each do |page| %>
+      <% if page == @employees.current_page %>
+        <li class="page-item active">
+          <span class="page-link">
+            <%= page %>
+            <span class="visually-hidden">(current)</span>
+          </span>
+        </li>
+      <% else %>
+        <li class="page-item">
+          <%= link_to page, { page: page }, class: 'page-link' %>
+        </li>
+      <% end %>
+    <% end %>
+    <% if @employees.current_page < @employees.total_pages %>
+      <li class="page-item">
+        <%= link_to 'Next &raquo;'.html_safe, { page: @employees.current_page + 1 }, class: 'page-link' %>
+      </li>
+    <% end %>
+  </ul>
+  

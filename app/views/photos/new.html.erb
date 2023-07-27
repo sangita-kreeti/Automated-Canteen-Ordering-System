@@ -1,0 +1,21 @@
+<div class="container mt-5">
+  <div class="card border-primary">
+    <div class="card-header text-center">
+      <h1>Upload Food Photo</h1>
+    </div>
+    <div class="card-body">
+      <%= form_with(model: @photo, url: photos_path, multipart: true) do |form| %>
+        
+        <div class="form-group">
+          <strong><%= form.label :image, 'Food Photo' %></strong>
+          <%= form.file_field :image, class: 'form-control' %>
+        </div>
+
+        <div class="text-center mt-3 d-flex justify-content-between">
+          <%= form.submit 'Upload', class: 'btn btn-primary' %>
+          <%= link_to 'Back', photos_path, class: 'btn btn-secondary' %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>
