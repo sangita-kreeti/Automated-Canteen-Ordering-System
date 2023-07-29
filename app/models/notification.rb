@@ -21,14 +21,13 @@ class Notification < ApplicationRecord
   scope :unread, -> { where(read: false) }
 
   def self.create_employee_approved_notification(admin, employee, message)
-    notification = Notification.new(sender: admin, receiver: employee, notification_type: 'employee_approved', message: message)
+    notification = Notification.new(sender: admin, receiver: employee, notification_type: 'employee_approved',
+                                    message: message)
 
     return unless notification.save
 
     ActionCable.server.broadcast("notification_channel_#{employee.id}", { message: message })
   end
-
-  
 
   private
 

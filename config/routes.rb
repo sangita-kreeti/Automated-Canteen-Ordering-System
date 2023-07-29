@@ -55,12 +55,10 @@ Rails.application.routes.draw do
 
   get '/register', to: 'users#new'
 
-  
   patch 'mark_notification_read/:id', to: 'notifications#mark_as_read', as: :mark_notification_read
 
   # Route for marking all notifications as read
   post 'mark_all_notifications_read', to: 'notifications#mark_all_as_read', as: :mark_all_notifications_read
-
 
   get '/auth/:provider/callback', to: 'sessions#omniauth'
   get '/auth/facebook/callback', to: 'sessions#omniauth'
