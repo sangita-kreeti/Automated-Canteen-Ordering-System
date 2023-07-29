@@ -19,7 +19,7 @@ class CompaniesController < ApplicationController
     @company = Company.new(company_params)
 
     if @company.save
-      redirect_to companies_path, notice: 'Company was successfully created.'
+      redirect_to companies_path, notice: 'Company created successfully.'
     else
       render :new
     end
@@ -33,7 +33,7 @@ class CompaniesController < ApplicationController
     @company = Company.find(params[:id])
 
     if @company.update(company_params)
-      redirect_to companies_path, notice: 'Company was successfully updated.'
+      redirect_to companies_path, notice: 'Company updated successfully.'
     else
       render :edit
     end
@@ -42,7 +42,7 @@ class CompaniesController < ApplicationController
   def destroy
     @company = Company.find(params[:id])
     @company.destroy
-    redirect_to companies_path, notice: 'Company was successfully destroyed.'
+    redirect_to companies_path, notice: 'Company destroyed successfully.'
   end
 
   private

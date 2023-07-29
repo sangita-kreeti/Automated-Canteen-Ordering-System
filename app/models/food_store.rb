@@ -7,7 +7,7 @@ class FoodStore < ApplicationRecord
   has_many :photos
   has_many :food_menus
 
-  validates :name, presence: true
+  validates :name, presence: true, uniqueness: true 
   validates :address, presence: true
   validates :latitude, presence: true
   validates :longitude, presence: true

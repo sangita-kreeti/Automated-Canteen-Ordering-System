@@ -5,11 +5,13 @@
     <div class="form-group">
       <%= f.label :name, class: 'form-label' %>
       <%= f.text_field :name, class: 'form-control' %>
+      <% if @food_category.errors.has_key?(:name) %>
+        <p class="text-danger"><%= @food_category.errors.full_messages_for(:name).first %></p>
+      <% end %>
     </div>
-     <div class="mt-4">
-        <%= f.submit 'Update Food Category', class: 'btn btn-primary' %>
-        <%= link_to 'Back', food_categories_path, class: 'btn btn-secondary' %>
+    <div class="mt-4">
+      <%= f.submit 'Update Food Category', class: 'btn btn-primary' %>
+      <%= link_to 'Back', food_categories_path, class: 'btn btn-secondary' %>
     </div>
- 
   <% end %>
 </div>

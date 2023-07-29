@@ -10,6 +10,7 @@ class SessionsController < ApplicationController
 
     if user
       session_and_cookies(user)
+      flash[:notice] = 'You have successfully logged in.'
       redirect_user_by_role(user)
     else
       flash.now[:alert] = 'Invalid username/password.'
@@ -22,6 +23,7 @@ class SessionsController < ApplicationController
 
     session.delete(:user_id)
     reset_session
+    flash[:notice] = 'You have logged out successfully.'
     redirect_to root_path
   end
 

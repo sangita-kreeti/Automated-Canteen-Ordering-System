@@ -1,4 +1,10 @@
-<div class="container">
+<div class="container mt-4">
+  <% if flash[:notice].present? %>
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+      <%= flash[:notice] %>
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+  <% end %>
   <h1 class="mt-4 mb-4">Food Categories</h1>
 
   <table class="table">
@@ -52,4 +58,14 @@
       </li>
     <% end %>
   </ul>
-  
+  <script>
+  document.addEventListener('DOMContentLoaded', function() {
+    var alerts = document.querySelectorAll('.alert-dismissible');
+
+    alerts.forEach(function(alert) {
+      setTimeout(function() {
+        alert.remove();
+      }, 2000);
+    });
+  });
+</script>

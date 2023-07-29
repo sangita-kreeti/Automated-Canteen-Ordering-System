@@ -19,7 +19,7 @@ class FoodStoresController < ApplicationController
     @food_store = FoodStore.new(food_store_params)
 
     if @food_store.save
-      redirect_to food_stores_path, notice: 'Food store was successfully created.'
+      redirect_to food_stores_path, notice: 'Food store created successfully .'
     else
       render :new
     end
@@ -33,7 +33,7 @@ class FoodStoresController < ApplicationController
     @food_store = FoodStore.find(params[:id])
 
     if @food_store.update(food_store_params)
-      redirect_to food_stores_path, notice: 'Food store was successfully updated.'
+      redirect_to food_stores_path, notice: 'Food store updated successfully.'
     else
       render :edit
     end
@@ -42,7 +42,7 @@ class FoodStoresController < ApplicationController
   def destroy
     @food_store = FoodStore.find(params[:id])
     @food_store.destroy
-    redirect_to food_stores_path, notice: 'Food store was successfully destroyed.'
+    redirect_to food_stores_path, notice: 'Food store destroyed successfully.'
   end
 
   private

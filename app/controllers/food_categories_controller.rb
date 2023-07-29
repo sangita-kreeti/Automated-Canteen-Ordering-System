@@ -17,7 +17,7 @@ class FoodCategoriesController < ApplicationController
   def create
     @food_category = FoodCategory.new(food_category_params)
     if @food_category.save
-      redirect_to food_categories_path, notice: 'Food category was successfully created.'
+      redirect_to food_categories_path, notice: 'Food category created successfully.'
     else
       render :new
     end
@@ -27,7 +27,7 @@ class FoodCategoriesController < ApplicationController
 
   def update
     if @food_category.update(food_category_params)
-      redirect_to food_categories_path, notice: 'Food category was successfully updated.'
+      redirect_to food_categories_path, notice: 'Food category updated successfully.'
     else
       render :edit
     end
@@ -35,7 +35,7 @@ class FoodCategoriesController < ApplicationController
 
   def destroy
     @food_category.destroy
-    redirect_to food_categories_path, notice: 'Food category was successfully deleted.'
+    redirect_to food_categories_path, notice: 'Food category deleted successfully.'
   end
 
   private
