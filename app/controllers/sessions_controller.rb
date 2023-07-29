@@ -52,15 +52,14 @@ class SessionsController < ApplicationController
   def find_and_authenticate_by_username_and_password
     user = User.find_by(username: params[:username])&.authenticate(params[:password])
     user ||= User.find_by(email: params[:username])&.authenticate(params[:password])
-  
+
     unless user
       flash.now[:alert] = 'Invalid username/password.'
       return nil
     end
-  
+
     user
   end
-  
 
   def session_and_cookies(user)
     cookies.encrypted[:user_id] = user.id
