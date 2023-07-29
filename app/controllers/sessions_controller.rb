@@ -13,7 +13,7 @@ class SessionsController < ApplicationController
       redirect_user_by_role(user)
     else
       flash.now[:alert] = 'Invalid username/password.'
-      render :new
+      render :new and return
     end
   end
 
@@ -52,14 +52,15 @@ class SessionsController < ApplicationController
   def find_and_authenticate_by_username_and_password
     user = User.find_by(username: params[:username])&.authenticate(params[:password])
     user ||= User.find_by(email: params[:username])&.authenticate(params[:password])
-
+  
     unless user
-      flash[:alert] = 'Invalid username/password.'
-      redirect_to login_path
+      flash.now[:alert] = 'Invalid username/password.'
+      return nil
     end
-
+  
     user
   end
+  
 
   def session_and_cookies(user)
     cookies.encrypted[:user_id] = user.id
