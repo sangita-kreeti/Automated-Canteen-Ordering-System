@@ -10,7 +10,9 @@ class EmployeesController < ApplicationController
   def approved
     employee = find_employee_by_id
     if employee.update(approved: true)
-      create_employee_approved_notification(employee)
+      admin = current_user
+      Notification.create_employee_approved_notification(admin, employee, 'Employee approved successfully.')
+
       redirect_to employees_path, notice: 'Employee approved successfully.'
     else
       redirect_to employees_path, alert: 'Failed to approve the employee.'

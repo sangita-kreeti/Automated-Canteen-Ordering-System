@@ -12,6 +12,7 @@ class SessionsController < ApplicationController
       session_and_cookies(user)
       redirect_user_by_role(user)
     else
+      flash.now[:alert] = 'Invalid username/password.'
       render :new
     end
   end
@@ -27,13 +28,20 @@ class SessionsController < ApplicationController
   def omniauth
     user = find_or_create_user_from_omniauth
 
-    if user.valid?
+    if user.persisted? # Check if the user is already persisted in the database (existing user)
       session_and_cookies(user)
-      redirect_to edit_user_path(user)
-    else
-      redirect_to login_path
+      redirect_user_by_role(user)
+    else # New user (signup)
+      if user.valid?
+        session_and_cookies(user)
+        redirect_to edit_user_path(user)
+      else
+        flash[:alert] = 'Unable to login with the given credentials.'
+        redirect_to login_path
+      end
     end
   end
+
 
   private
 
@@ -45,9 +53,17 @@ class SessionsController < ApplicationController
   end
 
   def find_and_authenticate_by_username_and_password
-    user = User.find_by(username: params[:username])
-    user&.authenticate(params[:password])
+    user = User.find_by(username: params[:username])&.authenticate(params[:password])
+    user ||= User.find_by(email: params[:username])&.authenticate(params[:password])
+  
+    unless user
+      flash[:alert] = 'Invalid username/password.'
+      redirect_to login_path
+    end
+  
+    user
   end
+  
 
   def session_and_cookies(user)
     cookies.encrypted[:user_id] = user.id
@@ -61,11 +77,14 @@ class SessionsController < ApplicationController
       when 'admin' then admin_dashboard_index_path
       when 'employee' then employee_dashboard_index_path
       when 'chef' then chef_dashboard_index_path
-      else login_path
+      else
+        flash[:alert] = 'Unable to login with the given credentials.'
+        login_path
       end
-
+  
     redirect_to redirect_path
   end
+  
 
   def revoke_google_access_token
     response = HTTParty.get("https://accounts.google.com/o/oauth2/revoke?token=#{session[:access_token]}")

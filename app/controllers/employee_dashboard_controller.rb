@@ -4,7 +4,9 @@
 class EmployeeDashboardController < ApplicationController
   before_action :require_employee
 
-  def index; end
+  def index
+    @notifications = current_user.notifications.order(created_at: :desc)
+  end
 
   def profile; end
 

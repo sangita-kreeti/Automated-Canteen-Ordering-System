@@ -2,7 +2,8 @@
 
 # This is a model
 class Notification < ApplicationRecord
-  belongs_to :user
+  belongs_to :sender, class_name: 'User', foreign_key: 'sender_id'
+  belongs_to :receiver, class_name: 'User', foreign_key: 'receiver_id'
   belongs_to :order, optional: true
 
   enum notification_type: {
@@ -11,35 +12,23 @@ class Notification < ApplicationRecord
   }
 
   enum order_status: {
-    placed: 0,
-    approved: 1,
-    preparing: 2,
-    finished: 3,
-    delivered: 4
+    approved: 0,
+    preparing: 1,
+    finished: 2,
+    delivered: 3
   }
 
   scope :unread, -> { where(read: false) }
 
-  def self.create_order_placed_notification(user, order, message)
-    Notification.create(user: user, order: order, notification_type: :order_placed, message: message)
-  end
-
-  def self.create_employee_approved_notification(user, message)
-    notification = Notification.new(user: user, notification_type: 'employee_approved', message: message)
+  def self.create_employee_approved_notification(admin, employee, message)
+    notification = Notification.new(sender: admin, receiver: employee, notification_type: 'employee_approved', message: message)
 
     return unless notification.save
 
-    ActionCable.server.broadcast('notification_channel_channel', { message: message }) # Pass the message parameter
+    ActionCable.server.broadcast("notification_channel_#{employee.id}", { message: message })
   end
 
-  def self.create_order_received_notification(user, order, message)
-    Notification.create(user: user, order: order, notification_type: :order_received, message: message)
-  end
-
-  def self.create_order_status_update_notification(user, order, order_status, message)
-    Notification.create(user: user, order: order, notification_type: :order_status_update,
-                        order_status: order_status, message: message)
-  end
+  
 
   private
 

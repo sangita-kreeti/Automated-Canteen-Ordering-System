@@ -17,5 +17,6 @@ class User < ApplicationRecord
   has_many :photos
   has_many :channels
   has_many :orders
-  has_many :notifications
+  has_many :notifications, class_name: 'Notification', foreign_key: 'sender_id'
+  has_many :notifications, class_name: 'Notification', foreign_key: 'receiver_id'
 end

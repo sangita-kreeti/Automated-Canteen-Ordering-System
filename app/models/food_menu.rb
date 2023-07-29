@@ -61,7 +61,4 @@ class FoodMenu < ApplicationRecord
 
     __elasticsearch__.search(search_query)
   end
-
-  after_commit -> { __elasticsearch__.index_document }, on: %i[create update]
-  after_commit -> { __elasticsearch__.delete_document }, on: :destroy
 end

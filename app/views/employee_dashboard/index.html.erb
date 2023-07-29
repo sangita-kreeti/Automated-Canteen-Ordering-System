@@ -1,6 +1,7 @@
 <div class="container mt-5">
   <div class="row justify-content-center">
     <div class="col-md-8">
+      <!-- Employee Details Card -->
       <div class="card border-primary">
         <div class="card-header text-center">
           <h3 class="card-title">Employee Details</h3>
@@ -17,11 +18,15 @@
             <% end %>
           </p>
           <div class="position-relative">
-            <div class="notification-icon position-absolute top-0 end-0 mt-3">
+            <!-- Notification Bell -->
+            <button type="button" class="btn btn-link notification-icon position-absolute top-0 end-0 mt-3" data-bs-toggle="modal" data-bs-target="#notificationModal">
               <i class="bi bi-bell"></i>
-              <span class="badge bg-danger rounded-circle" id="notification-count" data-current-user-id="<%= current_user.id %>">0</span>
-            </div>
+              <span class="badge bg-danger rounded-circle" id="notification-count" data-current-user-id="<%= current_user.id %>">
+                <%= @notifications.select { |notification| !notification.read }.size %>
+              </span>
+            </button>
           </div>
+                    
           <div class="d-flex justify-content-center mt-3">
             <%= button_to 'Edit', edit_path(current_user), method: :get, class: 'btn btn-primary mr-2' %>
             <%= button_to 'Logout', logout_path, class: 'btn btn-success' %>
@@ -32,10 +37,44 @@
   </div>
 </div>
 
+<!-- Notification Modal -->
+<!-- Notification Modal -->
+<div class="modal fade" id="notificationModal" tabindex="-1" aria-labelledby="notificationModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="notificationModalLabel">Notifications</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <!-- Notifications List -->
+        <div class="notification-list">
+          <% if @notifications.any? %>
+            <% @notifications.each do |notification| %>
+              <p class="notification-item font-weight-bold<%= ' text-muted' if notification.read %>">
+                <%= notification.message %>
+                <% unless notification.read %>
+                  <%= link_to 'Mark as Read', mark_notification_read_path(notification), method: :patch, class: 'btn btn-link btn-sm', remote: true %>
+                <% end %>
+              </p>
+            <% end %>
+            <div class="d-flex justify-content-center">
+              <%= button_to 'Mark All as Read', mark_all_notifications_read_path, method: :post, class: 'btn btn-primary mt-3', remote: true %>
+            </div>
+          <% else %>
+            <p class="font-italic">No notifications.</p>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 
 <div class="container mt-5">
   <div class="row mt-4">
     <div class="col-md-6">
+      <!-- Order Here Card -->
       <div class="card border-primary">
         <div class="card-body">
           <h3 class="card-title">Order Here</h3>
@@ -44,6 +83,9 @@
               <i class="bi bi-cart-plus-fill"></i> Order Food
             <% end %>
           <% else %>
+            <div class="alert alert-warning mb-3">
+              <strong>Please wait for admin approval.</strong>
+            </div>
             <button class="btn btn-primary" disabled>
               <i class="bi bi-cart-plus-fill"></i> Order Food
             </button>
@@ -53,6 +95,7 @@
     </div>
 
     <div class="col-md-6">
+      <!-- Food Gallery Card -->
       <div class="card border-primary">
         <div class="card-body">
           <h3 class="card-title">Food Gallery</h3>
@@ -66,6 +109,7 @@
 
   <div class="row mt-4">
     <div class="col-md-6">
+      <!-- Chat with Chef Card -->
       <div class="card border-primary">
         <div class="card-body">
           <h3 class="card-title">Chat with Chef</h3>
@@ -77,6 +121,7 @@
     </div>
 
     <div class="col-md-6">
+      <!-- Order Histories Card -->
       <div class="card border-primary">
         <div class="card-body">
           <h3 class="card-title">Order Histories</h3>
@@ -89,6 +134,7 @@
   </div>
 </div>
 
+
 <script>
   document.addEventListener('turbolinks:load', function() {
     const orderFoodButton = document.getElementById('order-food-button');
@@ -97,6 +143,47 @@
         if (!<%= @current_user.approved? %>) {
           event.preventDefault(); // Prevent the default action (following the link)
         }
+      });
+    }
+
+    // Function to handle AJAX response for marking individual notification as read
+    function handleMarkAsRead(response) {
+      if (response.status === 'success') {
+        const notificationItem = document.getElementById(`notification-${response.notification_id}`);
+        if (notificationItem) {
+          notificationItem.classList.add('text-muted');
+        }
+      }
+    }
+
+    // Function to handle AJAX response for marking all notifications as read
+    function handleMarkAllAsRead(response) {
+      if (response.status === 'success') {
+        const notificationItems = document.querySelectorAll('.notification-item');
+        notificationItems.forEach(item => {
+          item.classList.add('text-muted');
+        });
+      }
+    }
+
+    // Event listener for "Mark as Read" button
+    const markAsReadButtons = document.querySelectorAll('[data-mark-notification-read]');
+    markAsReadButtons.forEach(button => {
+      button.addEventListener('click', function() {
+        const notificationId = this.getAttribute('data-mark-notification-read');
+        fetch(`/mark_notification_read/${notificationId}`, { method: 'PATCH' })
+          .then(response => response.json())
+          .then(handleMarkAsRead);
+      });
+    });
+
+    // Event listener for "Mark All as Read" button
+    const markAllAsReadButton = document.getElementById('mark-all-as-read-button');
+    if (markAllAsReadButton) {
+      markAllAsReadButton.addEventListener('click', function() {
+        fetch('/mark_all_notifications_read', { method: 'POST' })
+          .then(response => response.json())
+          .then(handleMarkAllAsRead);
       });
     }
   });
