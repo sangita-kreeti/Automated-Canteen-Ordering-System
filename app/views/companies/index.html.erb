@@ -17,8 +17,6 @@
           <th>Latitude</th>
           <th>Longitude</th>
           <th>Action</th>
-          <th>Action</th>
-          <th>Action</th>
         </tr>
       </thead>
       <tbody>
@@ -29,16 +27,6 @@
             <td><%= company.address %></td>
             <td><%= company.latitude %></td>
             <td><%= company.longitude %></td>
-            <td>
-              <%= link_to company_path(company), class: 'btn btn-sm btn-secondary' do %>
-                <i class="bi bi-eye-fill"></i> Show
-              <% end %>
-            </td>
-            <td>
-              <%= link_to edit_company_path(company), class: 'btn btn-sm btn-primary' do %>
-                <i class="bi bi-pencil-fill"></i> Edit
-              <% end %>
-            </td>
             <td>
               <%= button_to company_path(company), method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-sm btn-danger', form: { class: 'd-inline' } do %>
                 <i class="bi bi-trash-fill"></i> Delete
@@ -52,7 +40,7 @@
 
   <div class="d-flex">
     <%= link_to 'Create New Company', new_company_path, class: 'btn btn-primary me-2' %>
-    <%= link_to 'Back to Admin Dashboard', admin_dashboard_index_path, class: 'btn btn-secondary' %>
+    <%= link_to 'Back to Admin Dashboard', admin_dashboard_path, class: 'btn btn-secondary' %>
   </div>
 
 

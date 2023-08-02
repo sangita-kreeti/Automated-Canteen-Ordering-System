@@ -4,8 +4,11 @@
 class ChannelsController < ApplicationController
   before_action :authenticate_user
   def select_users
-    @chefs = User.where(role: 'chef') if current_user.employee?
-    @employees = User.where(role: 'employee') if current_user.chef?
+    if current_user.employee?
+      @chefs = User.where(role: 'chef', approved: true)
+    elsif current_user.chef?
+      @employees = User.where(role: 'employee', approved: true)
+    end
 
     @channel = Channel.new
     render 'select_user', locals: { channel: @channel }
@@ -21,7 +24,6 @@ class ChannelsController < ApplicationController
       redirect_to channel_path(channel)
     else
       error_message = "Failed to create the channel: #{channel.errors.full_messages.join(', ')}"
-      puts error_message
     end
   end
 

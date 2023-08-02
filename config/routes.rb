@@ -3,8 +3,9 @@
 # rubocop:disable Metrics/BlockLength
 Rails.application.routes.draw do
   root 'users#new'
+  get '/users', to: 'users#new'
 
-  resources :admin_dashboard, only: [:index]
+ 
   resources :companies, only: %i[index show new create edit update destroy]
   resources :food_stores
   resources :food_categories, only: %i[index show new create edit update destroy]
@@ -39,11 +40,13 @@ Rails.application.routes.draw do
     get 'messages', on: :member
   end
 
+
   get '/login', to: 'sessions#new'
   post '/login', to: 'sessions#create'
   delete '/logout', to: 'sessions#destroy'
   post '/logout', to: 'sessions#destroy'
   get '/edit', to: 'users#edit'
+  get 'admin_dashboard', to: 'admin_dashboard#index', as: :admin_dashboard
   get '/employee_dashboard', to: 'employee_dashboard#index', as: 'employee_dashboard_index'
   get '/chef_dashboard', to: 'chef_dashboard#index', as: 'chef_dashboard_index'
 
@@ -63,7 +66,7 @@ Rails.application.routes.draw do
   get '/auth/:provider/callback', to: 'sessions#omniauth'
   get '/auth/facebook/callback', to: 'sessions#omniauth'
 
-  resources :users, only: %i[new create edit update]
+  resources :users
 end
 
 # rubocop:enable Metrics/BlockLength

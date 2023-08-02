@@ -40,7 +40,7 @@
                 <button class="btn btn-sm btn-danger" disabled>Reject</button>
               <% else %>
                 <%= link_to "Approve", approved_employee_path(employee), method: :patch, class: "btn btn-sm btn-primary" %>
-                <%= link_to "Reject", reject_employee_path(employee), method: :patch, class: "btn btn-sm btn-danger" %>
+                <%= link_to "Reject", reject_employee_path(employee), method: :patch, data: { confirm: 'Are you sure?' }, class: 'btn btn-danger btn-sm' %>
               <% end %>
             </td>
           </tr>
@@ -49,7 +49,7 @@
     </table>
   </div>
 
-  <%= link_to 'Back to Admin Dashboard', admin_dashboard_index_path, class: 'btn btn-secondary' %>
+  <%= link_to 'Back to Admin Dashboard', admin_dashboard_path, class: 'btn btn-secondary' %>
 </div>
 
 <ul class="pagination justify-content-center mt-3">

@@ -25,8 +25,13 @@ class UsersController < ApplicationController
 
   def update
     if @user.update(user_params)
-      redirect_user_by_role
+      if @user.name.present? && @user.role.present? && @user.phone_no.present?
+        redirect_user_by_role
+      else
+        render :edit
+      end
     else
+      # redirect_to edit_user_path(@user)
       render :edit
     end
   end
@@ -44,13 +49,12 @@ class UsersController < ApplicationController
   def redirect_user_by_role
     case @user.role
     when 'admin'
-      redirect_to admin_dashboard_index_path
+      redirect_to admin_dashboard_path
     when 'employee'
       redirect_to employee_dashboard_index_path
     when 'chef'
       redirect_to chef_dashboard_index_path
     else
-      # Redirect to a default path if role is not recognized
       redirect_to root_path
     end
   end

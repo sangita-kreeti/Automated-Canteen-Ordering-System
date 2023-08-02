@@ -7,10 +7,16 @@
           <!-- Flash Messages -->
           <% flash.each do |type, message| %>
             <div class="alert alert-<%= type == 'notice' ? 'success' : 'danger' %> alert-dismissible fade show" role="alert">
+              <% if type == 'notice' %>
+                <i class="bi bi-check-circle-fill me-2"></i> <!-- Success icon -->
+              <% else %>
+                <i class="bi bi-exclamation-circle-fill me-2"></i> <!-- Error icon -->
+              <% end %>
               <%= message %>
               <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
           <% end %>
+
 
           <h2 class="text-center mb-4">Login</h2>
           <%= form_with model: @user do |f| %>
@@ -46,3 +52,15 @@
     </div>
   </section>
 </div>
+<script>
+  // Automatically close the flash alert and notice after 3 seconds
+  document.addEventListener('DOMContentLoaded', () => {
+    const alertContainer = document.querySelector('.alert');
+    if (alertContainer) {
+      setTimeout(() => {
+        alertContainer.remove();
+      }, 2000);
+    }
+
+  });
+</script>

@@ -1,4 +1,28 @@
 <div class="container mt-5">
+  <% if flash[:notice].present? %>
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+      <%= flash[:notice] %>
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+  <% end %>
+</div>
+<div class="container mt-5">
+  <div class="text-center mb-4">
+    
+    <% if current_user.food_store.present? %>
+      <div class="food-store-info p-4 border rounded shadow bg-light">
+        <p class="fs-5"><i class="bi bi-shop text-primary me-2"></i> Food Store: <%= current_user.food_store.name %></p>
+        <% if current_user.food_store.food_category.present? %>
+          <p class="fs-5"><i class="bi bi-bookmark text-success me-2"></i> Food Category: <%= current_user.food_store.food_category.name %></p>
+        <% else %>
+          <p class="fs-5"><i class="bi bi-x-circle text-danger me-2"></i> No Food Category Available</p>
+        <% end %>
+      </div>
+    <% else %>
+      <p class="fs-5 text-danger">No Food Store Available</p>
+    <% end %>
+  </div>
+<div class="container mt-5">
   <h1 class="text-center mb-4">Gallery</h1>
 
   <div class="table-responsive">
@@ -80,4 +104,14 @@
       </li>
     <% end %>
   </ul>
-  
+  <script>
+  document.addEventListener('DOMContentLoaded', function() {
+    var alerts = document.querySelectorAll('.alert-dismissible');
+
+    alerts.forEach(function(alert) {
+      setTimeout(function() {
+        alert.remove();
+      }, 2000);
+    });
+  });
+</script>

@@ -9,7 +9,7 @@ class ChefDashboardController < ApplicationController
   def require_chef
     return if logged_in? && current_user.chef?
 
-    redirect_to root_path,
+    redirect_to login_path,
                 alert: 'You are not authorized to access this page.'
   end
 end

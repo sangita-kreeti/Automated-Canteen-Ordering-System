@@ -1,9 +1,20 @@
-<div class="container d-flex justify-content-center">
+<div class="container d-flex justify-content-center mt-5">
   <div class="card mt-4 border-primary" style="width: 400px;">
     <h5 class="card-header bg-primary text-white">
       <i class="bi bi-chat-dots"></i> Start Chat
     </h5>
+    
     <div class="card-body">
+      <% if current_user.employee? %>
+        <div class="text-center mb-4">
+          <h1>Chat with Chef</h1>
+        </div>
+      <% elsif current_user.chef? %>
+        <div class="text-center mb-4">
+          <h1>Chat with Employee</h1>
+        </div>
+      <% end %>
+
       <%= form_with(model: @channel, url: channels_path, method: :post) do |form| %>
         <div class="form-group">
           <% if current_user.employee? %>

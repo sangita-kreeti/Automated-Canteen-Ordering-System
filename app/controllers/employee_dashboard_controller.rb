@@ -13,7 +13,7 @@ class EmployeeDashboardController < ApplicationController
   def require_employee
     return if logged_in? && current_user.employee?
 
-    redirect_to root_path,
+    redirect_to login_path,
                 alert: 'You are not authorized to access this page.'
   end
 end

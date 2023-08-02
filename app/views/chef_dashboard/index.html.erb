@@ -9,7 +9,7 @@
         <div class="card-body text-center">
           <p class="card-text"><strong><i class="bi bi-person-fill"></i> Chef Name:</strong> <%= current_user.name %></p>
           <p class="card-text"><strong><i class="bi bi-telephone-fill"></i> Chef Phone Number:</strong> <%= current_user.phone_no %></p>
-          <p class="card-text"><strong><i class="bi bi-shop"></i> Food Store Name:</strong> <%= current_user.food_store.name %></p>
+          <p class="card-text"><strong><i class="bi bi-shop"></i> Food Store Name:</strong> <%= current_user.food_store&.name %></p>
           <div class="d-flex justify-content-center mt-3">
             <%= link_to edit_user_path(current_user), class: 'btn btn-primary mr-3' do %>
               <i class="bi bi-pencil-fill"></i> Edit
@@ -76,10 +76,18 @@
       <!-- Chat with Employee Card -->
       <div class="card border-primary">
         <div class="card-body">
-          <h3 class="card-title">Chat with Employee</h3>
-          
-          <%= link_to select_users_channels_path, method: :get, class: 'btn btn-primary' do %>
-            <i class="bi bi-chat-dots"></i> Start Chat
+          <h3 class="card-title">Chat with Employee</h3>          
+          <% if current_user.approved? %>
+            <%= link_to select_users_channels_path, method: :get, class: 'btn btn-primary' do %>
+              <i class="bi bi-chat-dots"></i> Start Chat
+            <% end %>
+          <% else %>
+            <div class="alert alert-warning mb-3">
+              <strong>Please wait for admin approval.</strong>
+            </div>
+            <button class="btn btn-primary" disabled>
+              <i class="bi bi-chat-dots"></i> Start Chat
+            </button>
           <% end %>
         </div>
       </div>
@@ -91,14 +99,14 @@
         <div class="card-body">
           <h3 class="card-title">Food Order Status Management</h3>
           <% if current_user.approved? %>
-            <%= link_to order_status_path, class: 'btn btn-secondary btn-block' do %>
+            <%= link_to order_status_path, class: 'btn btn-primary btn-block' do %>
               <i class="bi bi-list-check"></i> Food Order Status
             <% end %>
           <% else %>
             <div class="alert alert-warning mb-3">
               <strong>Please wait for admin approval.</strong>
             </div>
-            <button class="btn btn-secondary btn-block" disabled>
+            <button class="btn btn-primary btn-block" disabled>
               <i class="bi bi-list-check"></i> Food Order Status
             </button>
           <% end %>

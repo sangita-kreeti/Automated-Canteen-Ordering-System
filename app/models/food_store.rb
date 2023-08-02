@@ -2,13 +2,14 @@
 
 # This is a model
 class FoodStore < ApplicationRecord
+  
   belongs_to :food_category, optional: true
-  has_many :users
-  has_many :photos
-  has_many :food_menus
+  has_many :users, dependent: :destroy
+  has_many :photos, dependent: :destroy
+  has_many :food_menus, dependent: :destroy
 
-  validates :name, presence: true, uniqueness: true 
-  validates :address, presence: true
-  validates :latitude, presence: true
-  validates :longitude, presence: true
+  validates :name, :address, :latitude, :longitude, presence: true
+  validates :food_category_id, presence: true
+  validates :name, uniqueness: true
 end
+

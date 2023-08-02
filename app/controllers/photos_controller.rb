@@ -16,9 +16,9 @@ class PhotosController < ApplicationController
     @photo.food_store_id = current_user.food_store_id
 
     if @photo.save
-      redirect_to photos_path, notice: 'Photo was successfully uploaded.'
+      redirect_to photos_path, notice: 'Photo uploaded successfully.'
     else
-      puts @photo.errors.full_messages
+      flash.now[:alert] = 'Please upload a photo!'
       render :new
     end
   end
@@ -26,12 +26,12 @@ class PhotosController < ApplicationController
   def destroy
     @photo = Photo.find(params[:id])
     @photo.destroy
-    redirect_to photos_path, notice: 'Photo was successfully deleted.'
+    redirect_to photos_path, notice: 'Photo deleted successfully.'
   end
 
   private
 
   def photo_params
-    params.require(:photo).permit(:image, :food_store_id, :user_id)
+    params.require(:photo).permit(:image) if params[:photo].present?
   end
 end

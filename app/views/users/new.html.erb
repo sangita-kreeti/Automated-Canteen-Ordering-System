@@ -4,6 +4,12 @@
     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
   </div>
 <% end %>
+<% if flash[:alert].present? %>
+  <div class="alert alert-danger alert-dismissible fade show container mt-4" role="alert">
+    <%= flash[:alert] %>
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  </div>
+<% end %>
 
 <div class="container py-5 shadow-lg mx-auto mt-5">
   <section class="bg-image" style="background-image: url(<%= asset_path('background/background.png') %>);">
@@ -67,12 +73,19 @@
   </section>
 </div>
 <script>
-  // Automatically close the flash alert after 2 seconds
+  // Automatically close the flash alert and notice after 3 seconds
   document.addEventListener('DOMContentLoaded', () => {
     const alertContainer = document.querySelector('.alert');
     if (alertContainer) {
       setTimeout(() => {
         alertContainer.remove();
+      }, 2000);
+    }
+
+    const noticeContainer = document.querySelector('.notice');
+    if (noticeContainer) {
+      setTimeout(() => {
+        noticeContainer.remove();
       }, 2000);
     }
   });

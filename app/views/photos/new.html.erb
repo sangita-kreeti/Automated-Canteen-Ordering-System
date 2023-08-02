@@ -5,17 +5,29 @@
     </div>
     <div class="card-body">
       <%= form_with(model: @photo, url: photos_path, multipart: true) do |form| %>
-        
         <div class="form-group">
-          <strong><%= form.label :image, 'Food Photo' %></strong>
-          <%= form.file_field :image, class: 'form-control' %>
+          <%= form.label :image, 'Select an Image', class: 'h5' %>
+          <%= form.file_field :image, class: 'form-control form-control-lg' %>
         </div>
+        
+          <% if flash[:alert].present? %>
+          <div class="alert alert-danger alert-dismissible fade show container mt-4" role="alert">
+            <%= flash[:alert] %>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>
+        <% end %>
 
-        <div class="text-center mt-3 d-flex justify-content-between">
+        <div class="d-flex justify-content-between mt-4">
           <%= form.submit 'Upload', class: 'btn btn-primary' %>
-          <%= link_to 'Back', photos_path, class: 'btn btn-secondary' %>
+          <%= link_to 'Back to Photos', photos_path, class: 'btn btn-secondary' %>
         </div>
       <% end %>
     </div>
   </div>
 </div>
+<script>
+  // Close the flash alert after 3 seconds
+  setTimeout(function() {
+    document.getElementById('flash-alert').remove();
+  }, 3000);
+</script>

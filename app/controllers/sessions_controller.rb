@@ -24,21 +24,20 @@ class SessionsController < ApplicationController
     session.delete(:user_id)
     reset_session
     flash[:notice] = 'You have logged out successfully.'
-    redirect_to root_path
+    redirect_to login_path
   end
 
   def omniauth
     user = find_or_create_user_from_omniauth
 
-    if user.persisted? # Check if the user is already persisted in the database (existing user)
-      session_and_cookies(user)
+    return unless user.persisted? # Check if the user is already persisted in the database (existing user)
+
+    session_and_cookies(user)
+    if user.role.present? && (user.company.id.present? || user.food_store_id.present?) && user.name.present? && user.phone_no.present?
       redirect_user_by_role(user)
-    elsif user.valid? # New user (signup)
-      session_and_cookies(user)
-      redirect_to edit_user_path(user)
+
     else
-      flash[:alert] = 'Unable to login with the given credentials.'
-      redirect_to login_path
+      redirect_to edit_user_path(user)
     end
   end
 
@@ -72,7 +71,7 @@ class SessionsController < ApplicationController
   def redirect_user_by_role(user)
     redirect_path =
       case user.role
-      when 'admin' then admin_dashboard_index_path
+      when 'admin' then admin_dashboard_path
       when 'employee' then employee_dashboard_index_path
       when 'chef' then chef_dashboard_index_path
       else

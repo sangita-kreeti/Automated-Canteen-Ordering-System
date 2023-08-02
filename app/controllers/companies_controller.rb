@@ -7,10 +7,6 @@ class CompaniesController < ApplicationController
     @companies = Company.page(params[:page]).per(15)
   end
 
-  def show
-    @company = Company.find(params[:id])
-  end
-
   def new
     @company = Company.new
   end
@@ -22,20 +18,6 @@ class CompaniesController < ApplicationController
       redirect_to companies_path, notice: 'Company created successfully.'
     else
       render :new
-    end
-  end
-
-  def edit
-    @company = Company.find(params[:id])
-  end
-
-  def update
-    @company = Company.find(params[:id])
-
-    if @company.update(company_params)
-      redirect_to companies_path, notice: 'Company updated successfully.'
-    else
-      render :edit
     end
   end
 

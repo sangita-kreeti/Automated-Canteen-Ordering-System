@@ -6,6 +6,7 @@ class CreateFoodStores < ActiveRecord::Migration[6.1]
     create_table :food_stores do |t|
       t.string :name
       t.string :address
+      t.integer :food_category_id, foreign_key: true
       t.float :latitude
       t.float :longitude
 

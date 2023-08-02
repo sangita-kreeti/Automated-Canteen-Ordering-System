@@ -11,7 +11,7 @@
     <thead>
       <tr>
         <th>Name</th>
-        <th>Actions</th>
+        <th>Action</th>
       </tr>
     </thead>
     <tbody>
@@ -19,9 +19,7 @@
         <tr>
           <td><%= food_category.name %></td>
           <td>
-            <%= link_to 'Show', food_category_path(food_category), class: 'btn btn-primary btn-sm' %>
-            <%= link_to 'Edit', edit_food_category_path(food_category), class: 'btn btn-secondary btn-sm' %>
-            <%= link_to 'Delete', food_category_path(food_category), method: :delete, data: { confirm: 'Are you sure you want to delete this food category?' }, class: 'btn btn-danger btn-sm' %>
+            <%= link_to 'Delete', food_category_path(food_category), method: :delete, data: { confirm: 'Are you sure? Deleting the food category will also delete the relevant food stores, chefs, food-menus, photos associated with it.' }, class: 'btn btn-danger btn-sm' %>
           </td>
         </tr>
       <% end %>
@@ -29,7 +27,7 @@
   </table>
 
   <%= link_to 'New Food Category', new_food_category_path, class: 'btn btn-primary' %>
-  <%= link_to 'Back to Admin Dashboard', admin_dashboard_index_path, class: 'btn btn-secondary' %>
+  <%= link_to 'Back to Admin Dashboard', admin_dashboard_path, class: 'btn btn-secondary' %>
 </div>
 
 <ul class="pagination justify-content-center mt-3">

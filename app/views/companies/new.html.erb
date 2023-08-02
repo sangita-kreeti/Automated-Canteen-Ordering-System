@@ -35,8 +35,10 @@
             <p class="text-danger"><%= @company.errors.full_messages_for(:longitude).first %></p>
           <% end %>
         </div>
-
-        <%= form.submit 'Create', class: 'btn btn-primary mt-3' %>
+        <div class="d-flex">
+          <%= form.submit 'Create', class: 'btn btn-primary mt-3 mr-5' %>
+          <%= link_to 'Back', companies_path, class: 'btn btn-secondary mt-3' %>
+        </div>
       <% end %>
     </div>
   </div>

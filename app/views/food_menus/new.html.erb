@@ -2,16 +2,13 @@
   <h1 class="text-center mb-4">Upload Food Menu</h1>
 
   <%= form_with(model: @food_menu, url: food_menus_path, multipart: true) do |form| %>
-    <div class="form-group">
-      <%= form.label :food_category_id, 'Food Category', class: 'h5' %>
-      <%= form.collection_select :food_category_id, @food_categories, :id, :name, prompt: 'Select a category', class: 'form-control form-control-lg' %>
-    </div>
-
+    <!-- Title field -->
     <div class="form-group">
       <%= form.label :title, 'Title', class: 'h5' %>
       <%= form.text_field :title, class: 'form-control form-control-lg' %>
     </div>
 
+    <!-- Price field -->
     <div class="form-group">
       <%= form.label :price, 'Price', class: 'h5' %>
       <%= form.text_field :price, class: 'form-control form-control-lg' %>
@@ -20,6 +17,17 @@
     <div class="d-flex justify-content-between mt-4">
       <%= form.submit 'Upload', class: 'btn btn-primary' %>
       <%= link_to 'Back to Food Menus', food_menus_path, class: 'btn btn-secondary' %>
+    </div>
+  <% end %>
+
+  <% if @food_menu.errors.any? %>
+    <div class="alert alert-danger mt-4">
+      <h5 class="mb-3">Error(s) occurred while uploading the food menu:</h5>
+      <ul>
+        <% @food_menu.errors.full_messages.each do |error_message| %>
+          <li><%= error_message %></li>
+        <% end %>
+      </ul>
     </div>
   <% end %>
 </div>
