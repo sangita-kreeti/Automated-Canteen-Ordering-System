@@ -26,5 +26,4 @@ RSpec.describe User, type: :model do
     expect(user).not_to be_valid
     expect(user.errors[:password]).to include('is too short (minimum is 4 characters)')
   end
-
 end

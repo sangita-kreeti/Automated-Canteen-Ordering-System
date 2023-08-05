@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe CompaniesController, type: :controller do
@@ -9,8 +11,6 @@ RSpec.describe CompaniesController, type: :controller do
       longitude: -74.0060
     }
   end
-
-  
 
   describe 'GET #index' do
     it 'assigns all companies as @companies' do

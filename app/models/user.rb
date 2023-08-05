@@ -12,7 +12,7 @@ class User < ApplicationRecord
   has_many :notifications, class_name: 'Notification', foreign_key: 'sender_id'
   has_many :notifications, class_name: 'Notification', foreign_key: 'receiver_id'
 
-  validates :username, presence: true, uniqueness: true, length: { minimum: 4 } 
+  validates :username, presence: true, uniqueness: true, length: { minimum: 4 }
   validates :email, presence: true, uniqueness: { case_sensitive: false },
                     format: { with: /\A[a-zA-Z0-9][\w+\-.]*@[a-zA-Z0-9][a-zA-Z0-9\-.]*\.[a-zA-Z]+\z/,
                               message: 'should be in the format email@example.com' }

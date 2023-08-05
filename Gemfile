@@ -83,5 +83,5 @@ gem 'tzinfo-data', platforms: %i[mingw mswin x64_mingw jruby]
 gem 'prawn'
 
 gem 'factory_bot_rails', '~>6.0'
-gem 'rspec-rails', '~>4.0'
 gem 'rails-controller-testing'
+gem 'rspec-rails', '~>4.0'

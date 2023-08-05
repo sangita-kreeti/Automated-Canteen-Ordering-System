@@ -14,5 +14,4 @@ RSpec.describe FoodCategory, type: :model do
     expect(food_category).not_to be_valid
     expect(food_category.errors[:name]).to include("can't be blank")
   end
-  
 end
