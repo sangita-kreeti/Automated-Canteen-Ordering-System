@@ -1,7 +1,8 @@
+
 <div class="container">
    <div class="row">
-      <div class="col-md-6">
-         <div class="mb-4">
+      <div class="col-md-8">
+         <div class="mb-4 mt-3">
             <form id="search-form" method="GET" action="<%= search_orders_path %>">
                <div class="input-group">
                   <input type="text" class="form-control" name="search" id="search-input" placeholder="Search food ...." value="<%= params[:search] %>">
@@ -12,26 +13,26 @@
       </div>
    </div>
    <div class="row">
-      <div class="col-md-6">
+      <div class="col-md-8">
          <div class="filtration-section card border-primary">
             <h4 class="card-header text-center">Filter By:</h4>
             <div class="card-body">
                <div class="form-group text-center">
                   <label for="food_store_filter">Food Store:</label>
                   <select class="form-control" id="food_store_filter">
-                    <option value="">All Food Stores</option>
-                    <% @food_stores.each do |food_store| %>
-                    <option value="<%= food_store.id %>"><%= food_store.name %></option>
-                    <% end %>
+                     <option value="">All Food Stores</option>
+                     <% @food_stores.each do |food_store| %>
+                     <option value="<%= food_store.id %>"><%= food_store.name %></option>
+                     <% end %>
                   </select>
                </div>
                <div class="form-group text-center">
                   <label for="food_category_filter">Food Category:</label>
                   <select class="form-control" id="food_category_filter">
-                    <option value="">All Food Categories</option>
-                    <% @food_categories.each do |food_category| %>
-                    <option value="<%= food_category.id %>"><%= food_category.name %></option>
-                    <% end %>
+                     <option value="">All Food Categories</option>
+                     <% @food_categories.each do |food_category| %>
+                     <option value="<%= food_category.id %>"><%= food_category.name %></option>
+                     <% end %>
                   </select>
                </div>
                <div class="text-center mt-3">
@@ -43,10 +44,10 @@
          <div id="search-results">
             <!-- Display the search results here -->
          </div>
-         <div id="food-menu">
-            <div class="row mt-3">
+         <div id="food-menu" class="mt-3 d-flex" style="flex-wrap: wrap; column-gap: 2rem;">
+            <div class="row">
                <% @food_menus.each do |food_menu| %>
-               <div class="col-md-6">
+               <div class="col-md-4">
                   <div class="card mb-3 shadow">
                      <% if food_menu.food_store.present? %>
                      <div class="card-header text-center">
@@ -58,7 +59,7 @@
                      <div class="card-body text-center">
                         <h6 class="card-title"><%= food_menu.title %></h6>
                         <p class="card-text food-price" data-price="<%= food_menu.price %>">₹<%= food_menu.price %></p>
-                        <p class="card-text">Category: <%= food_menu.food_category.name %></p>
+                        <p class="card-text">Category: <%= FoodCategory.find(food_menu.food_category_id).name %></p>
                         <% if current_user.role == "employee" && current_user.company.present? %>
                         <% distance = @distances.find { |data| data[0] == food_menu.food_store }&.dig(1) %>
                         <% if distance.present? %>
@@ -83,7 +84,7 @@
             </div>
          </div>
       </div>
-      <div class="col-md-6 border-start">
+      <div class="col-md-4 border-start">
          <div id="cart-container" class="p-4">
             <h2 class="text-center mb-4">Cart</h2>
             <table class="table table-striped">
@@ -106,6 +107,9 @@
             <button id="place-order-button" class="btn btn-secondary" data-turbolinks="false">Place Order</button>
          </div>
       </div>
+      <div>
+         <%= link_to 'Back to Employee Dashboard', employee_dashboard_index_path, class: 'btn btn-secondary btn-sm' %>
+      </div>
       <div class="modal fade" id="confirm-modal" tabindex="-1" role="dialog" aria-labelledby="confirm-modal-label" aria-hidden="true">
          <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
@@ -125,224 +129,250 @@
       </div>
    </div>
 </div>
-
-<div>
-  <%= link_to 'Back to Employee Dashboard', employee_dashboard_index_path, class: 'btn btn-secondary btn-sm' %>
-</div>
-
 <ul class="pagination justify-content-center mt-3">
-    <% if @food_menus.current_page > 1 %>
-      <li class="page-item">
-        <%= link_to '&laquo; Previous'.html_safe, { page: @food_menus.current_page - 1 }, class: 'page-link' %>
-      </li>
-    <% end %>
-    <% (1..@food_menus.total_pages).each do |page| %>
-      <% if page == @food_menus.current_page %>
-        <li class="page-item active">
-          <span class="page-link">
-            <%= page %>
-            <span class="visually-hidden">(current)</span>
-          </span>
-        </li>
-      <% else %>
-        <li class="page-item">
-          <%= link_to page, { page: page }, class: 'page-link' %>
-        </li>
-      <% end %>
-    <% end %>
-    <% if @food_menus.current_page < @food_menus.total_pages %>
-      <li class="page-item">
-        <%= link_to 'Next &raquo;'.html_safe, { page: @food_menus.current_page + 1 }, class: 'page-link' %>
-      </li>
-    <% end %>
-  </ul>
-  
+   <% if @food_menus.current_page > 1 %>
+   <li class="page-item">
+      <%= link_to '&laquo; Previous'.html_safe, { page: @food_menus.current_page - 1 }, class: 'page-link' %>
+   </li>
+   <% end %>
+   <% (1..@food_menus.total_pages).each do |page| %>
+   <% if page == @food_menus.current_page %>
+   <li class="page-item active">
+      <span class="page-link">
+      <%= page %>
+      <span class="visually-hidden">(current)</span>
+      </span>
+   </li>
+   <% else %>
+   <li class="page-item">
+      <%= link_to page, { page: page }, class: 'page-link' %>
+   </li>
+   <% end %>
+   <% end %>
+   <% if @food_menus.current_page < @food_menus.total_pages %>
+   <li class="page-item">
+      <%= link_to 'Next &raquo;'.html_safe, { page: @food_menus.current_page + 1 }, class: 'page-link' %>
+   </li>
+   <% end %>
+</ul>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-
 <script>
-  $(document).ready(function() {
-    const cart = getCartItems();
+   $(document).ready(function() {
+     const cart = getCartItems();
+   
+     function getCartItems() {
+       const cartItemsJson = localStorage.getItem('cartItems');
+       return cartItemsJson ? JSON.parse(cartItemsJson) : [];
+     }
+   
+     function saveCartItems(cartItems) {
+       const cartItemsJson = JSON.stringify(cartItems.filter(Boolean));
+       localStorage.setItem('cartItems', cartItemsJson);
+     }
+   
+     function updateCart() {
+       const cartItems = $('#cart-items');
+       cartItems.empty();
+   
+       let totalPrice = 0;
+   
+       for (const item of cart) {
+         const itemPrice = (item.quantity * item.price).toFixed(2);
+   
+         const cartItemHtml = `
+           <tr>
+             <td>${item.food_item_name}</td>
+             <td>${item.quantity}</td>
+             <td>₹${itemPrice}</td>
+             <td>${item.food_store_name}</td>
+             <td>${item.special_ingredients}</td>
+             <td><button class="btn btn-danger remove-from-cart-btn" data-index="${cart.indexOf(item)}">Remove</button></td>
+           </tr>`;
+         
+         cartItems.append(cartItemHtml);
+         totalPrice += parseFloat(itemPrice);
+       }
+   
+       $('#total-price').text(`₹${totalPrice.toFixed(2)}`);
+     }
+   
+     $(document).on('click', '.add-to-cart-btn', function() {
+       const quantityInput = $(this).closest('.input-group').find('.quantity-input');
+       const quantity = parseInt(quantityInput.val());
+       const price = parseFloat($(this).closest('.card-body').find('.food-price').data('price'));
+       const name = $(this).closest('.card-body').find('.card-title').text();
+       const specialIngredients = $(this).closest('.card-body').find('.description-input').val();
+       const foodStoreName = $(this).data('food-store-name');
+   
+       if (quantity < 1) {
+         alert('Quantity must be at least 1.');
+         return;
+       }
+   
+       const existingItem = cart.find(item => item.food_item_name === name && item.food_store_name === foodStoreName);
+   
+       if (existingItem) {
+         existingItem.quantity = quantity;
+       } else {
+         const cartItem = {
+           food_store_name: foodStoreName,
+           food_item_name: name,
+           quantity: quantity,
+           price: price,
+           special_ingredients: specialIngredients
+         };
+         cart.push(cartItem);
+       }
+   
+       saveCartItems(cart);
+   
+       updateCart();
+     });
+   
+     $(document).on('click', '.remove-from-cart-btn', function() {
+       const index = $(this).data('index');
+       cart.splice(index, 1);
+       saveCartItems(cart);
+       updateCart();
+     });
+   
+     $('#place-order-button').click(function() {
+       $('#confirm-modal').modal('show');
+     });
+   
+     $('#confirm-order-button').click(function() {
 
-    function getCartItems() {
-      const cartItemsJson = localStorage.getItem('cartItems');
-      return cartItemsJson ? JSON.parse(cartItemsJson) : [];
-    }
-
-    function saveCartItems(cartItems) {
-      const cartItemsJson = JSON.stringify(cartItems.filter(Boolean));
-      localStorage.setItem('cartItems', cartItemsJson);
-    }
-
-    function updateCart() {
-      const cartItems = $('#cart-items');
-      cartItems.empty();
-
-      let totalPrice = 0;
-
-      for (const item of cart) {
-        const itemPrice = (item.quantity * item.price).toFixed(2);
-
-        const cartItemHtml = `
-          <tr>
-            <td>${item.food_item_name}</td>
-            <td>${item.quantity}</td>
-            <td>₹${itemPrice}</td>
-            <td>${item.food_store_name}</td>
-            <td>${item.special_ingredients}</td>
-            <td><button class="btn btn-danger remove-from-cart-btn" data-index="${cart.indexOf(item)}">Remove</button></td>
-          </tr>`;
-        
-        cartItems.append(cartItemHtml);
-        totalPrice += parseFloat(itemPrice);
-      }
-
-      $('#total-price').text(`₹${totalPrice.toFixed(2)}`);
-    }
-
-    $(document).on('click', '.add-to-cart-btn', function() {
-      const quantityInput = $(this).closest('.input-group').find('.quantity-input');
-      const quantity = parseInt(quantityInput.val());
-      const price = parseFloat($(this).closest('.card-body').find('.food-price').data('price'));
-      const name = $(this).closest('.card-body').find('.card-title').text();
-      const specialIngredients = $(this).closest('.card-body').find('.description-input').val();
-      const foodStoreName = $(this).data('food-store-name');
-
-      if (quantity < 1) {
-        alert('Quantity must be at least 1.');
+        if (cart.length === 0) {
+        alert('Add items to the cart before placing the order.');
         return;
       }
-
-      const existingItem = cart.find(item => item.food_item_name === name && item.food_store_name === foodStoreName);
-
-      if (existingItem) {
-        existingItem.quantity = quantity;
-      } else {
-        const cartItem = {
-          food_store_name: foodStoreName,
-          food_item_name: name,
-          quantity: quantity,
-          price: price,
-          special_ingredients: specialIngredients
-        };
-        cart.push(cartItem);
-      }
-
-      saveCartItems(cart);
-
-      updateCart();
-    });
-
-    $(document).on('click', '.remove-from-cart-btn', function() {
-      const index = $(this).data('index');
-      cart.splice(index, 1);
-      saveCartItems(cart);
-      updateCart();
-    });
-
-    $('#place-order-button').click(function() {
-      $('#confirm-modal').modal('show');
-    });
-
-    $('#confirm-order-button').click(function() {
-      $('#confirm-modal').modal('hide');
-
-      const cartItems = getCartItems();
-
-      const items = cartItems.map(item => {
-        return {
-          food_store_name: item.food_store_name,
-          food_item_name: item.food_item_name,
-          quantity: item.quantity,
-          price: item.price,
-          special_ingredients: item.special_ingredients
-        };
-      });
-
-      const csrfToken = $('meta[name="csrf-token"]').attr('content');
-      const orderData = {
-        items: items,
-        _token: csrfToken
-      };
-
-      $.ajax({
-        url: '/orders/place_order',
-        method: 'POST',
-        dataType: 'json',
-        contentType: 'application/json',
-        data: JSON.stringify(orderData),
-        beforeSend: function(xhr) {
-          xhr.setRequestHeader('X-CSRF-Token', csrfToken);
-        },
-        success: function(response) {
-           localStorage.removeItem('cartItems');
-        },
-        error: function(xhr, error) {
-          console.error('Failed to place order:', error);
-          
-        },
-
-        complete: function(xhr) {
-          if (xhr.status === 200) {
-            console.log('Order placed successfully');
-          } else {
-            console.error('Failed to place order');
-          }
-        }
-      });
-    });
-
-    $(document).on('submit', '#search-form', function (e) {
-  e.preventDefault();
-
-  var searchInput = $('#search-input').val();
-
-  $.ajax({
-    type: 'GET',
-    url: $(this).attr('action'),
-    data: { search: searchInput },
-    dataType: 'html',
-    success: function (response) {
-      $('#food-menu').html(response);
-    },
-    error: function (xhr, status, error) {
-      console.error(error);
-    }
-  });
-    function filterSearch(foodStoreId, foodCategoryId) {
-      const searchInput = $('#search-input').val();
-
-      $.ajax({
-        type: 'GET',
-        url: $('#search-form').attr('action'),
-        data: {
-          search: searchInput,
-          food_store_filter: foodStoreId, 
-          food_category_filter: foodCategoryId,
-        },
-        dataType: 'html',
-        success: function(response) {
-          $('#food-menu').html(response);
-        },
-        error: function(xhr, status, error) {
-          console.error(error);
-        },
-      });
-    }
-    $('#apply_filters_btn').click(function() {
-      const foodStoreId = $('#food_store_filter').val();
-      const foodCategoryId = $('#food_category_filter').val();
-      filterSearch(foodStoreId, foodCategoryId);
-    });
-    $('#reset_filters_btn').click(function() {
-      $('#food_store_filter').val('');
-      $('#food_category_filter').val('');
-      filterSearch('', '');
-    });
-    filterSearch('', '');
-    updateCart();
-  });
-
-  });
+       $('#confirm-modal').modal('hide');
+   
+       const cartItems = getCartItems();
+   
+       const items = cartItems.map(item => {
+         return {
+           food_store_name: item.food_store_name,
+           food_item_name: item.food_item_name,
+           quantity: item.quantity,
+           price: item.price,
+           special_ingredients: item.special_ingredients
+         };
+       });
+   
+       const csrfToken = $('meta[name="csrf-token"]').attr('content');
+       const orderData = {
+         items: items,
+         _token: csrfToken
+       };
+   
+       $.ajax({
+         url: '/orders/place_order',
+         method: 'POST',
+         dataType: 'json',
+         contentType: 'application/json',
+         data: JSON.stringify(orderData),
+         beforeSend: function(xhr) {
+           xhr.setRequestHeader('X-CSRF-Token', csrfToken);
+         },
+         success: function(response) {
+            localStorage.removeItem('cartItems');
+         },
+         error: function(xhr, error) {
+           console.error('Failed to place order:', error);
+           
+         },
+   
+         complete: function(xhr) {
+           if (xhr.status === 200) {
+             console.log('Order placed successfully');
+           } else {
+             console.error('Failed to place order');
+           }
+         }
+       });
+     });
+   
+     function filterSearch(foodStoreId, foodCategoryId) {
+   const searchInput = $('#search-input').val();
+   
+   $.ajax({
+     type: 'GET',
+     url: $('#search-form').attr('action'),
+     data: {
+       search: searchInput,
+       food_store_filter: foodStoreId, 
+       food_category_filter: foodCategoryId,
+     },
+     dataType: 'html',
+     success: function(response) {
+       $('#food-menu').html(response);
+     },
+     error: function(xhr, status, error) {
+       console.error(error);
+     },
+   });
+   }
+   
+   function filterSearch(searchInput, foodStoreId, foodCategoryId) {
+   $.ajax({
+     type: 'GET',
+     url: $('#search-form').attr('action'),
+     data: {
+       search: searchInput,
+       food_store_filter: foodStoreId, 
+       food_category_filter: foodCategoryId,
+     },
+     dataType: 'html',
+     success: function(response) {
+       $('#food-menu').html(response);
+   
+       if ($('#food-menu').find('.card').length === 0) {
+         $('#food-menu').html('<p>No results found.</p>');
+       }
+     },
+     error: function(xhr, status, error) {
+       console.error(error);
+     },
+   });
+   }
+   
+   $(document).on('submit', '#search-form', function (e) {
+   e.preventDefault();
+   
+   var searchInput = $('#search-input').val();
+   const foodStoreId = $('#food_store_filter').val();
+   const foodCategoryId = $('#food_category_filter').val();
+   
+   filterSearch(searchInput, foodStoreId, foodCategoryId);
+   });
+   
+   $('#apply_filters_btn').click(function() {
+   const foodStoreId = $('#food_store_filter').val();
+   const foodCategoryId = $('#food_category_filter').val();
+   const searchInput = $('#search-input').val();
+   
+   filterSearch(searchInput, foodStoreId, foodCategoryId);
+   });
+   
+   $('#reset_filters_btn').click(function() {
+   $('#food_store_filter').val('');
+   $('#food_category_filter').val('');
+   const searchInput = $('#search-input').val();
+   
+   filterSearch(searchInput, '', '');
+   });
+   
+   updateCart();
+   
+   
+   $('#reset_filters_btn').click(function() {
+   $('#food_store_filter').val('');
+   $('#food_category_filter').val('');
+   filterSearch('', '');
+   });
+   
+   filterSearch('', '');
+   updateCart();
+   });
 </script>
-

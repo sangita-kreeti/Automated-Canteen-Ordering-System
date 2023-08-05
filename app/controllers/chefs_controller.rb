@@ -9,14 +9,17 @@ class ChefsController < ApplicationController
 
   def approve
     chef = find_chef_by_id
-    chef.update(approved: true)
-    redirect_to chefs_path, notice: 'Chef approved successfully.'
+    if chef.update(approved: true)
+      redirect_to chefs_path, notice: 'Chef approved successfully.'
+    else
+      redirect_to chefs_path, alert: 'Failed to approve chef.'
+    end
   end
 
   def reject
     chef = find_chef_by_id
     chef.destroy
-    redirect_to chefs_path, notice: 'Chef rejected and removed.'
+    redirect_to chefs_path, alert: 'Chef rejected and removed.'
   end
 
   private

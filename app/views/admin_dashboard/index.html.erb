@@ -1,119 +1,99 @@
 <div class="container mt-3">
-  <% if flash[:notice].present? %>
-    <div class="alert alert-success alert-dismissible fade show mt-4" role="alert">
+   <% if flash[:notice].present? %>
+   <div class="alert alert-success alert-dismissible fade show mt-4" role="alert">
       <%= flash[:notice] %>
       <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
-  <% end %>
+   </div>
+   <% end %>
 </div>
-
 <div class="container border rounded mt-5 p-4">
-  <div class="card mb-3">
-    <div class="card-body">
-      <div class="row align-items-center">
-        <div class="col-md-6">
-          <h2><i class="bi bi-person-fill text-primary"></i> Admin: <%= current_user.name %></h2>
-          <p><i class="bi bi-envelope-fill text-secondary"></i> Email: <%= current_user.email %></p>
-          <p><i class="bi bi-telephone-fill text-secondary"></i> Phone No: <%= current_user.phone_no %></p>
-          <p><i class="bi bi-shield-fill text-secondary"></i> Role: <%= current_user.role.capitalize %></p>
-        </div>
-        <div class="col-md-6 text-center text-md-end">
-          <%= link_to "Log Out", logout_path, method: :delete, class: "btn btn-danger mt-3" %>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <h1 class="text-center mb-4">Admin Dashboard</h1>
-
-  <div class="row">
-    <div class="col-md-6 mb-4">
-      <div class="card h-100">
-        <div class="card-body">
-          <h3 class="card-title">Food Categories Management</h3>
-          <%= link_to food_categories_path, class: 'btn btn-info btn-block' do %>
-            <i class="bi bi-tags"></i> Manage Food Categories
-          <% end %>
-        </div>
-      </div>
-    </div>
-
-    <div class="col-md-6 mb-4">
-      <div class="card h-100">
-        <div class="card-body">
-          <h3 class="card-title">Company Management</h3>
-          <%= link_to companies_path, class: 'btn btn-info btn-block' do %>
-            <i class="bi bi-building"></i> Manage Companies
-          <% end %>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="row mb-4">
-    <div class="col-md-6 mb-4">
-      <div class="card h-100">
-        <div class="card-body">
-          <h3 class="card-title">Food Store Management</h3>
-          <% if FoodCategory.any? %>
-            <%= link_to food_stores_path, class: 'btn btn-success btn-block' do %>
-              <i class="bi bi-shop"></i> Food Store Management
-            <% end %>
-          <% else %>
-            <div class="btn btn-success btn-block disabled" disabled>
-              <i class="bi bi-shop"></i> Food Store Management
+   <div class="card mb-3">
+      <div class="card-body">
+         <div class="row align-items-center">
+            <div class="col-md-6">
+               <h2><i class="bi bi-person-fill text-primary"></i> Admin: <%= current_user.name %></h2>
+               <p><i class="bi bi-envelope-fill text-secondary"></i> Email: <%= current_user.email %></p>
+               <p><i class="bi bi-telephone-fill text-secondary"></i> Phone No: <%= current_user.phone_no %></p>
+               <p><i class="bi bi-shield-fill text-secondary"></i> Role: <%= current_user.role.capitalize %></p>
             </div>
-            <h4 class="text-center mt-2 text-muted">Create Food Category before create Food Store.</h4>
-          <% end %>
-        </div>
+            <div class="col-md-6 text-center text-md-end">
+               <%= link_to "Log Out", logout_path, method: :delete, class: "btn btn-danger mt-3" %>
+            </div>
+         </div>
       </div>
-    </div>
-
-    <div class="col-md-6 mb-4">
-      <div class="card h-100">
-        <div class="card-body">
-          <h3 class="card-title">Employee Management</h3>
-          <%= link_to employees_path, class: 'btn btn-info btn-block' do %>
-            <i class="bi bi-people"></i> Manage Employees
-          <% end %>
-        </div>
+   </div>
+   <h1 class="text-center mb-4">Admin Dashboard</h1>
+   <div class="row">
+      <div class="col-md-6 mb-4">
+         <div class="card h-100">
+            <div class="card-body">
+               <h3 class="card-title">Food Categories Management</h3>
+               <%= link_to food_categories_path, class: 'btn btn-info btn-block' do %>
+               <i class="bi bi-tags"></i> Manage Food Categories
+               <% end %>
+            </div>
+         </div>
       </div>
-    </div>
-  </div>
-
-  <div class="row mb-4">
-    <div class="col-md-6 mb-4">
-      <div class="card h-100">
-        <div class="card-body">
-          <h3 class="card-title">Chefs Management</h3>
-          <%= link_to chefs_path, class: 'btn btn-info btn-block' do %>
-            <i class="bi bi-people"></i> Manage Chefs
-          <% end %>
-        </div>
+      <div class="col-md-6 mb-4">
+         <div class="card h-100">
+            <div class="card-body">
+               <h3 class="card-title">Company Management</h3>
+               <%= link_to companies_path, class: 'btn btn-info btn-block' do %>
+               <i class="bi bi-building"></i> Manage Companies
+               <% end %>
+            </div>
+         </div>
       </div>
-    </div>
-
-    <div class="col-md-6 mb-4">
-      <div class="card h-100">
-        <div class="card-body">
-          <h3 class="card-title">Food Order Status Management</h3>
-          <%= link_to order_status_path, class: 'btn btn-secondary btn-block' do %>
-            <i class="bi bi-list-check"></i> Food Order Status
-          <% end %>
-        </div>
+   </div>
+   <div class="row mb-4">
+      <div class="col-md-6 mb-4">
+         <div class="card h-100">
+            <div class="card-body">
+               <h3 class="card-title">Food Store Management</h3>
+               <% if FoodCategory.any? %>
+               <%= link_to food_stores_path, class: 'btn btn-success btn-block' do %>
+               <i class="bi bi-shop"></i> Food Store Management
+               <% end %>
+               <% else %>
+               <div class="btn btn-success btn-block disabled" disabled>
+                  <i class="bi bi-shop"></i> Food Store Management
+               </div>
+               <h4 class="text-center mt-2 text-muted">Create Food Category before create Food Store.</h4>
+               <% end %>
+            </div>
+         </div>
       </div>
-    </div>
-  </div>
+      <div class="col-md-6 mb-4">
+         <div class="card h-100">
+            <div class="card-body">
+               <h3 class="card-title">Employee Management</h3>
+               <%= link_to employees_path, class: 'btn btn-info btn-block' do %>
+               <i class="bi bi-people"></i> Manage Employees
+               <% end %>
+            </div>
+         </div>
+      </div>
+   </div>
+   <div class="row mb-4">
+      <div class="col-md-6 mb-4">
+         <div class="card h-100">
+            <div class="card-body">
+               <h3 class="card-title">Chefs Management</h3>
+               <%= link_to chefs_path, class: 'btn btn-info btn-block' do %>
+               <i class="bi bi-people"></i> Manage Chefs
+               <% end %>
+            </div>
+         </div>
+      </div>
+      <div class="col-md-6 mb-4">
+         <div class="card h-100">
+            <div class="card-body">
+               <h3 class="card-title">Food Order Status Management</h3>
+               <%= link_to order_status_path, class: 'btn btn-secondary btn-block' do %>
+               <i class="bi bi-list-check"></i> Food Order Status
+               <% end %>
+            </div>
+         </div>
+      </div>
+   </div>
 </div>
-
-<script>
-  // Automatically close the flash alert after 2 seconds
-  document.addEventListener('DOMContentLoaded', () => {
-    const alertContainer = document.querySelector('.alert');
-    if (alertContainer) {
-      setTimeout(() => {
-        alertContainer.remove();
-      }, 2000);
-    }
-  });
-</script>

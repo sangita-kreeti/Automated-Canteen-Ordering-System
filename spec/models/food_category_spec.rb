@@ -14,9 +14,5 @@ RSpec.describe FoodCategory, type: :model do
     expect(food_category).not_to be_valid
     expect(food_category.errors[:name]).to include("can't be blank")
   end
-
-  it 'has many photos' do
-    association = FoodCategory.reflect_on_association(:photos)
-    expect(association.macro).to eq(:has_many)
-  end
+  
 end

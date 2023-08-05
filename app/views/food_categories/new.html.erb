@@ -1,21 +1,20 @@
 <div class="container mt-4">
-  <h1 class="text-center mt-4 mb-4"><i class="fas fa-utensils"></i> New Food Category</h1>
-
-  <div class="border p-4 rounded" style="background-color: #f8f9fa; border-color: #007BFF;">
-    <%= form_for @food_category, url: food_categories_path do |f| %>
+   <h1 class="text-center mt-4 mb-4"><i class="fas fa-utensils"></i> New Food Category</h1>
+   <div class="border p-4 rounded" style="background-color: #f8f9fa; border-color: #007BFF;">
+      <%= form_for @food_category, url: food_categories_path do |f| %>
       <div class="form-group">
-        <%= f.label :name, class: 'form-label' %>
-        <div class="input-group">
-          <%= f.text_field :name, class: 'form-control' %>
-        </div>
-        <% if @food_category.errors.has_key?(:name) %>
-          <p class="text-danger"><%= @food_category.errors.full_messages_for(:name).first %></p>
-        <% end %>
+         <%= f.label :name, class: 'form-label' %>
+         <div class="input-group">
+            <%= f.text_field :name, class: 'form-control' %>
+         </div>
+         <% if @food_category.errors.has_key?(:name) %>
+         <p class="text-danger"><%= @food_category.errors.full_messages_for(:name).first %></p>
+         <% end %>
       </div>
       <div class="text-center mt-3">
-        <%= f.submit 'Create Food Category', class: 'btn btn-primary' %>
-        <%= link_to 'Back', food_categories_path, class: 'btn btn-secondary' %>
+         <%= f.submit 'Create Food Category', class: 'btn btn-primary' %>
+         <%= link_to 'Back', food_categories_path, class: 'btn btn-secondary' %>
       </div>
-    <% end %>
-  </div>
+      <% end %>
+   </div>
 </div>

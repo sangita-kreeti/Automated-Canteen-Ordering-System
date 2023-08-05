@@ -1,70 +1,77 @@
-<div class="container">
-  <h1 class="text-center mt-4 mb-4">Available Food Menu</h1>
-
-  <div class="row">
-    <% @food_menus.each do |food_menu| %>
-      <div class="col-md-4">
-        <div class="card mb-4 border-primary">
-          <div class="card-body">
-            <h3 class="card-title text-center"><%= food_menu.title %></h3>
-            <h6 class="card-subtitle mb-2 text-muted text-center">Food Store: <%= food_menu.user.food_store.name %></h6>
-            <p class="card-text text-center h5">
-            Food Price: 
-            <span class="text-primary">&#x20B9;<%= food_menu.price %></span>
-            </p>
-            <p class="card-text text-center">
-              <strong>Food Category: </strong>
-              <%= FoodCategory.find_by(id: food_menu.food_category_id)&.name %>
-            </p>
-
-            <div class="text-center">
-              <%= link_to food_menu_path(food_menu), method: :delete, data: { confirm: 'Are you sure you want to delete this food menu?' }, class: 'btn btn-danger btn-sm' do %>
-                <i class="bi bi-trash-fill"></i> Delete
-              <% end %>
-            </div>
-          </div>
-        </div>
-      </div>
-    <% end %>
-  </div>
-
-  <div class="text-center">
-  <div class="d-flex justify-content-center">
-    <%= link_to new_food_menu_path, class: 'btn btn-primary me-3' do %>
-      <i class="bi bi-plus"></i> Upload Food Menu
-    <% end %>
-    <%= link_to chef_dashboard_index_path, class: 'btn btn-secondary' do %>
-      <i class="bi bi-house-fill"></i> Back to Chef Dashboard
-    <% end %>
-  </div>
-</div>
-
-</div>
-
-<ul class="pagination justify-content-center mt-3">
-    <% if @food_menus.current_page > 1 %>
-      <li class="page-item">
-        <%= link_to '&laquo; Previous'.html_safe, { page: @food_menus.current_page - 1 }, class: 'page-link' %>
-      </li>
-    <% end %>
-    <% (1..@food_menus.total_pages).each do |page| %>
-      <% if page == @food_menus.current_page %>
-        <li class="page-item active">
-          <span class="page-link">
-            <%= page %>
-            <span class="visually-hidden">(current)</span>
-          </span>
-        </li>
+<div class="container mt-5">
+   <% flash.each do |type, message| %>
+   <div class="alert alert-<%= type == 'notice' ? 'success' : 'danger' %> alert-dismissible fade show" role="alert">
+      <% if type == 'alert' %>                
+      <i class="bi bi-exclamation-circle-fill me-2"></i>
       <% else %>
-        <li class="page-item">
-          <%= link_to page, { page: page }, class: 'page-link' %>
-        </li>
+      <i class="bi bi-check-circle-fill me-2"></i>
       <% end %>
-    <% end %>
-    <% if @food_menus.current_page < @food_menus.total_pages %>
-      <li class="page-item">
-        <%= link_to 'Next &raquo;'.html_safe, { page: @food_menus.current_page + 1 }, class: 'page-link' %>
-      </li>
-    <% end %>
-  </ul>
-  
+      <%= message %>
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+   </div>
+   <% end %>
+</div>
+<div class="container">
+   <h1 class="text-center mt-4 mb-4">Available Food Menu</h1>
+   <div class="row">
+      <% @food_menus.each do |food_menu| %>
+      <div class="col-md-4">
+         <div class="card mb-4 border-primary">
+            <div class="card-body">
+               <h3 class="card-title text-center"><%= food_menu.title %></h3>
+               <h6 class="card-subtitle mb-2 text-muted text-center">Food Store: <%= food_menu.user.food_store.name %></h6>
+               <p class="card-text text-center h5">
+                  Food Price: 
+                  <span class="text-primary">&#x20B9;<%= food_menu.price %></span>
+               </p>
+               <p class="card-text text-center">
+                  <strong>Food Category: </strong>
+                  <%= FoodCategory.find_by(id: food_menu.food_category_id)&.name %>
+               </p>
+               <div class="text-center">
+                  <%= link_to food_menu_path(food_menu), method: :delete, data: { confirm: 'Are you sure you want to delete this food menu?' }, class: 'btn btn-danger btn-sm' do %>
+                  <i class="bi bi-trash-fill"></i> Delete
+                  <% end %>
+               </div>
+            </div>
+         </div>
+      </div>
+      <% end %>
+   </div>
+   <div class="text-center">
+      <div class="d-flex justify-content-center">
+         <%= link_to new_food_menu_path, class: 'btn btn-primary me-3' do %>
+         <i class="bi bi-plus"></i> Upload Food Menu
+         <% end %>
+         <%= link_to chef_dashboard_index_path, class: 'btn btn-secondary' do %>
+         <i class="bi bi-house-fill"></i> Back to Chef Dashboard
+         <% end %>
+      </div>
+   </div>
+</div>
+<ul class="pagination justify-content-center mt-3">
+   <% if @food_menus.current_page > 1 %>
+   <li class="page-item">
+      <%= link_to '&laquo; Previous'.html_safe, { page: @food_menus.current_page - 1 }, class: 'page-link' %>
+   </li>
+   <% end %>
+   <% (1..@food_menus.total_pages).each do |page| %>
+   <% if page == @food_menus.current_page %>
+   <li class="page-item active">
+      <span class="page-link">
+      <%= page %>
+      <span class="visually-hidden">(current)</span>
+      </span>
+   </li>
+   <% else %>
+   <li class="page-item">
+      <%= link_to page, { page: page }, class: 'page-link' %>
+   </li>
+   <% end %>
+   <% end %>
+   <% if @food_menus.current_page < @food_menus.total_pages %>
+   <li class="page-item">
+      <%= link_to 'Next &raquo;'.html_safe, { page: @food_menus.current_page + 1 }, class: 'page-link' %>
+   </li>
+   <% end %>
+</ul>

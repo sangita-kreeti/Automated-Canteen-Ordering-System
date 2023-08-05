@@ -12,3 +12,15 @@ import "channels"
 Rails.start()
 Turbolinks.start()
 ActiveStorage.start()
+
+
+document.addEventListener('DOMContentLoaded', function() {
+    var alerts = document.querySelectorAll('.alert-dismissible');
+
+    alerts.forEach(function(alert) {
+      setTimeout(function() {
+        alert.remove();
+      }, 2000);
+    });
+  });
+

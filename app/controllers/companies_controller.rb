@@ -13,7 +13,6 @@ class CompaniesController < ApplicationController
 
   def create
     @company = Company.new(company_params)
-
     if @company.save
       redirect_to companies_path, notice: 'Company created successfully.'
     else
@@ -24,7 +23,7 @@ class CompaniesController < ApplicationController
   def destroy
     @company = Company.find(params[:id])
     @company.destroy
-    redirect_to companies_path, notice: 'Company destroyed successfully.'
+    redirect_to companies_path, alert: 'Company destroyed successfully.'
   end
 
   private

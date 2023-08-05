@@ -5,9 +5,11 @@ class FoodMenu < ApplicationRecord
   include Elasticsearch::Model
   include Elasticsearch::Model::Callbacks
 
-  validates :title, presence: true, uniqueness: true
-  validates :price, numericality: { less_than_or_equal_to: 1000, message: 'should be a valid. Price limit is 1000' }
   belongs_to :user
+  belongs_to :food_store
+
+  validates :title, presence: true, uniqueness: { scope: :food_store_id, case_sensitive: false }
+  validates :price, numericality: { less_than_or_equal_to: 1000, message: 'should be less than 1000' }
 
   index_name "food_menus_#{Rails.env}"
 

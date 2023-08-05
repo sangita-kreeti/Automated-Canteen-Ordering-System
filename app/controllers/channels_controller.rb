@@ -9,7 +9,6 @@ class ChannelsController < ApplicationController
     elsif current_user.chef?
       @employees = User.where(role: 'employee', approved: true)
     end
-
     @channel = Channel.new
     render 'select_user', locals: { channel: @channel }
   end
@@ -17,13 +16,12 @@ class ChannelsController < ApplicationController
   def create
     chef_id = params[:channel][:chef_id]
     employee_id = params[:channel][:employee_id]
-
     channel = Channel.find_or_create_by(chef_id: chef_id, employee_id: employee_id)
-
     if channel.persisted?
       redirect_to channel_path(channel)
     else
-      error_message = "Failed to create the channel: #{channel.errors.full_messages.join(', ')}"
+      flash[:error] = 'Select one user to start the chat.'
+      redirect_to select_users_channels_path
     end
   end
 
@@ -61,7 +59,9 @@ class ChannelsController < ApplicationController
 
   def broadcast_message
     message_content = @message.content
-    ActionCable.server.broadcast("chat_channel_#{params[:id]}", message_content)
+    sender_name = User.find(@message.sender_id).name
+    ActionCable.server.broadcast("chat_channel_#{params[:id]}",
+                                 { message_content: message_content, sender_name: sender_name })
 
     respond_to do |format|
       format.js { head :ok }

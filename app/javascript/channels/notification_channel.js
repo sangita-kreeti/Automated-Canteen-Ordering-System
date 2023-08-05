@@ -1,5 +1,3 @@
-// app/javascript/channels/notification_channel.js
-
 import consumer from "./consumer"
 
 function updateNotificationCount(count) {
@@ -20,16 +18,15 @@ document.addEventListener('turbolinks:load', function() {
       },
 
       disconnected() {
-        // Called when the subscription has been terminated by the server
+        
       },
 
       received(data) {
         
         const count = parseInt(notificationCount.textContent);
-        const newCount = count + 1; // Increment the count
+        const newCount = count + 1;
         updateNotificationCount(newCount);
 
-        // Rest of the code for handling notifications...
       },
     });
   }

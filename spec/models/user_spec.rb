@@ -27,5 +27,4 @@ RSpec.describe User, type: :model do
     expect(user.errors[:password]).to include('is too short (minimum is 4 characters)')
   end
 
-  # Add more tests for other attributes and validations as needed
 end

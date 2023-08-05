@@ -15,7 +15,6 @@ class FoodStoresController < ApplicationController
   def create
     @food_categories = FoodCategory.all
     @food_store = FoodStore.new(food_store_params)
-
     if @food_store.save
       redirect_to food_stores_path, notice: 'Food store created successfully .'
     else
@@ -26,7 +25,7 @@ class FoodStoresController < ApplicationController
   def destroy
     @food_store = FoodStore.find(params[:id])
     @food_store.destroy
-    redirect_to food_stores_path, notice: 'Food store destroyed successfully.'
+    redirect_to food_stores_path, alert: 'Food store destroyed successfully.'
   end
 
   private

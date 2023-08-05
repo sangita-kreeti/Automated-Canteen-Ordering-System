@@ -1,63 +1,57 @@
 <div class="container mt-4">
-  <h1 class="text-center">Create New Food Store</h1>
-
-  <div class="d-flex justify-content-center align-items-center" style="border: 2px solid #007BFF; height: 80vh; padding: 20px;">
-    <%= form_with(model: @food_store, url: food_stores_path) do |form| %>
+   <h1 class="text-center">Create New Food Store</h1>
+   <div class="d-flex justify-content-center align-items-center" style="border: 2px solid #007BFF; height: 80vh; padding: 20px;">
+      <%= form_with(model: @food_store, url: food_stores_path) do |form| %>
       <div class="form-group">
-        <%= form.label :name, class: "form-label" %>
-        <div class="input-group">
-          <%= form.text_field :name, class: 'form-control' %>
-        </div>
-        <% if @food_store.errors.has_key?(:name) %>
-          <p class="text-danger"><%= @food_store.errors.full_messages_for(:name).first %></p>
-        <% end %>
+         <%= form.label :name, class: "form-label" %>
+         <div class="input-group">
+            <%= form.text_field :name, class: 'form-control' %>
+         </div>
+         <% if @food_store.errors.has_key?(:name) %>
+         <p class="text-danger"><%= @food_store.errors.full_messages_for(:name).first %></p>
+         <% end %>
       </div>
-
       <div class="form-group">
-        <%= form.label :address, class: "form-label" %>
-        <div class="input-group">
-          <%= form.text_field :address, class: 'form-control' %>
-        </div>
-        <% if @food_store.errors.has_key?(:address) %>
-          <p class="text-danger"><%= @food_store.errors.full_messages_for(:address).first %></p>
-        <% end %>
+         <%= form.label :address, class: "form-label" %>
+         <div class="input-group">
+            <%= form.text_field :address, class: 'form-control' %>
+         </div>
+         <% if @food_store.errors.has_key?(:address) %>
+         <p class="text-danger"><%= @food_store.errors.full_messages_for(:address).first %></p>
+         <% end %>
       </div>
-
       <div class="form-group">
-        <%= form.label :food_category_id, 'FoodCategory', class:'required form-label' %>
-        <div class="input-group">
-          <span class="input-group-text"><i class="bi bi-list"></i></span>
-          <%= form.collection_select :food_category_id, @food_categories, :id, :name, prompt: 'Select a category', class: 'form-select' %>
-        </div>
-        <% if form.object.errors.has_key?(:food_category_id) %>
-          <p class="text-danger"><%= form.object.errors[:food_category_id].first %></p>
-        <% end %>
+         <%= form.label :food_category_id, 'FoodCategory', class:'required form-label' %>
+         <div class="input-group">
+            <span class="input-group-text"><i class="bi bi-list"></i></span>
+            <%= form.collection_select :food_category_id, @food_categories, :id, :name, prompt: 'Select a category', class: 'form-select' %>
+         </div>
+         <% if form.object.errors.has_key?(:food_category_id) %>
+         <p class="text-danger"><%= form.object.errors[:food_category_id].first %></p>
+         <% end %>
       </div>
-
       <div class="form-group">
-        <%= form.label :latitude, class: "form-label" %>
-        <div class="input-group">
-          <%= form.text_field :latitude, class: 'form-control' %>
-        </div>
-        <% if @food_store.errors.has_key?(:latitude) %>
-          <p class="text-danger"><%= @food_store.errors.full_messages_for(:latitude).first %></p>
-        <% end %>
+         <%= form.label :latitude, class: "form-label" %>
+         <div class="input-group">
+            <%= form.text_field :latitude, class: 'form-control' %>
+         </div>
+         <% if @food_store.errors.has_key?(:latitude) %>
+         <p class="text-danger"><%= @food_store.errors.full_messages_for(:latitude).first %></p>
+         <% end %>
       </div>
-
       <div class="form-group">
-        <%= form.label :longitude, class: "form-label" %>
-        <div class="input-group">
-          <%= form.text_field :longitude, class: 'form-control' %>
-        </div>
-        <% if @food_store.errors.has_key?(:longitude) %>
-          <p class="text-danger"><%= @food_store.errors.full_messages_for(:longitude).first %></p>
-        <% end %>
+         <%= form.label :longitude, class: "form-label" %>
+         <div class="input-group">
+            <%= form.text_field :longitude, class: 'form-control' %>
+         </div>
+         <% if @food_store.errors.has_key?(:longitude) %>
+         <p class="text-danger"><%= @food_store.errors.full_messages_for(:longitude).first %></p>
+         <% end %>
       </div>
-
       <div class="mt-3">
-        <%= form.submit 'Create', class: 'btn btn-primary' %>
-        <%= link_to 'Back', food_stores_path, class: 'btn btn-secondary' %>
+         <%= form.submit 'Create', class: 'btn btn-primary' %>
+         <%= link_to 'Back', food_stores_path, class: 'btn btn-secondary' %>
       </div>
-    <% end %>
-  </div>
+      <% end %>
+   </div>
 </div>

@@ -12,6 +12,7 @@ class UsersController < ApplicationController
     @user = User.new(user_params)
     if @user.save
       session[:user_id] = @user.id
+      flash[:notice] = 'Please complete your profile first!.'
       redirect_to edit_user_path(@user)
     else
       render :new
@@ -24,14 +25,12 @@ class UsersController < ApplicationController
   end
 
   def update
-    if @user.update(user_params)
-      if @user.name.present? && @user.role.present? && @user.phone_no.present?
-        redirect_user_by_role
-      else
-        render :edit
-      end
+    if @user.update(user_params) && @user.role.present?
+      redirect_user_by_role
+      flash[:notice] = 'Successfully registration completed'
     else
-      # redirect_to edit_user_path(@user)
+      @companies = Company.all
+      @food_stores = FoodStore.all
       render :edit
     end
   end

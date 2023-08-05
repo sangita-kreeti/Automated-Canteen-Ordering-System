@@ -1,90 +1,89 @@
+<div class="container mt-5">
+   <% flash.each do |type, message| %>
+   <div class="alert alert-<%= type == 'notice' ? 'success' : 'danger' %> alert-dismissible fade show" role="alert">
+      <% if type == 'alert' %>                
+      <i class="bi bi-exclamation-circle-fill me-2"></i>
+      <% else %>
+      <i class="bi bi-check-circle-fill me-2"></i>
+      <% end %>
+      <%= message %>
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+   </div>
+   <% end %>
+</div>
 <div class="container mt-4">
-  <h1 class="text-center">Details of Registered Chefs</h1>
-  <% if flash[:notice].present? %>
-    <div class="alert alert-success alert-dismissible fade show" role="alert">
+   <h1 class="text-center">Details of Registered Chefs</h1>
+   <% if flash[:notice].present? %>
+   <div class="alert alert-success alert-dismissible fade show" role="alert">
       <%= flash[:notice] %>
       <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
-  <% end %>
-
-  <div class="table-responsive"> 
-    <table class="table table-striped">
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Email</th>
-          <th>Phone Number</th>
-          <th>Food Store</th>
-          <th>Status</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        <% @chefs.each do |chef| %>
-          <tr>
-            <td><%= chef.name %></td>
-            <td><%= chef.email %></td>
-            <td><%= chef.phone_no %></td>
-            <td><%= chef.food_store.name %></td>
-            <td>
-              <% if chef.approved? %>
-                <span class="badge bg-success">Approved</span>
-              <% else %>
-                <span class="badge bg-warning text-dark">Pending</span>
-              <% end %>
-            </td>
-            <td>
-              <% if chef.approved? %>
-                <button class="btn btn-sm btn-secondary" disabled>Approve</button>
-                <button class="btn btn-sm btn-danger" disabled>Reject</button>
-              <% else %>
-                <%= link_to "Approve", approve_chef_path(chef), method: :patch, class: "btn btn-sm btn-primary" %>
-                <%= link_to "Reject", rreject_chef_path(chef), method: :patch, data: { confirm: 'Are you sure?' }, class: 'btn btn-danger btn-sm' %>
-              <% end %>
-            </td>
-          </tr>
-        <% end %>
-      </tbody>
-    </table>
-    <%= link_to 'Back to Admin Dashboard', admin_dashboard_path, class: 'btn btn-secondary' %>
-  </div>
-
-  <ul class="pagination justify-content-center mt-3">
-    <% if @chefs.current_page > 1 %>
+   </div>
+   <% end %>
+   <div class="table-responsive">
+      <table class="table table-striped">
+         <thead>
+            <tr>
+               <th>Name</th>
+               <th>Email</th>
+               <th>Phone Number</th>
+               <th>Food Store</th>
+               <th>Status</th>
+               <th>Actions</th>
+            </tr>
+         </thead>
+         <tbody>
+            <% @chefs.each do |chef| %>
+            <tr>
+               <td><%= chef.name %></td>
+               <td><%= chef.email %></td>
+               <td><%= chef.phone_no %></td>
+               <td><%= chef.food_store.name %></td>
+               <td>
+                  <% if chef.approved? %>
+                  <span class="badge bg-success">Approved</span>
+                  <% else %>
+                  <span class="badge bg-warning text-dark">Pending</span>
+                  <% end %>
+               </td>
+               <td>
+                  <% if chef.approved? %>
+                  <button class="btn btn-sm btn-secondary" disabled>Approve</button>
+                  <button class="btn btn-sm btn-danger" disabled>Reject</button>
+                  <% else %>
+                  <%= link_to "Approve", approve_chef_path(chef), method: :patch, class: "btn btn-sm btn-primary" %>
+                  <%= link_to "Reject", rreject_chef_path(chef), method: :patch, data: { confirm: 'Are you sure?' }, class: 'btn btn-danger btn-sm' %>
+                  <% end %>
+               </td>
+            </tr>
+            <% end %>
+         </tbody>
+      </table>
+      <%= link_to 'Back to Admin Dashboard', admin_dashboard_path, class: 'btn btn-secondary' %>
+   </div>
+   <ul class="pagination justify-content-center mt-3">
+      <% if @chefs.current_page > 1 %>
       <li class="page-item">
-        <%= link_to '&laquo; Previous'.html_safe, { page: @chefs.current_page - 1 }, class: 'page-link' %>
+         <%= link_to '&laquo; Previous'.html_safe, { page: @chefs.current_page - 1 }, class: 'page-link' %>
       </li>
-    <% end %>
-    <% (1..@chefs.total_pages).each do |page| %>
-      <% if page == @chefs.current_page %>
-        <li class="page-item active">
-          <span class="page-link">
-            <%= page %>
-            <span class="visually-hidden">(current)</span>
-          </span>
-        </li>
-      <% else %>
-        <li class="page-item">
-          <%= link_to page, { page: page }, class: 'page-link' %>
-        </li>
       <% end %>
-    <% end %>
-    <% if @chefs.current_page < @chefs.total_pages %>
-      <li class="page-item">
-        <%= link_to 'Next &raquo;'.html_safe, { page: @chefs.current_page + 1 }, class: 'page-link' %>
+      <% (1..@chefs.total_pages).each do |page| %>
+      <% if page == @chefs.current_page %>
+      <li class="page-item active">
+         <span class="page-link">
+         <%= page %>
+         <span class="visually-hidden">(current)</span>
+         </span>
       </li>
-    <% end %>
-  </ul>
+      <% else %>
+      <li class="page-item">
+         <%= link_to page, { page: page }, class: 'page-link' %>
+      </li>
+      <% end %>
+      <% end %>
+      <% if @chefs.current_page < @chefs.total_pages %>
+      <li class="page-item">
+         <%= link_to 'Next &raquo;'.html_safe, { page: @chefs.current_page + 1 }, class: 'page-link' %>
+      </li>
+      <% end %>
+   </ul>
 </div>
-
-<script>
-  document.addEventListener('DOMContentLoaded', function() {
-    var alerts = document.querySelectorAll('.alert-dismissible');
-
-    alerts.forEach(function(alert) {
-      setTimeout(function() {
-        alert.remove();
-      }, 2000);
-    });
-  });
-</script>

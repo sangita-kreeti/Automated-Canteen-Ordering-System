@@ -5,7 +5,6 @@ Rails.application.routes.draw do
   root 'users#new'
   get '/users', to: 'users#new'
 
- 
   resources :companies, only: %i[index show new create edit update destroy]
   resources :food_stores
   resources :food_categories, only: %i[index show new create edit update destroy]
@@ -40,7 +39,6 @@ Rails.application.routes.draw do
     get 'messages', on: :member
   end
 
-
   get '/login', to: 'sessions#new'
   post '/login', to: 'sessions#create'
   delete '/logout', to: 'sessions#destroy'
@@ -60,13 +58,12 @@ Rails.application.routes.draw do
 
   patch 'mark_notification_read/:id', to: 'notifications#mark_as_read', as: :mark_notification_read
 
-  # Route for marking all notifications as read
   post 'mark_all_notifications_read', to: 'notifications#mark_all_as_read', as: :mark_all_notifications_read
 
   get '/auth/:provider/callback', to: 'sessions#omniauth'
   get '/auth/facebook/callback', to: 'sessions#omniauth'
 
-  resources :users
+  resources :users, only: %i[new create edit update]
 end
 
 # rubocop:enable Metrics/BlockLength

@@ -4,9 +4,7 @@
 class Photo < ApplicationRecord
   belongs_to :user
   belongs_to :food_store
-
   has_one_attached :image
 
   validates :image, presence: true
-  
 end

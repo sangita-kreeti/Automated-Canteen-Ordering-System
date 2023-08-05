@@ -5,11 +5,17 @@ require 'rails_helper'
 
 RSpec.describe FoodStore, type: :model do
   it 'is valid with valid attributes' do
-    food_store = FactoryBot.build(:food_store)
+    food_category = FactoryBot.create(:food_category)
+    food_store = FactoryBot.build(:food_store, food_category: food_category)
     expect(food_store).to be_valid
   end
 
-  it 'is invalid without a name' do
+  it 'is invalid without a food category' do
+    food_store = FactoryBot.build(:food_store, food_category: nil)
+    expect(food_store).not_to be_valid
+  end
+
+  it 'is invalid without name' do
     food_store = FactoryBot.build(:food_store, name: nil)
     expect(food_store).not_to be_valid
     expect(food_store.errors[:name]).to include("can't be blank")

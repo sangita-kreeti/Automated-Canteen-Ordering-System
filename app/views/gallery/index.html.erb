@@ -1,55 +1,52 @@
 <div class="container border rounded mt-4 p-4 shadow">
-  <h2 class="text-center mb-4">Gallery</h2>
-
-  <% if @photos.any? %>
-    <% @photos.group_by { |photo| photo.user.food_store.name }.each do |food_store_name, photos| %>
-      <div class="mb-4">
-        <div class="col-md-12">
-          <% if food_store_name.present? %>
-            <h4><%= food_store_name %></h4>
-          <% else %>
-            <h4>Food Store Not Available</h4>
-          <% end %>
-        </div>
+   <h2 class="text-center mb-4">Gallery</h2>
+   <% if @photos.any? %>
+   <% @photos.group_by { |photo| photo.user.food_store.name }.each do |food_store_name, photos| %>
+   <div class="mb-4">
+      <div class="col-md-12">
+         <% if food_store_name.present? %>
+         <h4><%= food_store_name %></h4>
+         <% else %>
+         <h4>Food Store Not Available</h4>
+         <% end %>
       </div>
-      <div class="row">
-        <% photos.each do |photo| %>
-          <div class="col-md-3 mb-3">
-            <% if photo.image.attached? %>
-              <a href="#" data-bs-toggle="modal" data-bs-target="#photo-modal-<%= photo.id %>">
-                <%= image_tag photo.image, size: "70x70", class: "img-thumbnail" %>
-              </a>
-            <% else %>
-              <p class="card-text text-center">No Image Available</p>
-            <% end %>
-          </div>
-        <% end %>
+   </div>
+   <div class="row">
+      <% photos.each do |photo| %>
+      <div class="col-md-3 mb-3">
+         <% if photo.image.attached? %>
+         <a href="#" data-bs-toggle="modal" data-bs-target="#photo-modal-<%= photo.id %>">
+         <%= image_tag photo.image, size: "70x70", class: "img-thumbnail" %>
+         </a>
+         <% else %>
+         <p class="card-text text-center">No Image Available</p>
+         <% end %>
       </div>
-    <% end %>
-  <% else %>
-    <p class="text-center">No Photos Available</p>
-  <% end %>
-
-  <div class="text-center mt-3">
-    <%= link_to 'Back', employee_dashboard_index_path, class: 'btn btn-secondary' %>
-  </div>
+      <% end %>
+   </div>
+   <% end %>
+   <% else %>
+   <p class="text-center">No Photos Available</p>
+   <% end %>
+   <div class="text-center mt-3">
+      <%= link_to 'Back', employee_dashboard_index_path, class: 'btn btn-secondary' %>
+   </div>
 </div>
-
 <% @photos.each do |photo| %>
-  <div class="modal fade" id="photo-modal-<%= photo.id %>" tabindex="-1" role="dialog" aria-labelledby="photo-modal-label-<%= photo.id %>" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
+<div class="modal fade" id="photo-modal-<%= photo.id %>" tabindex="-1" role="dialog" aria-labelledby="photo-modal-label-<%= photo.id %>" aria-hidden="true">
+   <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          <% if photo.image.attached? %>
+         <div class="modal-header">
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+         </div>
+         <div class="modal-body">
+            <% if photo.image.attached? %>
             <%= image_tag photo.image, size: "800x800", style: "max-width: 100%; height: auto;" %>
-          <% else %>
+            <% else %>
             <p>No Image Available</p>
-          <% end %>
-        </div>
+            <% end %>
+         </div>
       </div>
-    </div>
-  </div>
+   </div>
+</div>
 <% end %>

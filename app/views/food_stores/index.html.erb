@@ -1,83 +1,74 @@
-<div class="container mt-4">
-  <% if flash[:notice].present? %>
-    <div class="alert alert-success alert-dismissible fade show" role="alert">
-      <%= flash[:notice] %>
-      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
-  <% end %>
-  <h1>Food Store List</h1>
-
-  <%= link_to 'Create New Food Store', new_food_store_path, class: 'btn btn-primary mb-3' %>
-
-  <table class="table">
-    <thead>
-      <tr>
-        <th>Food Store ID</th>
-        <th>Name</th>
-        <th>Address</th>
-        <th>Food Category</th>
-        <th>Latitude</th>
-        <th>Longitude</th>
-        <th>Action</th>
-      </tr>
-    </thead>
-    <tbody>
-      <% @food_stores.each do |food_store| %>
-        <tr>
-          <td><%= food_store.id %></td>
-          <td><%= food_store.name %></td>
-          <td><%= food_store.address %></td>
-          <td><%= food_store.food_category&.name %></td>
-          <td><%= food_store.latitude %></td>
-          <td><%= food_store.longitude %></td>
-          <td>
-            <%= button_to food_store_path(food_store), method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-sm btn-danger', form: { class: 'd-inline' } do %>
-              <i class="bi bi-trash-fill"></i> Delete
-            <% end %>
-          </td>
-        </tr>
+<div class="container mt-5">
+   <% flash.each do |type, message| %>
+   <div class="alert alert-<%= type == 'notice' ? 'success' : 'danger' %> alert-dismissible fade show" role="alert">
+      <% if type == 'alert' %>                
+      <i class="bi bi-exclamation-circle-fill me-2"></i>
+      <% else %>
+      <i class="bi bi-check-circle-fill me-2"></i>
       <% end %>
-    </tbody>
-  </table>
-
-  <%= link_to 'Back to Admin Dashboard', admin_dashboard_path, class: 'btn btn-secondary' %>
+      <%= message %>
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+   </div>
+   <% end %>
 </div>
-
+<div class="container mt-4">
+   <h1>Food Store List</h1>
+   <%= link_to 'Create New Food Store', new_food_store_path, class: 'btn btn-primary mb-3' %>
+   <table class="table">
+      <thead>
+         <tr>
+            <th>Food Store ID</th>
+            <th>Name</th>
+            <th>Address</th>
+            <th>Food Category</th>
+            <th>Latitude</th>
+            <th>Longitude</th>
+            <th>Action</th>
+         </tr>
+      </thead>
+      <tbody>
+         <% @food_stores.each do |food_store| %>
+         <tr>
+            <td><%= food_store.id %></td>
+            <td><%= food_store.name %></td>
+            <td><%= food_store.address %></td>
+            <td><%= food_store.food_category&.name %></td>
+            <td><%= food_store.latitude %></td>
+            <td><%= food_store.longitude %></td>
+            <td>
+               <%= button_to food_store_path(food_store), method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-sm btn-danger', form: { class: 'd-inline' } do %>
+               <i class="bi bi-trash-fill"></i> Delete
+               <% end %>
+            </td>
+         </tr>
+         <% end %>
+      </tbody>
+   </table>
+   <%= link_to 'Back to Admin Dashboard', admin_dashboard_path, class: 'btn btn-secondary' %>
+</div>
 <ul class="pagination justify-content-center mt-3">
-  <% if @food_stores.current_page > 1 %>
-    <li class="page-item">
+   <% if @food_stores.current_page > 1 %>
+   <li class="page-item">
       <%= link_to '&laquo; Previous'.html_safe, { page: @food_stores.current_page - 1 }, class: 'page-link' %>
-    </li>
-  <% end %>
-  <% (1..@food_stores.total_pages).each do |page| %>
-    <% if page == @food_stores.current_page %>
-      <li class="page-item active">
-        <span class="page-link">
-          <%= page %>
-          <span class="visually-hidden">(current)</span>
-        </span>
-      </li>
-    <% else %>
-      <li class="page-item">
-        <%= link_to page, { page: page }, class: 'page-link' %>
-      </li>
-    <% end %>
-  <% end %>
-  <% if @food_stores.current_page < @food_stores.total_pages %>
-    <li class="page-item">
+   </li>
+   <% end %>
+   <% (1..@food_stores.total_pages).each do |page| %>
+   <% if page == @food_stores.current_page %>
+   <li class="page-item active">
+      <span class="page-link">
+      <%= page %>
+      <span class="visually-hidden">(current)</span>
+      </span>
+   </li>
+   <% else %>
+   <li class="page-item">
+      <%= link_to page, { page: page }, class: 'page-link' %>
+   </li>
+   <% end %>
+   <% end %>
+   <% if @food_stores.current_page < @food_stores.total_pages %>
+   <li class="page-item">
       <%= link_to 'Next &raquo;'.html_safe, { page: @food_stores.current_page + 1 }, class: 'page-link' %>
-    </li>
-  <% end %>
+   </li>
+   <% end %>
 </ul>
-
-<script>
-  document.addEventListener('DOMContentLoaded', function() {
-    var alerts = document.querySelectorAll('.alert-dismissible');
-
-    alerts.forEach(function(alert) {
-      setTimeout(function() {
-        alert.remove();
-      }, 2000);
-    });
-  });
-</script>

@@ -12,7 +12,6 @@ class EmployeesController < ApplicationController
     if employee.update(approved: true)
       admin = current_user
       Notification.create_employee_approved_notification(admin, employee, 'Employee approved successfully.')
-
       redirect_to employees_path, notice: 'Employee approved successfully.'
     else
       redirect_to employees_path, alert: 'Failed to approve the employee.'
@@ -22,7 +21,7 @@ class EmployeesController < ApplicationController
   def reject
     employee = find_employee_by_id
     employee.destroy
-    redirect_to employees_path, notice: 'Employee rejected and removed.'
+    redirect_to employees_path, alert: 'Employee rejected and removed.'
   end
 
   private

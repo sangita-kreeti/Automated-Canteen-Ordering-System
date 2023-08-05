@@ -19,7 +19,7 @@ class FoodMenusController < ApplicationController
     @food_menu.food_category_id = current_user.food_store.food_category_id
 
     if @food_menu.save
-      redirect_to food_menus_path, notice: 'Food menu was successfully uploaded.'
+      redirect_to food_menus_path, notice: 'Food menu uploaded successfully.'
     else
       flash.now[:alert] = 'Failed to upload food menu.'
       render :new
@@ -29,7 +29,7 @@ class FoodMenusController < ApplicationController
   def destroy
     @food_menu = FoodMenu.find(params[:id])
     @food_menu.destroy
-    redirect_to food_menus_path, notice: 'Food menu was successfully deleted.'
+    redirect_to food_menus_path, alert: 'Food menu deleted successfully.'
   end
 
   private

@@ -1,69 +1,62 @@
-<div class="container mt-4">
-  <% if flash[:notice].present? %>
-    <div class="alert alert-success alert-dismissible fade show" role="alert">
-      <%= flash[:notice] %>
-      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
-  <% end %>
-  <h1 class="mt-4 mb-4">Food Categories</h1>
-
-  <table class="table">
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Action</th>
-      </tr>
-    </thead>
-    <tbody>
-      <% @food_categories.each do |food_category| %>
-        <tr>
-          <td><%= food_category.name %></td>
-          <td>
-            <%= link_to 'Delete', food_category_path(food_category), method: :delete, data: { confirm: 'Are you sure? Deleting the food category will also delete the relevant food stores, chefs, food-menus, photos associated with it.' }, class: 'btn btn-danger btn-sm' %>
-          </td>
-        </tr>
-      <% end %>
-    </tbody>
-  </table>
-
-  <%= link_to 'New Food Category', new_food_category_path, class: 'btn btn-primary' %>
-  <%= link_to 'Back to Admin Dashboard', admin_dashboard_path, class: 'btn btn-secondary' %>
-</div>
-
-<ul class="pagination justify-content-center mt-3">
-    <% if @food_categories.current_page > 1 %>
-      <li class="page-item">
-        <%= link_to '&laquo; Previous'.html_safe, { page: @food_categories.current_page - 1 }, class: 'page-link' %>
-      </li>
-    <% end %>
-    <% (1..@food_categories.total_pages).each do |page| %>
-      <% if page == @food_categories.current_page %>
-        <li class="page-item active">
-          <span class="page-link">
-            <%= page %>
-            <span class="visually-hidden">(current)</span>
-          </span>
-        </li>
+<div class="container mt-5">
+   <% flash.each do |type, message| %>
+   <div class="alert alert-<%= type == 'notice' ? 'success' : 'danger' %> alert-dismissible fade show" role="alert">
+      <% if type == 'alert' %>                
+      <i class="bi bi-exclamation-circle-fill me-2"></i>
       <% else %>
-        <li class="page-item">
-          <%= link_to page, { page: page }, class: 'page-link' %>
-        </li>
+      <i class="bi bi-check-circle-fill me-2"></i>
       <% end %>
-    <% end %>
-    <% if @food_categories.current_page < @food_categories.total_pages %>
-      <li class="page-item">
-        <%= link_to 'Next &raquo;'.html_safe, { page: @food_categories.current_page + 1 }, class: 'page-link' %>
-      </li>
-    <% end %>
-  </ul>
-  <script>
-  document.addEventListener('DOMContentLoaded', function() {
-    var alerts = document.querySelectorAll('.alert-dismissible');
-
-    alerts.forEach(function(alert) {
-      setTimeout(function() {
-        alert.remove();
-      }, 2000);
-    });
-  });
-</script>
+      <%= message %>
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+   </div>
+   <% end %>
+</div>
+<div class="container mt-4">
+   <h1 class="mt-4 mb-4">Food Categories</h1>
+   <table class="table">
+      <thead>
+         <tr>
+            <th>Name</th>
+            <th>Action</th>
+         </tr>
+      </thead>
+      <tbody>
+         <% @food_categories.each do |food_category| %>
+         <tr>
+            <td><%= food_category.name %></td>
+            <td>
+               <%= link_to 'Delete', food_category_path(food_category), method: :delete, data: { confirm: 'Are you sure? Deleting the food category will also delete the relevant food stores, chefs, food-menus, photos associated with it.' }, class: 'btn btn-danger btn-sm' %>
+            </td>
+         </tr>
+         <% end %>
+      </tbody>
+   </table>
+   <%= link_to 'New Food Category', new_food_category_path, class: 'btn btn-primary' %>
+   <%= link_to 'Back to Admin Dashboard', admin_dashboard_path, class: 'btn btn-secondary' %>
+</div>
+<ul class="pagination justify-content-center mt-3">
+   <% if @food_categories.current_page > 1 %>
+   <li class="page-item">
+      <%= link_to '&laquo; Previous'.html_safe, { page: @food_categories.current_page - 1 }, class: 'page-link' %>
+   </li>
+   <% end %>
+   <% (1..@food_categories.total_pages).each do |page| %>
+   <% if page == @food_categories.current_page %>
+   <li class="page-item active">
+      <span class="page-link">
+      <%= page %>
+      <span class="visually-hidden">(current)</span>
+      </span>
+   </li>
+   <% else %>
+   <li class="page-item">
+      <%= link_to page, { page: page }, class: 'page-link' %>
+   </li>
+   <% end %>
+   <% end %>
+   <% if @food_categories.current_page < @food_categories.total_pages %>
+   <li class="page-item">
+      <%= link_to 'Next &raquo;'.html_safe, { page: @food_categories.current_page + 1 }, class: 'page-link' %>
+   </li>
+   <% end %>
+</ul>

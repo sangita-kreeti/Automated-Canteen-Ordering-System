@@ -3,9 +3,10 @@
 # spec/factories/food_stores.rb
 FactoryBot.define do
   factory :food_store do
-    name { 'Example Food Store' }
-    address { '123 Main Street, City' }
-    latitude { 40.7128 } # Example latitude value
-    longitude { -74.0060 } # Example longitude value
+    sequence(:name) { |n| "Food Store #{n}" }
+    address { 'Address' }
+    food_category { association :food_category }
+    latitude { 22.5730705 }
+    longitude { 88.4312256 }
   end
 end
