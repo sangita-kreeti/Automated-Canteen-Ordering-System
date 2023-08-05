@@ -4,13 +4,13 @@
 require 'rails_helper'
 
 RSpec.describe ChannelsController, type: :controller do
-  let(:user) { create(:user) } # You'll need to define a factory for User or use other user creation method
+  let(:user) { create(:user) }
   let(:chef) { create(:user, role: 'chef', approved: true) }
   let(:employee) { create(:user, role: 'employee', approved: true) }
 
   describe 'GET #select_users' do
     context 'when user is an employee' do
-      before { sign_in(user) } # You'll need to define the sign_in method or use a gem like Devise
+      before { sign_in(user) }
 
       it 'renders the select_user template and assigns chefs' do
         user.update(role: 'employee')
@@ -48,8 +48,4 @@ RSpec.describe ChannelsController, type: :controller do
       expect(flash[:error]).to eq('Select one user to start the chat.')
     end
   end
-
-  # Other controller action tests (show, send_message) can be written similarly
-
-  # You may also want to test the private methods using controller.send(:method_name, args)
 end

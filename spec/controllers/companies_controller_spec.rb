@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# spec/controllers/companies_controller_spec.rb
 require 'rails_helper'
 
 RSpec.describe CompaniesController, type: :controller do

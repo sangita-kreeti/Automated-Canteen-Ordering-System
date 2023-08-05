@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# This is a users controller spec
 require 'rails_helper'
 
 RSpec.describe UsersController, type: :controller do

@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
+# spec/controllers/food_categories_controller_spec.rb
 require 'rails_helper'
 
 RSpec.describe FoodCategoriesController, type: :controller do
-  let(:user) { create(:user) }  # Assuming you have a FactoryBot factory named :user
-
+  let(:user) { create(:user) }
   describe 'GET #index' do
     it 'assigns @food_categories and renders the index template' do
       food_category = create(:food_category)
