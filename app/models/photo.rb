@@ -7,4 +7,11 @@ class Photo < ApplicationRecord
   has_one_attached :image
 
   validates :image, presence: true
+  validate :image_content_type
+
+  def image_content_type
+    return unless image.attached? && !image.content_type.in?(%w[image/jpeg image/png image/gif image/tiff])
+
+    errors.add(:image, 'must be a JPEG, PNG, or GIF image')
+  end
 end

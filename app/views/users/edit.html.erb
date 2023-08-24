@@ -1,77 +1,54 @@
-<div class="container mt-5">
-   <% flash.each do |type, message| %>
-   <div class="alert alert-<%= type == 'notice' ? 'success' : 'danger' %> alert-dismissible fade show" role="alert">
-      <% if type == 'notice' %>
-      <i class="bi bi-check-circle-fill me-2"></i> 
-      <% else %>
-      <i class="bi bi-exclamation-circle-fill me-2"></i> 
-      <% end %>
-      <%= message %>
+<div class="container mt-3">
+   <% if flash[:alert].present? %>
+   <div class="alert alert-danger alert-dismissible fade show mt-4" role="alert">
+      <%= flash[:alert] %>
       <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
    </div>
    <% end %>
+</div>
+<div class="container mt-5">
    <div class="row justify-content-center">
       <div class="col-md-6 card shadow p-2">
-         <h1 class="text-center">Complete Your Profile</h1>
-         <%= form_for @user, url: user_path(@user), method: :patch do |f| %>
+         <h1 class="text-center">Edit Profile</h1>
+         <%= form_for @user, url: user_path(@user), method: :put do |f| %>
+                 
          <div class="form-group mb-4">
-            <strong><%= f.label :role %></strong>
-            <%= f.select :role, [['Select a role', ''], ['Employee', 'employee'], ['Chef', 'chef']], {}, { class: "form-control", id: "role-select" } %>
-            <% if @user.errors.has_key?(:role) %>
-            <p class="text-danger"><%= @user.errors.full_messages_for(:role).first %></p>
-            <% end %>
-         </div>
-         <div class="form-group mb-4" id="company-field">
-            <strong><%= f.label :associated_company_id %></strong>
-            <% options = @companies&.map { |company| [company.name, company.id] } || [] %>
-            <%= f.select :company_id, options.push(['other']), { prompt: "Select a company" }, class: "form-control" %>
-            <% if @user.errors.has_key?(:company_id) %>
-            <p class="text-danger"><%= @user.errors.full_messages_for(:company_id).first %></p>
-            <% end %>
-         </div>
-         <div class="form-group mb-4" id="food-store-field" style="display: none;">
-            <strong><%= f.label :food_store_id %></strong>
-            <% options = @food_stores&.map { |food_store| [food_store.name, food_store.id] } || [] %>
-            <%= f.select :food_store_id, options, { prompt: "Select a food store" }, { class: "form-control" } %>
-            <% if @user.errors.has_key?(:food_store_id) %>
-            <p class="text-danger"><%= @user.errors.full_messages_for(:food_store_id).first %></p>
-            <% end %>
-         </div>
-         <div class="form-group mb-4">
-            <strong><%= f.label :name %></strong>
+            <strong><%= f.label :name, class: "form-label required"%></strong>
             <%= f.text_field :name, class: "form-control", placeholder: "Enter your name" %>
             <% if @user.errors.has_key?(:name) %>
             <p class="text-danger"><%= @user.errors.full_messages_for(:name).first %></p>
             <% end %>
          </div>
          <div class="form-group mb-4">
-            <strong><%= f.label :phone_no %></strong>
+            <strong><%= f.label :username, class: "form-label required" %></strong>
+            <%= f.text_field :username, class: "form-control", placeholder: "Enter your username" %>
+            <% if @user.errors.has_key?(:username) %>
+               <p class="text-danger"><%= @user.errors.full_messages_for(:username).first %></p>
+            <% end %>
+         </div>
+         <div class="form-group mb-4">
+            <strong><%= f.label :phone_no, class: "form-label required"%></strong>
             <%= f.text_field :phone_no, class: "form-control", placeholder: "Enter your phone number" %>
             <% if @user.errors.has_key?(:phone_no) %>
             <p class="text-danger"><%= @user.errors.full_messages_for(:phone_no).first %></p>
             <% end %>
          </div>
-         <div class="form-group mt-3">
-            <%= f.submit "Update Profile", class: "btn btn-primary btn-block" %>
+         <div class="form-group mb-4">
+            <strong><%= f.label :email, class: "form-label required"%></strong>
+            <%= f.text_field :email, class: "form-control", placeholder: "Enter your email" %>
+            <% if @user.errors.has_key?(:email) %>
+               <p class="text-danger"><%= @user.errors.full_messages_for(:email).first %></p>
+            <% end %>
+         </div>         
+         <div class="form-group mt-3 d-flex justify-content-between">
+            <%= f.submit "Update Profile", class: "btn btn-primary" %>
+            <% if current_user.employee? %>
+               <%= link_to "Back to Dashboard", employee_dashboard_index_path, class: "btn btn-secondary" %>
+            <% else current_user.chef? %>
+               <%= link_to "Back to Dashboard", chef_dashboard_index_path, class: "btn btn-secondary" %>
+            <% end %>
          </div>
          <% end %>
       </div>
    </div>
 </div>
-<script>
-   document.addEventListener("DOMContentLoaded", function() {
-     var roleSelect = document.getElementById("role-select");
-     var companyField = document.getElementById("company-field");
-     var foodStoreField = document.getElementById("food-store-field");
-   
-     roleSelect.addEventListener("change", function() {
-       if (roleSelect.value === "chef") {
-         companyField.style.display = "none";
-         foodStoreField.style.display = "block";
-       } else {
-         companyField.style.display = "block";
-         foodStoreField.style.display = "none";
-       }
-     });
-   });
-</script>

@@ -2,7 +2,6 @@
 
 # This is controller
 class ApplicationController < ActionController::Base
-  # Make the `current_user` and `logged_in?` methods accessible as helper methods
   helper_method :current_user, :logged_in?
 
   def current_user

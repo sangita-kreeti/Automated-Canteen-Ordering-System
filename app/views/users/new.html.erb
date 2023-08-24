@@ -13,21 +13,21 @@
                   <h2 class="text-center mb-4">Register Here</h2>
                   <%= form_with model: @user do |f| %>
                   <div class="mb-3">
-                     <%= f.label :username, class: "form-label" %>
+                     <%= f.label :username, class: "form-label required" %>
                      <%= f.text_field :username, class: "form-control", placeholder: "Enter your username" %>
                      <% if @user.errors.has_key?(:email) %>
                      <p class="text-danger"><%= @user.errors.full_messages_for(:username).first %></p>
                      <% end %>
                   </div>
                   <div class="mb-3">
-                     <%= f.label :email, class: "form-label" %>
+                     <%= f.label :email, class: "form-label required" %>
                      <%= f.text_field :email, class: "form-control", placeholder: "Enter your email" %>
                      <% if @user.errors.has_key?(:email) %>
                      <p class="text-danger"><%= @user.errors.full_messages_for(:email).first %></p>
                      <% end %>
                   </div>
                   <div class="mb-3">
-                     <%= f.label :password, class: "form-label" %>
+                     <%= f.label :password, class: "form-label " %>
                      <%= f.password_field :password, class: "form-control", placeholder: "Enter your password" %>
                      <% if @user.errors[:password].any? %>
                      <small class="text-danger"><%= @user.errors[:password].first %></small>

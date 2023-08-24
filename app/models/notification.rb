@@ -29,6 +29,15 @@ class Notification < ApplicationRecord
     ActionCable.server.broadcast("notification_channel_#{employee.id}", { message: message })
   end
 
+  def self.create_order_notification(sender, receiver, message)
+    notification = Notification.new(sender: sender, receiver: receiver, notification_type: 'order_status_update',
+                                    message: message)
+
+    return unless notification.save
+
+    ActionCable.server.broadcast("notification_channel_#{receiver.id}", { message: message })
+  end
+
   private
 
   def order_status_update?

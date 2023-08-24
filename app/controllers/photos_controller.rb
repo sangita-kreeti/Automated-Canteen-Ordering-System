@@ -18,7 +18,6 @@ class PhotosController < ApplicationController
     if @photo.save
       redirect_to photos_path, notice: 'Photo uploaded successfully.'
     else
-      flash.now[:alert] = 'Please upload a photo!'
       render :new
     end
   end

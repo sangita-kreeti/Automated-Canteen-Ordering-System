@@ -3,6 +3,7 @@
 require 'httparty'
 # This is the controller
 class SessionsController < ApplicationController
+  skip_before_action :verify_authenticity_token, only: [:destroy]
   def new; end
 
   def create
@@ -21,7 +22,7 @@ class SessionsController < ApplicationController
     revoke_google_access_token
     session.delete(:user_id)
     reset_session
-    flash[:alert] = 'You have logged out successfully.'
+    flash[:notice] = 'You have logged out successfully.'
     redirect_to login_path
   end
 
@@ -33,7 +34,7 @@ class SessionsController < ApplicationController
     if user.role.present?
       redirect_user_by_role(user)
     else
-      redirect_to edit_user_path(user)
+      redirect_to complete_registration_user_path(user)
     end
   end
 

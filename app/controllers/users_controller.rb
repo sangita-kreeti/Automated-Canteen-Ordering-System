@@ -13,26 +13,67 @@ class UsersController < ApplicationController
     if @user.save
       session[:user_id] = @user.id
       flash[:notice] = 'Please complete your profile first!.'
-      redirect_to edit_user_path(@user)
+      redirect_to complete_registration_user_path(@user)
+
     else
       render :new
     end
   end
 
-  def edit
+  def complete_registration
+    @user = User.find(session[:user_id])
     @companies = Company.all
     @food_stores = FoodStore.all
   end
 
-  def update
-    if @user.update(user_params) && @user.role.present?
+  def save_registration
+    @user = User.find(params[:user_id])
+
+    if @user.update(user_params)
       redirect_user_by_role
-      flash[:notice] = 'Successfully registration completed'
+      flash[:notice] = 'Successfully completed registration'
     else
       @companies = Company.all
       @food_stores = FoodStore.all
+      render :complete_registration
+    end
+  end
+
+  def edit
+    @user = User.find(params[:id])
+
+    if @user.id != session[:user_id]
+      flash[:alert] = 'You are not authorized to access this page.'
+      redirect_to edit_user_path(session[:user_id])
+    end
+  rescue ActiveRecord::RecordNotFound
+    render file: Rails.public_path.join('404.html'), status: :not_found, layout: false
+  end
+
+  def update
+    if @user.update(user_params)
+      flash[:notice] = 'Profile updated successfully.'
+      redirect_user_by_role
+    else
       render :edit
     end
+  end
+
+  def redirect_to_dashboard
+    user = User.find(params[:user_id])
+
+    if user.employee?
+      redirect_to employee_dashboard_index_path
+    elsif user.chef?
+      redirect_to chef_dashboard_index_path
+    else
+      redirect_to admin_dashboard_path
+    end
+  end
+
+  def redirect_to_complete_registration
+    user_id = params[:user_id]
+    redirect_to complete_registration_user_path(user_id)
   end
 
   private

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# app/controllers/channels_controller.rb
+# This is channels_controller.rb
 class ChannelsController < ApplicationController
   before_action :authenticate_user
   def select_users
@@ -29,6 +29,9 @@ class ChannelsController < ApplicationController
     @channel = Channel.find(params[:id])
     @messages = @channel.messages.order(created_at: :desc)
     @message = Message.new
+    session[:current_channel_id] = @channel.id
+  rescue ActiveRecord::RecordNotFound
+    redirect_to channel_path(session[:current_channel_id])
   end
 
   def send_message

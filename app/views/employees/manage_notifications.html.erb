@@ -1,0 +1,75 @@
+<div class="container mt-4">
+   <div class="card border rounded p-4 shadow-sm bg-light text-dark">
+      <h1 class="text-center mb-4">Manage Notifications for Employees</h1>
+      <div class="card bg-light p-3 mb-3">
+         <p class="mb-0">By default, employees can see the notifications</p>
+      </div>
+      <div class="table-responsive">
+         <table class="table table-striped table-bordered">
+            <thead>
+               <tr>
+                  <th>Name</th>
+                  <th>Email</th>
+                  <th>Phone Number</th>
+                  <th>Associated Company</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+               </tr>
+            </thead>
+            <tbody>
+               <% @employees.each do |employee| %>
+               <tr>
+                  <td><%= employee.name %></td>
+                  <td><%= employee.email %></td>
+                  <td><%= employee.phone_no %></td>
+                  <td><%= Company.find_by(id: employee.company_id)&.name %></td>
+                  <td>
+                     <% if employee.hide_notifications? %>
+                     <span class="badge bg-success">Hidden</span>
+                     <% else %>
+                     <span class="badge bg-warning text-dark">Show</span>
+                     <% end %>
+                  </td>
+                  <td>
+                     <% if employee.hide_notifications? %>
+                     <button class="btn btn-sm btn-secondary" disabled="disabled">Hide Notifications</button>
+                     <% else %>
+                     <%= link_to "Hide Notifications", update_notifications_employee_path(employee), method: :patch, data: { confirm: 'Are you sure?' }, class: 'btn btn-danger btn-sm' %>
+                     <% end %>
+                  </td>
+               </tr>
+               <% end %>
+            </tbody>
+         </table>
+      </div>
+      <div class="d-flex justify-content-center">
+         <%= link_to 'Back to Admin Dashboard', admin_dashboard_path, class: 'btn btn-secondary' %>
+      </div>
+   </div>
+</div>
+<ul class="pagination justify-content-center mt-3">
+   <% if @employees.current_page > 1 %>
+   <li class="page-item">
+      <%= link_to '&laquo; Previous'.html_safe, { page: @employees.current_page - 1 }, class: 'page-link' %>
+   </li>
+   <% end %>
+   <% (1..@employees.total_pages).each do |page| %>
+   <% if page == @employees.current_page %>
+   <li class="page-item active">
+      <span class="page-link">
+      <%= page %>
+      <span class="visually-hidden">(current)</span>
+      </span>
+   </li>
+   <% else %>
+   <li class="page-item">
+      <%= link_to page, { page: page }, class: 'page-link' %>
+   </li>
+   <% end %>
+   <% end %>
+   <% if @employees.current_page < @employees.total_pages %>
+   <li class="page-item">
+      <%= link_to 'Next &raquo;'.html_safe, { page: @employees.current_page + 1 }, class: 'page-link' %>
+   </li>
+   <% end %>
+</ul>

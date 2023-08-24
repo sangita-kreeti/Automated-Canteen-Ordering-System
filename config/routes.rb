@@ -24,13 +24,25 @@ Rails.application.routes.draw do
 
   resources :orders, only: [:index] do
     post 'place_order', on: :collection
+    get 'search', on: :collection
   end
 
   get '/order_history', to: 'orders#order_history', as: :order_history
   get '/order_status', to: 'orders#order_status', as: :order_status
-
+  get '/received_orders', to: 'orders#received_orders', as: :received_orders
   post '/notifications/notify', to: 'notifications#notify', as: :notify_notification
   get '/confirm_order', to: 'orders#confirm_order', as: 'confirm_order'
+
+  resources :orders, only: [:show] do
+    member do
+      patch :approved
+      patch :preparing
+      patch :finished
+      patch :delivered
+    end
+  end
+
+  get '/order_details', to: 'orders#order_details'
 
   resources :channels, only: %i[show create] do
     get 'select_users', on: :collection
@@ -43,18 +55,32 @@ Rails.application.routes.draw do
   post '/login', to: 'sessions#create'
   delete '/logout', to: 'sessions#destroy'
   post '/logout', to: 'sessions#destroy'
-  get '/edit', to: 'users#edit'
+
+  resources :users, only: %i[new create edit update]
+
+  get '/users/:user_id/complete_registration', to: 'users#complete_registration', as: 'complete_registration_user'
+  post '/users/:user_id/save_registration', to: 'users#save_registration', as: 'save_registration_user'
+
+  get '/users/:user_id/save_registration', to: 'users#redirect_to_complete_registration',
+                                           as: 'save_registration_to_complete'
+
+  get '/users/:user_id', to: 'users#redirect_to_dashboard', as: 'user_dashboard_redirect'
+
   get 'admin_dashboard', to: 'admin_dashboard#index', as: :admin_dashboard
   get '/employee_dashboard', to: 'employee_dashboard#index', as: 'employee_dashboard_index'
   get '/chef_dashboard', to: 'chef_dashboard#index', as: 'chef_dashboard_index'
 
+  get 'employees/manage_notifications', to: 'employees#manage_notifications', as: :manage_notifications_employee
+
+  resources :employees, only: [:update] do
+    member do
+      patch 'update_notifications'
+    end
+  end
+
   get 'gallery', to: 'gallery#index'
 
-  get '/orders/search', to: 'orders#search', as: 'search_orders'
-
   patch '/orders/:id/update_status', to: 'orders#update_status', as: 'update_order_status'
-
-  get '/register', to: 'users#new'
 
   patch 'mark_notification_read/:id', to: 'notifications#mark_as_read', as: :mark_notification_read
 
@@ -63,7 +89,9 @@ Rails.application.routes.draw do
   get '/auth/:provider/callback', to: 'sessions#omniauth'
   get '/auth/facebook/callback', to: 'sessions#omniauth'
 
-  resources :users, only: %i[new create edit update]
+  match '*path', to: lambda { |_env|
+    [404, {}, [File.read(Rails.public_path.join('404.html'))]]
+  }, via: :all
 end
 
 # rubocop:enable Metrics/BlockLength

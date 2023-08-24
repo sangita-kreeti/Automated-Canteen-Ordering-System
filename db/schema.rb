@@ -114,7 +114,7 @@ ActiveRecord::Schema.define(version: 20_230_721_045_336) do
   create_table 'orders', force: :cascade do |t|
     t.text 'food_item_names', default: [], array: true
     t.integer 'quantities', default: [], array: true
-    t.text 'food_store_names', default: [], array: true
+    t.string 'food_store_name'
     t.integer 'prices', default: [], array: true
     t.text 'special_ingredients', default: [], array: true
     t.bigint 'user_id'
@@ -147,6 +147,7 @@ ActiveRecord::Schema.define(version: 20_230_721_045_336) do
     t.integer 'company_id'
     t.integer 'food_store_id'
     t.boolean 'approved', default: false
+    t.boolean 'hide_notifications', default: false
     t.datetime 'created_at', precision: 6, null: false
     t.datetime 'updated_at', precision: 6, null: false
   end

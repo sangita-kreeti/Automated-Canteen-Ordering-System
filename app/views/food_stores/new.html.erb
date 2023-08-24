@@ -3,7 +3,7 @@
    <div class="d-flex justify-content-center align-items-center" style="border: 2px solid #007BFF; height: 80vh; padding: 20px;">
       <%= form_with(model: @food_store, url: food_stores_path) do |form| %>
       <div class="form-group">
-         <%= form.label :name, class: "form-label" %>
+         <%= form.label :name, class: "form-label required" %>
          <div class="input-group">
             <%= form.text_field :name, class: 'form-control' %>
          </div>
@@ -12,7 +12,7 @@
          <% end %>
       </div>
       <div class="form-group">
-         <%= form.label :address, class: "form-label" %>
+         <%= form.label :address, class: "form-label required" %>
          <div class="input-group">
             <%= form.text_field :address, class: 'form-control' %>
          </div>
@@ -31,7 +31,7 @@
          <% end %>
       </div>
       <div class="form-group">
-         <%= form.label :latitude, class: "form-label" %>
+         <%= form.label :latitude, class: "form-label required" %>
          <div class="input-group">
             <%= form.text_field :latitude, class: 'form-control' %>
          </div>
@@ -40,7 +40,7 @@
          <% end %>
       </div>
       <div class="form-group">
-         <%= form.label :longitude, class: "form-label" %>
+         <%= form.label :longitude, class: "form-label required" %>
          <div class="input-group">
             <%= form.text_field :longitude, class: 'form-control' %>
          </div>

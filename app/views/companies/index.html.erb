@@ -1,16 +1,3 @@
-<div class="container mt-5">
-   <% flash.each do |type, message| %>
-   <div class="alert alert-<%= type == 'notice' ? 'success' : 'danger' %> alert-dismissible fade show" role="alert">
-      <% if type == 'alert' %>                
-      <i class="bi bi-exclamation-circle-fill me-2"></i>
-      <% else %>
-      <i class="bi bi-check-circle-fill me-2"></i>
-      <% end %>
-      <%= message %>
-      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-   </div>
-   <% end %>
-</div>
 <div class="container mt-4">
    <h1>Company List</h1>
    <div class="table-responsive">

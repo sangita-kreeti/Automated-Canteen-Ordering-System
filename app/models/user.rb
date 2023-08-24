@@ -12,19 +12,26 @@ class User < ApplicationRecord
   has_many :notifications, class_name: 'Notification', foreign_key: 'sender_id'
   has_many :notifications, class_name: 'Notification', foreign_key: 'receiver_id'
 
-  validates :username, presence: true, uniqueness: true, length: { minimum: 4 }
+  validates :username, presence: true, uniqueness: { message: '%<value>s is already taken' }, length: { minimum: 4 }
   validates :email, presence: true, uniqueness: { case_sensitive: false },
                     format: { with: /\A[a-zA-Z0-9][\w+\-.]*@[a-zA-Z0-9][a-zA-Z0-9\-.]*\.[a-zA-Z]+\z/,
                               message: 'should be in the format email@example.com' }
   validates :password, presence: true, length: { minimum: 4 }, allow_blank: true, on: :create
-  validates :role, presence: true, on: :update
-  validates :company_id, presence: true, on: :update, if: -> { food_store_id.blank? }
-  validates :food_store_id, presence: true, on: :update, if: -> { company_id.blank? }
+  validates :role, presence: { message: 'must be present' }, on: :update
+  validates :company_id, presence: { message: 'must be present' }, on: :update, if: lambda {
+                                                                                      food_store_id.blank?
+                                                                                    }
+  validates :food_store_id, presence: { message: 'must be present' }, on: :update, if: lambda {
+                                                                                         company_id.blank?
+                                                                                       }
   validate :either_company_or_food_store_present, on: :update
   validates :name, presence: true, length: { minimum: 4 }, on: :update,
-                   format: { with: /\A[A-Za-z ]+\z/, message: 'Name will contain alphabets only' }
-  validates :phone_no, presence: true, uniqueness: true, on: :update,
-                       numericality: { only_integer: true, message: 'should be a valid numeric phone number' }
+                   format: { with: /\A[A-Za-z ]+\z/, message: '%<value>s is not a valid name' }
+  validates :phone_no, presence: true,
+                       uniqueness: { message: '%<value>s is already taken' },
+                       length: { is: 10, message: 'should be exactly 10 digits' },
+                       on: :update,
+                       numericality: { only_integer: true, message: '%<value>s is not a valid phone number' }
 
   enum role: { employee: 0, chef: 1, admin: 2 }
 

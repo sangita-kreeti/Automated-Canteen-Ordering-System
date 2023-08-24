@@ -32,43 +32,46 @@ class OrdersController < ApplicationController
       return
     end
 
-    order = current_user.orders.new
-
-    food_item_names = []
-    quantities = []
-    food_store_names = []
-    prices = []
-    special_ingredients = []
+    orders_by_food_store = {}
 
     items.each do |item|
-      food_item_names << item['food_item_name']
-      quantities << item['quantity']
-      food_store_names << item['food_store_name']
-      prices << (item['quantity'] * item['price']).round(2)
-      special_ingredients << item['special_ingredients']
+      food_store_name = item['food_store_name']
+
+      if orders_by_food_store[food_store_name]
+        order_group = orders_by_food_store[food_store_name]
+      else
+        order_group = []
+        orders_by_food_store[food_store_name] = order_group
+      end
+
+      order = current_user.orders.new
+      order.food_store_name = food_store_name
+      order.company_name = current_user.company&.name || 'Other'
+      order.food_item_names = [item['food_item_name']]
+      order.quantities = [item['quantity']]
+      order.prices = [(item['quantity'] * item['price']).round(2)]
+      order.special_ingredients = [item['special_ingredients']]
+
+      order_group << order
     end
 
-    order.food_item_names = food_item_names
-    order.quantities = quantities
-    order.food_store_names = food_store_names
-    order.prices = prices
-    order.special_ingredients = special_ingredients
+    orders_by_food_store.each do |_food_store_name, order_group|
+      order_group.each do |order|
+        if order.save
+          order.update(status: 'placed')
+        else
+          render json: { error: 'Failed to place order.' }, status: :unprocessable_entity
+        end
 
-    if current_user.company_id.present?
-      company = Company.find_by(id: current_user.company_id)
-      order.company_name = company&.name
-    else
-      order.company_name = 'Other'
+        puts order
+        puts '-------------------------------------'
+        OrderMailer.confirmation_email([order]).deliver_later if order.status == 'placed'
+      end
     end
 
-    if order.save
-      order.update(status: 'placed')
-      render json: { message: 'Order placed successfully!' }, status: 200
-      OrderMailer.confirmation_email(order).deliver_now
-    else
-      render json: { error: 'Failed to place order.' }, status: :unprocessable_entity
-    end
+    render json: { success: true }
   end
+
   # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
 
   def confirm_order
@@ -104,8 +107,14 @@ class OrdersController < ApplicationController
   # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
 
   def order_history
-    @orders = current_user.orders.order(created_at: :desc)
+    @orders = current_user.orders.order(created_at: :desc).page(params[:page]).per(10)
     render 'order_history'
+  end
+
+  def received_orders
+    approved_orders = Order.where(status: 'approved')
+
+    @orders = approved_orders.where(food_store_name: current_user.food_store.name)
   end
 
   def order_status
@@ -113,7 +122,36 @@ class OrdersController < ApplicationController
     render 'order_status'
   end
 
+  def approved
+    update_order_status('approved', 'Your order has been approved.')
+  end
+
+  def preparing
+    update_order_status('preparing', 'Your order is being prepared.')
+  end
+
+  def finished
+    update_order_status('finished', 'Your order is ready for pickup.')
+  end
+
+  def delivered
+    update_order_status('delivered', 'Your order has been delivered.')
+  end
+
   private
+
+  def update_order_status(new_status, message)
+    order = Order.find(params[:id])
+
+    if order.update(status: new_status)
+      sender = current_user
+      receiver = order.user
+      Notification.create_order_notification(sender, receiver, message) unless receiver.hide_notifications
+      redirect_to order_status_path, notice: 'Order status updated successfully.'
+    else
+      redirect_to order_status_path, alert: 'Failed to update order status.'
+    end
+  end
 
   def current_order
     @current_order ||= find_order_by_session
@@ -138,10 +176,10 @@ class OrdersController < ApplicationController
 
   def calculate_distances_for_employee
     if current_user.company_id.zero?
-      [22.33, 77.33] # Use default values if company_id is not set
+      [22.33, 77.33]
     else
       company = Company.find_by(id: current_user.company_id)
-      [company&.latitude, company&.longitude] # Use company latitude and longitude if available
+      [company&.latitude, company&.longitude]
     end
 
     @distances = calculate_distances(@food_stores).map do |food_store, distance|

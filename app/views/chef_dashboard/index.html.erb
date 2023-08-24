@@ -1,15 +1,4 @@
-<div class="container mt-5">
-   <% flash.each do |type, message| %>
-   <div class="alert alert-<%= type == 'notice' ? 'success' : 'danger' %> alert-dismissible fade show" role="alert">
-      <% if type == 'notice' %>
-      <i class="bi bi-check-circle-fill me-2"></i>
-      <% else %>
-      <i class="bi bi-exclamation-circle-fill me-2"></i>
-      <% end %>
-      <%= message %>
-      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-   </div>
-   <% end %>
+<div class="container mt-3">
    <div class="row justify-content-center">
       <div class="col-md-8">
          <div class="card border-primary">
@@ -24,7 +13,7 @@
                   <%= link_to edit_user_path(current_user), class: 'btn btn-primary mr-3' do %>
                   <i class="bi bi-pencil-fill"></i> Edit
                   <% end %>
-                  <%= button_to logout_path, method: :delete, class: 'btn btn-success' do %>
+                  <%= button_to logout_path, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-success' do %>
                   <i class="bi bi-box-arrow-right"></i> Logout
                   <% end %>
                </div>
@@ -33,7 +22,7 @@
       </div>
    </div>
 </div>
-<div class="container mt-5">
+<div class="container mt-3">
    <div class="row mt-4">
       <div class="col-md-6">
          <div class="card border-primary">
@@ -75,7 +64,7 @@
       </div>
    </div>
 </div>
-<div class="container mt-5">
+<div class="container mt-3">
    <div class="row mt-4">
       <div class="col-md-6">
          <div class="card border-primary">
@@ -110,6 +99,29 @@
                </div>
                <button class="btn btn-primary btn-block" disabled>
                <i class="bi bi-list-check"></i> Food Order Status
+               </button>
+               <% end %>
+            </div>
+         </div>
+      </div>
+   </div>
+</div>
+<div class="container mt-3">
+   <div class="row mt-4">
+      <div class="col-md-6">
+         <div class="card border-primary">
+            <div class="card-body">
+               <h3 class="card-title">Received Orders</h3>
+               <% if current_user.approved? %>
+               <%= link_to received_orders_path, class: 'btn btn-primary' do %>
+               <i class="bi bi-clock-history"></i> Received Orders
+               <% end %>
+               <% else %>
+               <div class="alert alert-warning mb-3">
+                  <strong>Please wait for admin approval.</strong>
+               </div>
+               <button class="btn btn-primary" disabled>
+               <i class="bi bi-chat-dots"></i> Start Chat
                </button>
                <% end %>
             </div>

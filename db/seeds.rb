@@ -39,11 +39,11 @@ food_store2 = FoodStore.create(name: 'Food Store 2', address: 'Address', food_ca
 # Sample data for Users
 users_data = [
   { email: 'employee1@gmail.com', password: 'password', role: 'employee', username: 'employee1', name: 'John',
-    phone_no: '1234567890', company_id: company1.id, food_store_id: nil },
+    phone_no: '1234567890', company_id: company1.id, food_store_id: nil, hide_notifications: false },
   { email: 'chef1@gmail.com', password: 'password', role: 'chef', username: 'chef1', name: 'Michael',
     phone_no: '9876543210', company_id: nil, food_store_id: food_store1.id, approved: true },
   { email: 'employee2@gmail.com', password: 'password', role: 'employee', username: 'employee2', name: 'David',
-    phone_no: '5678901234', company_id: company2.id, food_store_id: nil },
+    phone_no: '5678901234', company_id: company2.id, food_store_id: nil, hide_notifications: false },
   { email: 'chef2@gmail.com', password: 'password', role: 'chef', username: 'chef2', name: 'James',
     phone_no: '123456789', company_id: nil, food_store_id: food_store2.id, approved: true },
   { email: 'employee3@gmail.com', password: 'password', role: 'employee', username: 'employee3', name: 'Ethan',

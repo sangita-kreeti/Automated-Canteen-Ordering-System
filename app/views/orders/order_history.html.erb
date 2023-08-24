@@ -1,25 +1,73 @@
 <div class="container mt-5">
-  <div class="row mt-4">
-    <div class="col-md-12">
-      <div class="card border-primary">
-        <div class="card-body">
-          <h3 class="card-title">
-            <i class="fas fa-history"></i> Order History
-          </h3>
-          <% if @orders.any? %>
-            <table class="table table-bordered">
-            </table>
-          <% else %>
-            <p>No order history available.</p>
-          <% end %>
-        </div>
+   <div class="row mt-4">
+      <div class="col-md-12">
+         <div class="card border-primary">
+            <div class="card-body">
+               <h3 class="card-title text-center">
+                  <i class="fas fa-history"></i> Order History
+               </h3>
+               <% if @orders.any? %>
+               <table class="table table-bordered">
+                  <thead>
+                     <tr>
+                        <th>Food Store</th>
+                        <th>Food Items</th>
+                        <th>Quantities</th>
+                        <th>Price</th>
+                        <th>Order Date</th>
+                        <th>Order status</th>
+                     </tr>
+                  </thead>
+                  <tbody>
+                     <% @orders.each do |order| %>
+                     <tr>
+                        <td><%= order.food_store_name %></td>
+                        <td><%= order.food_item_names.join(", ") %></td>
+                        <td><%= order.quantities.join(", ") %></td>
+                        <td><%= order.prices.join(", ") %></td>
+                        <td><%= order.created_at.strftime('%d/%m/%Y %H:%M %p') %></td>
+                        <td><%= order.status %></td>
+                     </tr>
+                     <% end %>
+                  </tbody>
+               </table>
+               <% else %>
+               <p>You do not have any previous orders.</p>
+               <% end %>
+            </div>
+         </div>
       </div>
-    </div>
-  </div>
+   </div>
+</div>
+<div class="text-center p-3">
+   <%= link_to employee_dashboard_index_path, class: 'btn btn-secondary' do %>
+   <i class="fas fa-arrow-left"></i> Back
+   <% end %>
 </div>
 
-<div class="text-center p-5">
-  <%= link_to employee_dashboard_index_path, class: 'btn btn-secondary' do %>
-    <i class="fas fa-arrow-left"></i> Back
-  <% end %>
-</div>
+<ul class="pagination justify-content-center">
+   <% if @orders.current_page > 1 %>
+   <li class="page-item">
+      <%= link_to '&laquo; Previous'.html_safe, { page: @orders.current_page - 1 }, class: 'page-link' %>
+   </li>
+   <% end %>
+   <% (1..@orders.total_pages).each do |page| %>
+   <% if page == @orders.current_page %>
+   <li class="page-item active">
+      <span class="page-link">
+      <%= page %>
+      <span class="visually-hidden">(current)</span>
+      </span>
+   </li>
+   <% else %>
+   <li class="page-item">
+      <%= link_to page, { page: page }, class: 'page-link' %>
+   </li>
+   <% end %>
+   <% end %>
+   <% if @orders.current_page < @orders.total_pages %>
+   <li class="page-item">
+      <%= link_to 'Next &raquo;'.html_safe, { page: @orders.current_page + 1 }, class: 'page-link' %>
+   </li>
+   <% end %>
+</ul>

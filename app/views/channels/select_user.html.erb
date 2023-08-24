@@ -13,12 +13,7 @@
             <h1>Chat with Employee</h1>
          </div>
          <% end %>
-         <% if flash[:error].present? %>
-         <div class="alert alert-danger mt-3">
-            <%= flash[:error] %>
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-         </div>
-         <% end %>
+         
          <%= form_with(model: @channel, url: channels_path, method: :post) do |form| %>
          <div class="form-group">
             <% if current_user.employee? %>

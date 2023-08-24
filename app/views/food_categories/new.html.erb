@@ -3,7 +3,7 @@
    <div class="border p-4 rounded" style="background-color: #f8f9fa; border-color: #007BFF;">
       <%= form_for @food_category, url: food_categories_path do |f| %>
       <div class="form-group">
-         <%= f.label :name, class: 'form-label' %>
+         <%= f.label :name, class: 'form-label required' %>
          <div class="input-group">
             <%= f.text_field :name, class: 'form-control' %>
          </div>
