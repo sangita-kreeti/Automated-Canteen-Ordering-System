@@ -102,11 +102,13 @@
                <strong>Total Price: <span id="total-price">₹0</span></strong>
             </div>
             <br>
-            <button id="place-order-button" class="btn btn-secondary" data-turbolinks="false">Place Order</button>
+            <div class="d-flex justify-content-between">
+               <button id="place-order-button" class="btn btn-secondary" data-turbolinks="false">Place Order</button>
+               <div>
+                  <%= link_to 'Back to Employee Dashboard', employee_dashboard_index_path, class: 'btn btn-secondary btn-sm' %>
+               </div>
+            </div>
          </div>
-      </div>
-      <div>
-         <%= link_to 'Back to Employee Dashboard', employee_dashboard_index_path, class: 'btn btn-secondary btn-sm' %>
       </div>
       <div class="modal fade" id="confirm-modal" tabindex="-1" role="dialog" aria-labelledby="confirm-modal-label" aria-hidden="true">
          <div class="modal-dialog modal-dialog-centered">

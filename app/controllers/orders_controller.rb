@@ -26,51 +26,49 @@ class OrdersController < ApplicationController
   # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
   def place_order
     items = params[:items]
-
+  
     if items.empty?
       render json: { error: 'Cart is empty.' }, status: :unprocessable_entity
       return
     end
-
+  
     orders_by_food_store = {}
-
+  
     items.each do |item|
       food_store_name = item['food_store_name']
-
+  
       if orders_by_food_store[food_store_name]
         order_group = orders_by_food_store[food_store_name]
       else
         order_group = []
         orders_by_food_store[food_store_name] = order_group
       end
-
+  
       order = current_user.orders.new
       order.food_store_name = food_store_name
       order.company_name = current_user.company&.name || 'Other'
-      order.food_item_names = [item['food_item_name']]
-      order.quantities = [item['quantity']]
-      order.prices = [(item['quantity'] * item['price']).round(2)]
-      order.special_ingredients = [item['special_ingredients']]
-
       order_group << order
     end
-
+  
     orders_by_food_store.each do |_food_store_name, order_group|
+      order_group_total_price = 0
+  
       order_group.each do |order|
-        if order.save
-          order.update(status: 'placed')
-        else
-          render json: { error: 'Failed to place order.' }, status: :unprocessable_entity
-        end
-
-        puts order
-        puts '-------------------------------------'
-        OrderMailer.confirmation_email([order]).deliver_later if order.status == 'placed'
+        items_for_food_store = items.select { |item| item['food_store_name'] == order.food_store_name }
+        order.food_item_names = items_for_food_store.map { |item| item['food_item_name'] }
+        order.quantities = items_for_food_store.map { |item| item['quantity'] }
+        order.prices = items_for_food_store.map { |item| (item['quantity'] * item['price']).round(2) }
+        order_group_total_price += order.prices.sum
+        order.update(status: 'placed')
       end
+  
+      OrderMailer.order_confirmation_email(order_group, order_group_total_price).deliver_later if order_group.first.status == 'placed'
     end
-
+  
     render json: { success: true }
   end
+  
+  
 
   # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
 

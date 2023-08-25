@@ -1,29 +1,31 @@
-# frozen_string_literal: true
 
 class OrderMailer < ApplicationMailer
-  require 'prawn'
+  def order_confirmation_email(orders, total_price)
+    @orders = orders
+    @total_price = total_price
+    pdf_content = generate_consolidated_pdf(@orders, @total_price)
 
-  def confirmation_email(order_group)
-    @order_group = order_group
-    pdf_attachment = generate_order_pdf(order_group)
-    attachments['Invoice.pdf'] = pdf_attachment
-    mail(to: order_group.first.user.email, subject: 'Order Placed Successfully')
+    attachments['consolidated_order_details.pdf'] = pdf_content
+
+    mail(to: @orders.first.user.email, subject: 'Order Confirmation')
   end
 
   private
 
-  def generate_order_pdf(order_group)
-    Prawn::Document.new.tap do |pdf|
-      pdf.text 'Order Details', size: 24, style: :bold, color: '0000FF', align: :center
-      pdf.move_down 10
-  
-      order_group.each do |order|
-        pdf.move_down 10
-        pdf.text "Food Item: #{order.food_item_names.join(', ')}", color: '0000FF', align: :center
-        pdf.text "Quantity: #{order.quantities.join(', ')}", color: '800080', align: :center
-        pdf.text "Food Store Name: #{order.food_store_name}", color: '800080', align: :center
-        pdf.text "Price: #{order.prices.map { |price| "$#{price}" }.join(', ')}", color: 'A52A2A', align: :center
-      end
-    end.render
+  def generate_consolidated_pdf(orders, total_price)
+    pdf = Prawn::Document.new
+    pdf.text 'Consolidated Order Details'
+
+    orders.each do |order|
+      pdf.text "Food Store: #{order.food_store_name}" # Use food_store_name here
+      pdf.text "Food Items: #{order.food_item_names.join(', ')}"
+      pdf.text "Quantities: #{order.quantities.join(', ')}"
+      pdf.text "Prices: #{order.prices.join(', ')}"
+      pdf.text '-' * 40
+    end
+
+    pdf.text "Total Price: #{total_price}"
+
+    pdf.render
   end
 end
