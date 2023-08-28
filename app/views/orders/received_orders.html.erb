@@ -45,3 +45,29 @@
   </div>
 </div>
 
+<ul class="pagination justify-content-center">
+   <% if @orders.current_page > 1 %>
+   <li class="page-item">
+      <%= link_to '&laquo; Previous'.html_safe, { page: @orders.current_page - 1 }, class: 'page-link' %>
+   </li>
+   <% end %>
+   <% (1..@orders.total_pages).each do |page| %>
+   <% if page == @orders.current_page %>
+   <li class="page-item active">
+      <span class="page-link">
+      <%= page %>
+      <span class="visually-hidden">(current)</span>
+      </span>
+   </li>
+   <% else %>
+   <li class="page-item">
+      <%= link_to page, { page: page }, class: 'page-link' %>
+   </li>
+   <% end %>
+   <% end %>
+   <% if @orders.current_page < @orders.total_pages %>
+   <li class="page-item">
+      <%= link_to 'Next &raquo;'.html_safe, { page: @orders.current_page + 1 }, class: 'page-link' %>
+   </li>
+   <% end %>
+</ul>

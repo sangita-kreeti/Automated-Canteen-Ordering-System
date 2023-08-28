@@ -129,51 +129,56 @@
 </div>
 <script>
    document.addEventListener('turbolinks:load', function() {
-     const orderFoodButton = document.getElementById('order-food-button');
-     if (orderFoodButton) {
-       orderFoodButton.addEventListener('click', function(event) {
-         if (!<%= @current_user.approved? %>) {
-           event.preventDefault();
-         }
-       });
-     }
-     
-     const startChatButton = document.getElementById('start-chat-button');
-     if (startChatButton) {
-       startChatButton.disabled = !<%= @current_user.approved? %>;
-     }
-     function handleMarkAsRead(response) {
-       if (response.status === 'success') {
-         const notificationItem = document.getElementById(`notification-${response.notification_id}`);
-         if (notificationItem) {
-           notificationItem.classList.add('text-muted');
-         }
-       }
-     }
-     function handleMarkAllAsRead(response) {
-       if (response.status === 'success') {
-         const notificationItems = document.querySelectorAll('.notification-item');
-         notificationItems.forEach(item => {
-           item.classList.add('text-muted');
-         });
-       }
-     }
-     const markAsReadButtons = document.querySelectorAll('[data-mark-notification-read]');
-     markAsReadButtons.forEach(button => {
-       button.addEventListener('click', function() {
-         const notificationId = this.getAttribute('data-mark-notification-read');
-         fetch(`/mark_notification_read/${notificationId}`, { method: 'PATCH' })
-           .then(response => response.json())
-           .then(handleMarkAsRead);
-       });
-     });
-     const markAllAsReadButton = document.getElementById('mark-all-as-read-button');
-     if (markAllAsReadButton) {
-       markAllAsReadButton.addEventListener('click', function() {
-         fetch('/mark_all_notifications_read', { method: 'POST' })
-           .then(response => response.json())
-           .then(handleMarkAllAsRead);
-       });
-     }
-   });
+  const orderFoodButton = document.getElementById('order-food-button');
+  if (orderFoodButton) {
+    orderFoodButton.addEventListener('click', function(event) {
+      if (!<%= @current_user.approved? %>) {
+        event.preventDefault();
+      }
+    });
+  }
+
+  const startChatButton = document.getElementById('start-chat-button');
+  if (startChatButton) {
+    startChatButton.disabled = !<%= @current_user.approved? %>;
+  }
+
+  function handleMarkAsRead(response) {
+    if (response.status === 'success') {
+      const notificationItem = document.getElementById(`notification-${response.notification_id}`);
+      if (notificationItem) {
+        notificationItem.classList.add('text-muted');
+      }
+    }
+  }
+
+  function handleMarkAllAsRead(response) {
+    if (response.status === 'success') {
+      const notificationItems = document.querySelectorAll('.notification-item');
+      notificationItems.forEach(item => {
+        item.classList.add('text-muted');
+      });
+    }
+  }
+
+  const markAsReadButtons = document.querySelectorAll('[data-mark-notification-read]');
+  markAsReadButtons.forEach(button => {
+    button.addEventListener('click', function() {
+      const notificationId = this.getAttribute('data-mark-notification-read');
+      fetch(`/mark_notification_read/${notificationId}`, { method: 'PATCH' })
+        .then(response => response.json())
+        .then(handleMarkAsRead);
+    });
+  });
+
+  const markAllAsReadButton = document.getElementById('mark-all-as-read-button');
+  if (markAllAsReadButton) {
+    markAllAsReadButton.addEventListener('click', function() {
+      fetch('/mark_all_notifications_read', { method: 'POST' })
+        .then(response => response.json())
+        .then(handleMarkAllAsRead);
+    });
+  }
+});
+
 </script>

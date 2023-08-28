@@ -37,6 +37,7 @@ document.addEventListener('turbolinks:load', function() {
         `;
         notificationList.insertBefore(newNotification, notificationList.firstChild);
       },
+      
     });
         const markAllAsReadButton = document.getElementById('mark-all-as-read-button');
     if (markAllAsReadButton) {

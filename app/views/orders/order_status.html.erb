@@ -79,3 +79,18 @@
   </div>
 </div>
 
+<div class="text-center mt-3 mb-3">
+  <div class="btn-group" role="group">
+    <% if page > 1 %>
+      <%= link_to "Previous", order_status_path(page: page - 1), class: 'btn btn-outline-dark' %>
+    <% end %>
+
+    <% (1..total_pages).each do |p| %>
+      <%= link_to p, order_status_path(page: p), class: p == page ? 'btn btn-dark' : 'btn btn-outline-dark' %>
+    <% end %>
+
+    <% if page < total_pages %>
+      <%= link_to "Next", order_status_path(page: page + 1), class: 'btn btn-outline-dark' %>
+    <% end %>
+  </div>
+</div>

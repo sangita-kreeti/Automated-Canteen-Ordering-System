@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# This is a helper
+# orders_helper.rb
 module OrdersHelper
   RADIUS = 6371
 
@@ -21,7 +21,63 @@ module OrdersHelper
   end
   # rubocop:enable Metrics/AbcSize
 
+  def update_order_status(new_status, message)
+    order = Order.find(params[:id])
+
+    if order.update(status: new_status)
+      sender = current_user
+      receiver = order.user
+      Notification.create_order_notification(sender, receiver, message) unless receiver.hide_notifications
+      redirect_to order_status_path, notice: 'Order status updated successfully.'
+    else
+      redirect_to order_status_path, alert: 'Failed to update order status.'
+    end
+  end
+
+  def apply_search_filters
+    apply_text_search
+    apply_food_store_filter
+    apply_food_category_filter
+  end
+
   private
+
+  def apply_text_search
+    return unless params[:search].present?
+
+    search_results = FoodMenu.search(params[:search]).records.includes(:food_store)
+    @food_menus = @food_menus.merge(search_results)
+  end
+
+  def apply_food_store_filter
+    return unless params[:food_store_filter].present?
+
+    food_store_id = params[:food_store_filter].to_i
+    @food_menus = @food_menus.where(food_store_id: food_store_id)
+  end
+
+  def apply_food_category_filter
+    return unless params[:food_category_filter].present?
+
+    food_category_id = params[:food_category_filter].to_i
+    @food_menus = @food_menus.where(food_category_id: food_category_id)
+  end
+
+  def paginate_orders(orders)
+    per_page = 10
+    page = (params[:page] || 1).to_i
+
+    total_orders = orders.count
+    total_pages = (total_orders / per_page.to_f).ceil
+
+    start_index = (page - 1) * per_page
+    end_index = start_index + per_page - 1
+    end_index = total_orders - 1 if end_index >= total_orders
+
+    paged_orders = orders[start_index..end_index]
+
+    [paged_orders, page, total_pages]
+  end
 
   def to_radians(degrees)
     degrees.to_f * Math::PI / 180
@@ -46,5 +102,17 @@ module OrdersHelper
 
     company = Company.find_by(id: current_user.company_id)
     company&.values_at(:latitude, :longitude) || [0, 0]
+  end
+
+  def find_order_by_session
+    Order.find_by(id: session[:order_id]) if session[:order_id]
+  end
+
+  def calculate_distances_for_employee(food_stores)
+    return unless employee_needs_distances?
+
+    @distances = calculate_distances(food_stores).map do |food_store, distance|
+      [food_store, distance.round(2)]
+    end
   end
 end
