@@ -2,7 +2,8 @@
 
 # This is controller
 class UsersController < ApplicationController
-  before_action :set_user, :authenticate_user, only: %i[edit update]
+  before_action :set_user
+  before_action :authenticate_employee_or_chef, only: %i[edit update]
 
   def new
     @user = User.new
@@ -63,9 +64,9 @@ class UsersController < ApplicationController
     user = User.find(params[:user_id])
 
     if user.employee?
-      redirect_to employee_dashboard_index_path
+      redirect_to employee_dashboard_path
     elsif user.chef?
-      redirect_to chef_dashboard_index_path
+      redirect_to chef_dashboard_path
     else
       redirect_to admin_dashboard_path
     end
@@ -82,6 +83,12 @@ class UsersController < ApplicationController
     @user = current_user
   end
 
+  def authenticate_employee_or_chef
+    return if current_user && (current_user.employee? || current_user.chef?)
+
+    handle_unauthorized_access
+  end
+
   def user_params
     params.require(:user).permit(:username, :email, :password, :role, :company_id, :food_store_id, :name, :phone_no)
   end
@@ -91,9 +98,9 @@ class UsersController < ApplicationController
     when 'admin'
       redirect_to admin_dashboard_path
     when 'employee'
-      redirect_to employee_dashboard_index_path
+      redirect_to employee_dashboard_path
     when 'chef'
-      redirect_to chef_dashboard_index_path
+      redirect_to chef_dashboard_path
     else
       redirect_to root_path
     end

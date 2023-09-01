@@ -69,8 +69,8 @@ class SessionsController < ApplicationController
     redirect_path =
       case user.role
       when 'admin' then admin_dashboard_path
-      when 'employee' then employee_dashboard_index_path
-      when 'chef' then chef_dashboard_index_path
+      when 'employee' then employee_dashboard_path
+      when 'chef' then chef_dashboard_path
       else
         flash[:alert] = 'Unable to login with the given credentials.'
         login_path

@@ -39,7 +39,7 @@ document.addEventListener('turbolinks:load', function() {
       },
       
     });
-        const markAllAsReadButton = document.getElementById('mark-all-as-read-button');
+    const markAllAsReadButton = document.getElementById('mark-all-as-read-button');
     if (markAllAsReadButton) {
       markAllAsReadButton.addEventListener('click', function() {
         fetch('/mark_all_notifications_read', {

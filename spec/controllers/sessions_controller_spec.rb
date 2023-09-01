@@ -83,7 +83,7 @@ RSpec.describe SessionsController, type: :controller do
       it 'redirects to the appropriate dashboard' do
         user.update(role: 'chef')
         get :omniauth
-        expect(response).to redirect_to(chef_dashboard_index_path)
+        expect(response).to redirect_to(chef_dashboard_path)
       end
     end
 

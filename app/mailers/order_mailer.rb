@@ -23,7 +23,7 @@ class OrderMailer < ApplicationMailer
   private
 
   def add_header(pdf)
-    pdf.text 'Consolidated Order Details'
+    pdf.text 'Order Details'
   end
 
   def add_order_details(pdf, orders)

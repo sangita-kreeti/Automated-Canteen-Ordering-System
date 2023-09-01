@@ -1,10 +1,12 @@
-# app/controllers/orders_controller.rb
+# frozen_string_literal: true
 
 # This is a controller
 class OrdersController < ApplicationController
   include OrdersHelper
 
-  before_action :authenticate_user
+  before_action :authenticate_chef, only: %i[received_orders]
+  before_action :authenticate_employee, only: %i[index place_order order_history search]
+  before_action :authenticate_admin_or_chef, only: %i[order_status]
 
   def index
     @food_menus = fetch_food_menus
@@ -35,7 +37,8 @@ class OrdersController < ApplicationController
 
     @food_stores = FoodStore.all
     @food_categories = FoodCategory.all
-    @distances = calculate_distances(@food_stores)
+
+    @distances = calculate_distances_for_employee(@food_stores)
 
     render partial: 'search_results'
   end
@@ -51,7 +54,10 @@ class OrdersController < ApplicationController
   end
 
   def order_status
-    @orders, page, total_pages = paginate_orders(Order.all.sort_by { |order| order.company_name.present? ? 0 : 1 })
+    orders = Order.all.sort_by do |order|
+      [order.company_name == 'Other' ? 1 : 0, order.company_name]
+    end
+    @orders, page, total_pages = paginate_orders(orders)
     render 'order_status', locals: { orders: @orders, page: page, total_pages: total_pages }
   end
 
@@ -72,6 +78,12 @@ class OrdersController < ApplicationController
   end
 
   private
+
+  def authenticate_admin_or_chef
+    return if current_user && (current_user.admin? || current_user.chef?)
+
+    handle_unauthorized_access
+  end
 
   def fetch_food_menus
     search_results = params[:search].present? ? FoodMenu.search(params[:search]).records : FoodMenu.all

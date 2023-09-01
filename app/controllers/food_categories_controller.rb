@@ -2,7 +2,7 @@
 
 # This is controller
 class FoodCategoriesController < ApplicationController
-  before_action :authenticate_user
+  before_action :authenticate_admin
   def index
     @food_categories = FoodCategory.page(params[:page]).per(10)
   end
@@ -22,6 +22,7 @@ class FoodCategoriesController < ApplicationController
 
   def destroy
     @food_category = FoodCategory.find(params[:id])
+
     @food_category.destroy
     redirect_to food_categories_path, alert: 'Food category deleted successfully.'
   end

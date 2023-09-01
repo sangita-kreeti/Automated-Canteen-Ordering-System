@@ -1,6 +1,7 @@
 <% if @food_menus.any? %>
 <% @food_menus.each do |food_menu| %>
-<div class="col-md-6">
+<div class="col-md-4 col-lg-6 col-sm-6 p-1" style="min-width:363px";
+" >
    <div class="card mb-3 shadow">
       <% if food_menu.food_store.present? %>
       <div class="card-header text-center">
@@ -33,6 +34,7 @@
       </div>
    </div>
 </div>
+
 <% end %>
 <% else %>
 <p>No results found.</p>

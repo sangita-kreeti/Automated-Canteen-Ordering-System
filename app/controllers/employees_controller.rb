@@ -2,7 +2,7 @@
 
 # This is a controller
 class EmployeesController < ApplicationController
-  before_action :authenticate_user
+  before_action :authenticate_admin
   def index
     @employees = User.where(role: 'employee').page(params[:page]).per(15)
   end

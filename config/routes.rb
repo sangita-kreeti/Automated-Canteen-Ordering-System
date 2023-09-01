@@ -5,9 +5,9 @@ Rails.application.routes.draw do
   root 'users#new'
   get '/users', to: 'users#new'
 
-  resources :companies, only: %i[index show new create edit update destroy]
+  resources :companies, only: %i[index new create destroy]
   resources :food_stores
-  resources :food_categories, only: %i[index show new create edit update destroy]
+  resources :food_categories, only: %i[index new create destroy]
 
   resources :employees, only: [:index] do
     patch 'approved', on: :member
@@ -67,8 +67,8 @@ Rails.application.routes.draw do
   get '/users/:user_id', to: 'users#redirect_to_dashboard', as: 'user_dashboard_redirect'
 
   get 'admin_dashboard', to: 'admin_dashboard#index', as: :admin_dashboard
-  get '/employee_dashboard', to: 'employee_dashboard#index', as: 'employee_dashboard_index'
-  get '/chef_dashboard', to: 'chef_dashboard#index', as: 'chef_dashboard_index'
+  get '/employee_dashboard', to: 'employee_dashboard#index', as: :employee_dashboard
+  get '/chef_dashboard', to: 'chef_dashboard#index', as: :chef_dashboard
 
   get 'employees/manage_notifications', to: 'employees#manage_notifications', as: :manage_notifications_employee
 
@@ -89,9 +89,9 @@ Rails.application.routes.draw do
   get '/auth/:provider/callback', to: 'sessions#omniauth'
   get '/auth/facebook/callback', to: 'sessions#omniauth'
 
-  match '*path', to: lambda { |_env|
-    [404, {}, [File.read(Rails.public_path.join('404.html'))]]
-  }, via: :all
+  match '*unmatched', to: 'application#not_found_method', via: :all, constraints: lambda { |req|
+    !req.path.match(%r{\A/rails/active_storage/})
+  }
 end
 
 # rubocop:enable Metrics/BlockLength

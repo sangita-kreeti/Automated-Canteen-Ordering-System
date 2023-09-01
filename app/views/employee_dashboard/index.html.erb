@@ -25,8 +25,10 @@
                   </button>
                </div>
                <div class="d-flex justify-content-center mt-3">
-                  <%= link_to 'Edit', edit_user_path(current_user), class: 'btn btn-primary mr-2' %>
-                  <%= button_to 'Logout', logout_path, data: { confirm: 'Are you sure?' }, class: 'btn btn-success' %>
+               <div class="p-1">
+                  <%= link_to 'Edit', edit_user_path(current_user), class: 'btn btn-primary mr-2' %></div>
+                  <div class="p-1">
+                  <%= button_to 'Logout', logout_path, data: { confirm: 'Are you sure?' }, class: 'btn btn-success' %></div>
                </div>
             </div>
          </div>
@@ -129,29 +131,6 @@
 </div>
 <script>
    document.addEventListener('turbolinks:load', function() {
-  const orderFoodButton = document.getElementById('order-food-button');
-  if (orderFoodButton) {
-    orderFoodButton.addEventListener('click', function(event) {
-      if (!<%= @current_user.approved? %>) {
-        event.preventDefault();
-      }
-    });
-  }
-
-  const startChatButton = document.getElementById('start-chat-button');
-  if (startChatButton) {
-    startChatButton.disabled = !<%= @current_user.approved? %>;
-  }
-
-  function handleMarkAsRead(response) {
-    if (response.status === 'success') {
-      const notificationItem = document.getElementById(`notification-${response.notification_id}`);
-      if (notificationItem) {
-        notificationItem.classList.add('text-muted');
-      }
-    }
-  }
-
   function handleMarkAllAsRead(response) {
     if (response.status === 'success') {
       const notificationItems = document.querySelectorAll('.notification-item');
@@ -160,16 +139,6 @@
       });
     }
   }
-
-  const markAsReadButtons = document.querySelectorAll('[data-mark-notification-read]');
-  markAsReadButtons.forEach(button => {
-    button.addEventListener('click', function() {
-      const notificationId = this.getAttribute('data-mark-notification-read');
-      fetch(`/mark_notification_read/${notificationId}`, { method: 'PATCH' })
-        .then(response => response.json())
-        .then(handleMarkAsRead);
-    });
-  });
 
   const markAllAsReadButton = document.getElementById('mark-all-as-read-button');
   if (markAllAsReadButton) {

@@ -97,7 +97,7 @@ RSpec.describe UsersController, type: :controller do
       it 'redirects to appropriate dashboard based on user role' do
         new_attributes[:role] = 'employee'
         patch :update, params: { id: user.to_param, user: new_attributes }
-        expect(response).to redirect_to(employee_dashboard_index_path)
+        expect(response).to redirect_to(employee_dashboard_path)
       end
 
       it 'sets a flash notice' do

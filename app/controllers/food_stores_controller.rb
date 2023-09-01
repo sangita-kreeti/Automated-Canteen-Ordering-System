@@ -2,7 +2,7 @@
 
 # This is controller
 class FoodStoresController < ApplicationController
-  before_action :authenticate_user
+  before_action :authenticate_admin
   def index
     @food_stores = FoodStore.page(params[:page]).per(10)
   end

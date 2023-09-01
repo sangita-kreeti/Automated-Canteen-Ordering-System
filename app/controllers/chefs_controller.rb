@@ -2,7 +2,7 @@
 
 # This is controller
 class ChefsController < ApplicationController
-  before_action :authenticate_user
+  before_action :authenticate_admin
   def index
     @chefs = User.where(role: 'chef').page(params[:page]).per(15)
   end

@@ -8,7 +8,7 @@
                <p><i class="bi bi-telephone-fill text-secondary"></i> Phone No: <%= current_user.phone_no %></p>
                <p><i class="bi bi-shield-fill text-secondary"></i> Role: <%= current_user.role.capitalize %></p>
             </div>
-            <div class="col-md-6 text-center text-md-end">
+            <div>
                <%= link_to "Log Out", logout_path, method: :delete, data: { confirm: 'Are you sure?' }, class: "btn btn-danger mt-3" %>
             </div>
          </div>

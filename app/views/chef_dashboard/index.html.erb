@@ -10,12 +10,16 @@
                <p class="card-text"><strong><i class="bi bi-telephone-fill"></i> Chef Phone Number:</strong> <%= current_user.phone_no %></p>
                <p class="card-text"><strong><i class="bi bi-shop"></i> Food Store Name:</strong> <%= current_user.food_store&.name %></p>
                <div class="d-flex justify-content-center mt-3">
+                  <div class="p-1">
                   <%= link_to edit_user_path(current_user), class: 'btn btn-primary mr-3' do %>
                   <i class="bi bi-pencil-fill"></i> Edit
                   <% end %>
+                  </div>
+                  <div class="p-1">
                   <%= button_to logout_path, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-success' do %>
                   <i class="bi bi-box-arrow-right"></i> Logout
                   <% end %>
+                  </div>
                </div>
             </div>
          </div>

@@ -12,10 +12,31 @@ class ApplicationController < ActionController::Base
     current_user.present?
   end
 
-  def authenticate_user
-    return if current_user
+  def authenticate_admin
+    return if current_user&.admin?
 
-    redirect_to login_path,
-                alert: 'You are not authorized to access this page.'
+    handle_unauthorized_access
+  end
+
+  def authenticate_employee
+    return if current_user&.employee?
+
+    handle_unauthorized_access
+  end
+
+  def authenticate_chef
+    return if current_user&.chef?
+
+    handle_unauthorized_access
+  end
+
+  def not_found_method
+    render file: "#{Rails.public_path}/404.html", status: :not_found, layout: false
+  end
+
+  private
+
+  def handle_unauthorized_access
+    render file: Rails.public_path.join('404.html'), status: :not_found, layout: false
   end
 end

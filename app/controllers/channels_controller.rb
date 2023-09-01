@@ -2,7 +2,8 @@
 
 # This is channels_controller.rb
 class ChannelsController < ApplicationController
-  before_action :authenticate_user
+  before_action :authenticate_employee_or_chef
+
   def select_users
     if current_user.employee?
       @chefs = User.where(role: 'chef', approved: true)
@@ -45,6 +46,12 @@ class ChannelsController < ApplicationController
   end
 
   private
+
+  def authenticate_employee_or_chef
+    return if current_user && (current_user.employee? || current_user.chef?)
+
+    handle_unauthorized_access
+  end
 
   def message_params
     params.require(:message).permit(:content, :channel_id)

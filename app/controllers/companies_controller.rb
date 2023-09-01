@@ -2,7 +2,7 @@
 
 # This is controller
 class CompaniesController < ApplicationController
-  before_action :authenticate_user
+  before_action :authenticate_admin
   def index
     @companies = Company.page(params[:page]).per(15)
   end

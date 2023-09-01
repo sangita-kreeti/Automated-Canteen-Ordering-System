@@ -3,9 +3,7 @@
 # orders_helper.rb
 module OrdersHelper
   RADIUS = 6371
-
-  # rubocop:disable Metrics/AbcSize
-  def calculate_distance(lat1, lon1, lat2, lon2)
+  def calculate_distances(lat1, lon1, lat2, lon2)
     lat1_rad = to_radians(lat1)
     lon1_rad = to_radians(lon1)
     lat2_rad = to_radians(lat2)
@@ -14,12 +12,11 @@ module OrdersHelper
     dlat = lat2_rad - lat1_rad
     dlon = lon2_rad - lon1_rad
 
-    a = Math.sin(dlat / 2)**2 + Math.cos(lat1_rad) * Math.cos(lat2_rad) * Math.sin(dlon / 2)**2
-    c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
+    a = calculate_a(dlat, lat1_rad, lat2_rad, dlon)
+    c = calculate_c(a)
 
     RADIUS * c
   end
-  # rubocop:enable Metrics/AbcSize
 
   def update_order_status(new_status, message)
     order = Order.find(params[:id])
@@ -83,35 +80,36 @@ module OrdersHelper
     degrees.to_f * Math::PI / 180
   end
 
-  def calculate_distances(food_stores)
-    return [] unless valid_user_for_distances?
+  def calculate_a(dlat, lat1_rad, lat2_rad, dlon)
+    Math.sin(dlat / 2)**2 + Math.cos(lat1_rad) * Math.cos(lat2_rad) * Math.sin(dlon / 2)**2
+  end
 
-    user_latitude, user_longitude = user_coordinates
-
-    food_stores.map do |food_store|
-      [food_store, calculate_distance(user_latitude, user_longitude, food_store.latitude, food_store.longitude)]
-    end
+  def calculate_c(a)
+    2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
   end
 
   def valid_user_for_distances?
     current_user.role == 'employee' && current_user.company_id.present?
   end
 
-  def user_coordinates
+  def find_order_by_session
+    Order.find_by(id: session[:order_id]) if session[:order_id]
+  end
+
+  def user_company_coordinates
     return [0, 0] if current_user.company_id.zero?
 
     company = Company.find_by(id: current_user.company_id)
     company&.values_at(:latitude, :longitude) || [0, 0]
   end
 
-  def find_order_by_session
-    Order.find_by(id: session[:order_id]) if session[:order_id]
-  end
-
   def calculate_distances_for_employee(food_stores)
     return unless employee_needs_distances?
 
-    @distances = calculate_distances(food_stores).map do |food_store, distance|
+    company_latitude, company_longitude = user_company_coordinates
+
+    @distances = food_stores.map do |food_store|
+      distance = calculate_distances(company_latitude, company_longitude, food_store.latitude, food_store.longitude)
       [food_store, distance.round(2)]
     end
   end

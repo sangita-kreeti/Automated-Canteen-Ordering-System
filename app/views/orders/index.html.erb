@@ -1,6 +1,6 @@
 <div class="container">
    <div class="row">
-      <div class="col-md-8">
+      <div class="col-md-5">
          <div class="mb-4 mt-3">
             <form id="search-form" method="GET" action="<%= search_orders_path %>">
                <div class="input-group">
@@ -9,10 +9,6 @@
                </div>
             </form>
          </div>
-      </div>
-   </div>
-   <div class="row">
-      <div class="col-md-8">
          <div class="filtration-section card border-primary">
             <h4 class="card-header text-center">Filter By:</h4>
             <div class="card-body">
@@ -40,50 +36,7 @@
                </div>
             </div>
          </div>
-         <div id="search-results">
-         </div>
-         <div id="food-menu" class="mt-3 d-flex" style="flex-wrap: wrap; column-gap: 2rem;">
-            <div class="row">
-               <% @food_menus.each do |food_menu| %>
-               <div class="col-md-4">
-                  <div class="card mb-3 shadow">
-                     <% if food_menu.food_store.present? %>
-                     <div class="card-header text-center">
-                        <h5 class="card-text mb-0">
-                           <i class="bi bi-shop"></i> <%= food_menu.food_store.name %>
-                        </h5>
-                     </div>
-                     <% end %>
-                     <div class="card-body text-center">
-                        <h6 class="card-title"><%= food_menu.title %></h6>
-                        <p class="card-text food-price" data-price="<%= food_menu.price %>">₹<%= food_menu.price %></p>
-                        <p class="card-text">Category: <%= FoodCategory.find(food_menu.food_category_id).name %></p>
-                        <% if current_user.role == "employee" && current_user.company.present? %>
-                        <% distance = @distances.find { |data| data[0] == food_menu.food_store }&.dig(1) %>
-                        <% if distance.present? %>
-                        <p class="card-text">Distance: <%= distance %> Km</p>
-                        <% else %>
-                        <p class="card-text">Distance: N/A</p>
-                        <% end %>
-                        <% else %>
-                        <p class="card-text">Distance: N/A</p>
-                        <% end %>
-                        <div class="input-group input-group-sm mb-3">
-                           <input type="number" class="form-control quantity-input" pattern="[0-9]*" value="0" min="1">
-                           <textarea class="form-control description-input" rows="2" placeholder="Special ingredients"></textarea>
-                           <button class="btn btn-primary add-to-cart-btn" data-food-item-id="<%= food_menu.id %>" data-food-store-name="<%= food_menu.food_store.name %>">
-                           <i class="bi bi-cart-plus"></i> 
-                           </button>
-                        </div>
-                     </div>
-                  </div>
-               </div>
-               <% end %>
-            </div>
-         </div>
-      </div>
-      <div class="col-md-4 border-start">
-         <div id="cart-container" class="p-4">
+         <div id="cart-container" class="p-1 overflow-auto">
             <h2 class="text-center mb-4">Cart</h2>
             <table class="table table-striped">
                <thead>
@@ -102,32 +55,42 @@
                <strong>Total Price: <span id="total-price">₹0</span></strong>
             </div>
             <br>
-            <div class="d-flex justify-content-between">
-               <button id="place-order-button" class="btn btn-secondary" data-turbolinks="false">Place Order</button>
-               <div>
-                  <%= link_to 'Back to Employee Dashboard', employee_dashboard_index_path, class: 'btn btn-secondary btn-sm' %>
-               </div>
+            <div class="d-flex ">
+            <div class=p-1>
+               <button id="place-order-button" class="btn btn-primary" data-turbolinks="false">Place Order</button></div>
+               <div class=p-1>
+               <%= link_to 'Back to Employee Dashboard', employee_dashboard_path, class: 'btn btn-warning btn-sm' %></div>
             </div>
          </div>
       </div>
-      <div class="modal fade" id="confirm-modal" tabindex="-1" role="dialog" aria-labelledby="confirm-modal-label" aria-hidden="true">
-         <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-               <div class="modal-header">
-                  <h5 class="modal-title" id="confirm-modal-label">Confirm Order</h5>
-                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-               </div>
-               <div class="modal-body">
-                  <p>Are you sure you want to place this order?</p>
-               </div>
-               <div class="modal-footer">
-                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                  <button type="button" class="btn btn-primary" id="confirm-order-button">Confirm</button>
-               </div>
-            </div>
+      <div class="col-md-7">
+         <div id="search-results">
+            <!-- Search results content goes here -->
+         </div>
+         <div id="food-menu" class="mt-3 d-flex flex-row" style=" flex-wrap: wrap;">
+            
          </div>
       </div>
    </div>
+</div>
+<div class="modal fade" id="confirm-modal" tabindex="-1" role="dialog" aria-labelledby="confirm-modal-label" aria-hidden="true">
+   <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+         <div class="modal-header">
+            <h5 class="modal-title" id="confirm-modal-label">Confirm Order</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+         </div>
+         <div class="modal-body">
+            <p>Are you sure you want to place this order?</p>
+         </div>
+         <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+            <button type="button" class="btn btn-primary" id="confirm-order-button">Confirm</button>
+         </div>
+      </div>
+   </div>
+</div>
+</div>
 </div>
 <ul class="pagination justify-content-center mt-3">
    <% if @food_menus.current_page > 1 %>
@@ -210,9 +173,16 @@
          }
          return;
          }
+      const specialIngredientsInput = $(this).closest('.input-group').find('.description-input');
+      const specialIngredients = specialIngredientsInput.val();
+
+  if (specialIngredients.length > 30) {
+    alert('Special ingredients should not exceed 30 characters.');
+    return;
+  }
        const price = parseFloat($(this).closest('.card-body').find('.food-price').data('price'));
        const name = $(this).closest('.card-body').find('.card-title').text();
-       const specialIngredients = $(this).closest('.card-body').find('.description-input').val();
+       
        const foodStoreName = $(this).data('food-store-name');
    
        if (quantity < 1) {
@@ -303,10 +273,9 @@
          }
          }
        });
-     });
-   
+     });   
      function filterSearch(foodStoreId, foodCategoryId) {
-   const searchInput = $('#search-input').val();
+     const searchInput = $('#search-input').val();
    
    $.ajax({
      type: 'GET',
@@ -324,8 +293,7 @@
        console.error(error);
      },
    });
-   }
-   
+   }   
    function filterSearch(searchInput, foodStoreId, foodCategoryId) {
    $.ajax({
      type: 'GET',
