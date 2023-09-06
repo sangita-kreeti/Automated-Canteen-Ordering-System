@@ -7,12 +7,12 @@ class CreateUsers < ActiveRecord::Migration[6.1]
     create_table :users do |t|
       t.string :email, null: false
       t.string :password_digest, null: false
-      t.integer :role, null: false
+      t.integer :role
       t.string :username, null: false
       t.string :uid
       t.string :provider
-      t.string :name, null: false
-      t.string :phone_no, null: false
+      t.string :name
+      t.string :phone_no
       t.integer :company_id
       t.integer :food_store_id
       t.boolean :approved, default: false

@@ -15,7 +15,6 @@ class UsersController < ApplicationController
       session[:user_id] = @user.id
       flash[:notice] = 'Please complete your profile first!.'
       redirect_to complete_registration_user_path(@user)
-
     else
       render :new
     end
@@ -53,7 +52,9 @@ class UsersController < ApplicationController
 
   def update
     if @user.update(user_params)
-      flash[:notice] = 'Profile updated successfully.'
+      if @user.previous_changes.any?
+        flash[:notice] = 'Profile updated successfully.'
+      end
       redirect_user_by_role
     else
       render :edit
