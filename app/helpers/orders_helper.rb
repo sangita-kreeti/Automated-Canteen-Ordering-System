@@ -20,22 +20,26 @@ module OrdersHelper
 
   def update_order_status(new_status)
     order = Order.find(params[:id])
+
     if order.update(status: new_status)
       sender = current_user
       receiver = order.user
       message = "Order items #{order.food_item_names.join(', ')} has been #{new_status}."
-      if order.status == 'approved'
-        chefs = User.where(role: 'chef', food_store_id: FoodStore.find_by(name: order.food_store_name)&.id)
-        chefs.each do |chef|
-          Notification.create_order_notification(sender, chef, message)
-        end
-      end
 
-      Notification.create_order_notification(sender, receiver, message) unless receiver.hide_notifications
+      send_notifications(order, sender, receiver, message)
       redirect_to order_status_path, notice: 'Order status updated successfully.'
     else
       redirect_to order_status_path, alert: 'Failed to update order status.'
     end
+  end
+
+  def send_notifications(order, sender, receiver, message)
+    if order.status == 'approved'
+      chefs = User.chefs_for_food_store(order.food_store_name)
+      chefs.each { |chef| Notification.create_order_notification(sender, chef, message) }
+    end
+
+    Notification.create_order_notification(sender, receiver, message) unless receiver.hide_notifications
   end
 
   def apply_search_filters
@@ -57,14 +61,14 @@ module OrdersHelper
     return unless params[:food_store_filter].present?
 
     food_store_id = params[:food_store_filter].to_i
-    @food_menus = @food_menus.where(food_store_id: food_store_id)
+    @food_menus = @food_menus.filter_by_food_store(food_store_id)
   end
 
   def apply_food_category_filter
     return unless params[:food_category_filter].present?
 
     food_category_id = params[:food_category_filter].to_i
-    @food_menus = @food_menus.where(food_category_id: food_category_id)
+    @food_menus = @food_menus.filter_by_food_category(food_category_id)
   end
 
   def paginate_orders(orders)
@@ -110,6 +114,7 @@ module OrdersHelper
     company&.values_at(:latitude, :longitude) || [0, 0]
   end
 
+  # rubocop:disable Metrics/CyclomaticComplexity, Metrics/MethodLength, Metrics/PerceivedComplexity, Metrics/AbcSize
   def calculate_distances_for_employee(food_stores)
     return unless employee_needs_distances?
 
@@ -130,4 +135,5 @@ module OrdersHelper
       end
     end
   end
+  # rubocop:enable Metrics/CyclomaticComplexity, Metrics/MethodLength, Metrics/PerceivedComplexity, Metrics/AbcSize
 end

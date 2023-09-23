@@ -13,9 +13,9 @@ User.create(
 )
 
 # Sample data for Companies
-company1 = Company.create(name: 'Kreeti Technology', address: 'Address', pincode: '700091')
-company2 = Company.create(name: 'Kaizen', address: 'Address', pincode: '700091')
-company3 = Company.create(name: 'Fujitsu', address: 'Address', pincode: '700091')
+company1 = Company.create(name: 'Kreeti Technology', address: 'Godrej Genesis', pincode: '700091')
+company2 = Company.create(name: 'Kaizen', address: 'Godrej Genesis', pincode: '700091')
+company3 = Company.create(name: 'Fujitsu', address: 'Godrej Genesis', pincode: '700091')
 
 # Sample data for FoodCategories
 food_categories_data = [
@@ -31,9 +31,9 @@ food_categories_data.each do |category_params|
 end
 
 # Sample data for FoodStores
-food_store1 = FoodStore.create(name: 'Food Store 1', address: 'Address', food_category_id: FoodCategory.first.id,
+food_store1 = FoodStore.create(name: 'Chinese Zone', address: 'Address', food_category_id: FoodCategory.first.id,
                                pincode: '700091')
-food_store2 = FoodStore.create(name: 'Food Store 2', address: 'Address', food_category_id: FoodCategory.second.id,
+food_store2 = FoodStore.create(name: 'Kasturi Bengali Resturant', address: 'Address', food_category_id: FoodCategory.second.id,
                                pincode: '700091')
 
 # Sample data for Users
@@ -67,7 +67,7 @@ food_menus_data = [
   { user_id: user_chef1&.id, food_store_id: user_chef1&.food_store&.id,
     food_category_id: user_chef1&.food_store&.food_category_id, title: 'Chicken Chowmin', price: 140 },
   { user_id: user_chef2&.id, food_store_id: user_chef2&.food_store&.id,
-    food_category_id: user_chef2&.food_store&.food_category_id, title: 'Beulir dal', price: 70 },
+    food_category_id: user_chef2&.food_store&.food_category_id, title: 'Mishti Doi', price: 70 },
   { user_id: user_chef2&.id, food_store_id: user_chef2&.food_store&.id,
     food_category_id: user_chef2&.food_store&.food_category_id, title: 'Alu posto', price: 110 }
 

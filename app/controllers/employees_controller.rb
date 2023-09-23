@@ -7,30 +7,25 @@ class EmployeesController < ApplicationController
   def select_employees; end
 
   def company_employees
-    @employees = User.where(role: 'employee').where.not(company_id: 0).page(params[:page]).per(15)
+    @employees = User.company_employees.page(params[:page]).per(15)
   end
 
   def ordinary_employees
-    @employees = User.where(role: 'employee', company_id: 0).page(params[:page]).per(15)
+    @employees = User.ordinary_employees.page(params[:page]).per(15)
   end
 
   def approved
     employee = find_employee_by_id
+    return unless employee.update(approved: true)
 
-    if employee.update(approved: true)
-      admin = current_user
-      unless employee.hide_notifications
-        Notification.create_employee_approved_notification(admin, employee,
-                                                           'You have been successfully approved by an admin.')
-      end
-
-      notice_message = 'Employee approved successfully.'
-      redirect_path = employee.company_id.zero? ? ordinary_employees_path : company_employees_path
-      redirect_to redirect_path, notice: notice_message
-    else
-      error_messages = employee.errors.full_messages.join(', ')
-      redirect_to admin_dashboard_path, alert: "Failed to approve the employee: #{error_messages}"
+    admin = current_user
+    unless employee.hide_notifications
+      Notification.create_employee_approved_notification(admin, employee,
+                                                         'You have been successfully approved by an admin.')
     end
+    notice_message = 'Employee approved successfully.'
+    redirect_path = employee.company_id.zero? ? ordinary_employees_path : company_employees_path
+    redirect_to redirect_path, notice: notice_message
   end
 
   def reject
@@ -44,7 +39,7 @@ class EmployeesController < ApplicationController
   end
 
   def manage_notifications
-    @employees = User.where(role: 'employee').page(params[:page]).per(15)
+    @employees = User.employees.page(params[:page]).per(15)
   end
 
   def update_notifications

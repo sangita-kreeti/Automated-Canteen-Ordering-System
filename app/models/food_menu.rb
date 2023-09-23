@@ -11,6 +11,14 @@ class FoodMenu < ApplicationRecord
   validates :title, presence: true, uniqueness: { scope: :food_store_id, case_sensitive: false }
   validates :price, presence: true, numericality: { less_than_or_equal_to: 1000, message: 'should be less than 1000' }
 
+  scope :filter_by_food_store, lambda { |food_store_id|
+    where(food_store_id: food_store_id) if food_store_id.present?
+  }
+
+  scope :filter_by_food_category, lambda { |food_category_id|
+    where(food_category_id: food_category_id) if food_category_id.present?
+  }
+
   index_name "food_menus_#{Rails.env}"
 
   settings do

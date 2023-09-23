@@ -6,9 +6,9 @@ class ChannelsController < ApplicationController
 
   def select_users
     if current_user.employee?
-      @chefs = User.where(role: 'chef', approved: true)
+      @chefs = User.approved_chefs
     elsif current_user.chef?
-      @employees = User.where(role: 'employee', approved: true)
+      @employees = User.approved_employees
     end
     @channel = Channel.new
     render 'select_user', locals: { channel: @channel }

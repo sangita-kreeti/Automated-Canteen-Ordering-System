@@ -35,6 +35,18 @@ class User < ApplicationRecord
                        on: :update,
                        numericality: { only_integer: true, message: '%<value>s is not a valid phone number' }
 
+  scope :approved_chefs, -> { where(role: 'chef', approved: true) }
+  scope :approved_employees, -> { where(role: 'employee', approved: true) }
+  scope :company_employees, -> { where(role: 'employee').where.not(company_id: 0) }
+  scope :ordinary_employees, -> { where(role: 'employee', company_id: 0) }
+  scope :chefs, -> { where(role: 'chef') }
+  scope :employees, -> { where(role: 'employee') }
+  scope :chefs_for_food_store, -> (food_store_name) {
+    where(role: 'chef')
+      .joins(:food_store)
+      .where(food_stores: { name: food_store_name })
+  }
+                                                                                
   enum role: { employee: 0, chef: 1, admin: 2 }
 
   def either_company_or_food_store_present
@@ -44,7 +56,7 @@ class User < ApplicationRecord
   end
 
   def pincode_presence_when_company_id_zero
-    return unless company_id.zero? && pincode.blank?
+    return unless role == 'employee' && company_id.zero? && pincode.blank?
 
     errors.add(:pincode, 'must be present when company id is 0')
   end

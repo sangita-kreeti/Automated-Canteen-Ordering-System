@@ -20,13 +20,15 @@ class OrdersController < ApplicationController
     items = params[:items]
     return render(json: { error: 'Cart is empty.' }, status: :unprocessable_entity) if items.empty?
 
-    orders_by_food_store(items).each do |food_store_name, order_items|
+    orders_by_food_store_result = orders_by_food_store(items)
+
+    orders_by_food_store_result.each do |food_store_name, order_items|
       order = build_order(food_store_name)
       update_order_with_items(order, order_items)
       order.update(status: 'placed')
     end
 
-    send_order_confirmation_emails(Order.where(status: 'placed').last(orders_by_food_store.size))
+    send_order_confirmation_emails(Order.where(status: 'placed').last(orders_by_food_store_result.size))
     render json: { success: true }
   end
 
