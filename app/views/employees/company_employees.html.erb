@@ -18,7 +18,12 @@
                <td><%= employee.name %></td>
                <td><%= employee.email %></td>
                <td><%= employee.phone_no %></td>
-               <td><%= Company.find_by(id: employee.company_id)&.name %></td>
+               <td>
+               <% if employee.company_id.zero? %>
+                  Other
+                  <% else %>
+                  <%= Company.find_by(id: employee.company_id)&.name %>
+                  <% end %></td>
                <td>
                   <% if employee.approved? %>
                   <span class="badge bg-success">Approved</span>
@@ -40,7 +45,7 @@
          </tbody>
       </table>
    </div>
-   <%= link_to 'Back to Admin Dashboard', admin_dashboard_path, class: 'btn btn-secondary' %>
+   <%= link_to 'Back to select employees', select_employees_path, class: 'btn btn-secondary' %>
 </div>
 <ul class="pagination justify-content-center mt-3">
    <% if @employees.current_page > 1 %>

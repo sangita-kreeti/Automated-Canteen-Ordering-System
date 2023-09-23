@@ -31,23 +31,15 @@
          <% end %>
       </div>
       <div class="form-group">
-         <%= form.label :latitude, class: "form-label required" %>
+         <%= form.label :pincode, class: "form-label required" %>
          <div class="input-group">
-            <%= form.text_field :latitude, class: 'form-control' %>
+            <%= form.text_field :pincode, class: 'form-control' %>
          </div>
-         <% if @food_store.errors.has_key?(:latitude) %>
-         <p class="text-danger"><%= @food_store.errors.full_messages_for(:latitude).first %></p>
+         <% if @food_store.errors.has_key?(:pincode) %>
+         <p class="text-danger"><%= @food_store.errors.full_messages_for(:pincode).first %></p>
          <% end %>
       </div>
-      <div class="form-group">
-         <%= form.label :longitude, class: "form-label required" %>
-         <div class="input-group">
-            <%= form.text_field :longitude, class: 'form-control' %>
-         </div>
-         <% if @food_store.errors.has_key?(:longitude) %>
-         <p class="text-danger"><%= @food_store.errors.full_messages_for(:longitude).first %></p>
-         <% end %>
-      </div>
+      
       <div class="mt-3">
          <%= form.submit 'Create', class: 'btn btn-primary' %>
          <%= link_to 'Back', food_stores_path, class: 'btn btn-secondary' %>

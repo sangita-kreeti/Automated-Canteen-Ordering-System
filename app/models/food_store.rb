@@ -7,7 +7,8 @@ class FoodStore < ApplicationRecord
   has_many :photos, dependent: :destroy
   has_many :food_menus, dependent: :destroy
 
-  validates :name, :address, :latitude, :longitude, presence: true
+  validates :name, :address, presence: true
+  validates :pincode, presence: true, format: { with: /\A\d{6}\z/, message: 'should be a 6-digit number' }
   validates :food_category_id, presence: true
   validates :name, uniqueness: true
 end

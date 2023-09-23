@@ -11,6 +11,8 @@ class CreateUsers < ActiveRecord::Migration[6.1]
       t.string :username, null: false
       t.string :uid
       t.string :provider
+      t.string :other_company_name
+      t.integer :pincode
       t.string :name
       t.string :phone_no
       t.integer :company_id

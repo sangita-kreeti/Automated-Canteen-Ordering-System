@@ -8,8 +8,7 @@
             <th>Name</th>
             <th>Address</th>
             <th>Food Category</th>
-            <th>Latitude</th>
-            <th>Longitude</th>
+            <th>Pincode</th>
             <th>Action</th>
          </tr>
       </thead>
@@ -20,8 +19,7 @@
             <td><%= food_store.name %></td>
             <td><%= food_store.address %></td>
             <td><%= food_store.food_category&.name %></td>
-            <td><%= food_store.latitude %></td>
-            <td><%= food_store.longitude %></td>
+            <td><%= food_store.pincode %></td>
             <td>
                <%= button_to food_store_path(food_store), method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-sm btn-danger', form: { class: 'd-inline' } do %>
                <i class="bi bi-trash-fill"></i> Delete

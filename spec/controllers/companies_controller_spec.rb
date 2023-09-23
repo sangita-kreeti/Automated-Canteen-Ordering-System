@@ -8,8 +8,7 @@ RSpec.describe CompaniesController, type: :controller do
     {
       name: 'Test Company',
       address: '123 Test Street',
-      latitude: 40.7128,
-      longitude: -74.0060
+      pincode: 700_091
     }
   end
 

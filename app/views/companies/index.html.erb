@@ -7,8 +7,7 @@
                <th>Company ID</th>
                <th>Name</th>
                <th>Address</th>
-               <th>Latitude</th>
-               <th>Longitude</th>
+               <th>Pincode</th>
                <th>Action</th>
             </tr>
          </thead>
@@ -18,8 +17,7 @@
                <td><%= company.id %></td>
                <td><%= company.name %></td>
                <td><%= company.address %></td>
-               <td><%= company.latitude %></td>
-               <td><%= company.longitude %></td>
+               <td><%= company.pincode %></td>
                <td>
                   <%= button_to company_path(company), method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-sm btn-danger', form: { class: 'd-inline' } do %>
                   <i class="bi bi-trash-fill"></i> Delete

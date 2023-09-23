@@ -18,19 +18,13 @@
             <% end %>
          </div>
          <div class="form-group">
-            <%= form.label :latitude , class: "required" %>
-            <%= form.text_field :latitude, class: 'form-control' %>
-            <% if @company.errors.has_key?(:latitude) %>
-            <p class="text-danger"><%= @company.errors.full_messages_for(:latitude).first %></p>
+            <%= form.label :pincode , class: "required" %>
+            <%= form.text_field :pincode, class: 'form-control' %>
+            <% if @company.errors.has_key?(:pincode) %>
+            <p class="text-danger"><%= @company.errors.full_messages_for(:pincode).first %></p>
             <% end %>
          </div>
-         <div class="form-group">
-            <%= form.label :longitude , class: "required"  %>
-            <%= form.text_field :longitude, class: 'form-control' %>
-            <% if @company.errors.has_key?(:longitude) %>
-            <p class="text-danger"><%= @company.errors.full_messages_for(:longitude).first %></p>
-            <% end %>
-         </div>
+         
          <div class="d-flex">
             <%= form.submit 'Create', class: 'btn btn-primary mt-3 mr-5' %>
             <%= link_to 'Back', companies_path, class: 'btn btn-secondary mt-3' %>

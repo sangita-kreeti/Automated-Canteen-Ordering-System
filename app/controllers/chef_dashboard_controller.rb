@@ -4,5 +4,7 @@
 class ChefDashboardController < ApplicationController
   before_action :authenticate_chef
 
-  def index; end
+  def index
+    @notifications = current_user.notifications.order(created_at: :desc)
+  end
 end

@@ -18,16 +18,15 @@ class OrdersController < ApplicationController
 
   def place_order
     items = params[:items]
+    return render(json: { error: 'Cart is empty.' }, status: :unprocessable_entity) if items.empty?
 
-    if items.empty?
-      render json: { error: 'Cart is empty.' }, status: :unprocessable_entity
-      return
+    orders_by_food_store(items).each do |food_store_name, order_items|
+      order = build_order(food_store_name)
+      update_order_with_items(order, order_items)
+      order.update(status: 'placed')
     end
 
-    orders_by_food_store = group_items_by_food_store(items)
-
-    process_orders_and_send_emails(orders_by_food_store, items)
-
+    send_order_confirmation_emails(Order.where(status: 'placed').last(orders_by_food_store.size))
     render json: { success: true }
   end
 
@@ -62,22 +61,26 @@ class OrdersController < ApplicationController
   end
 
   def approved
-    update_order_status('approved', 'Your order has been approved.')
+    update_order_status('approved')
   end
 
   def preparing
-    update_order_status('preparing', 'Your order is being prepared.')
+    update_order_status('preparing')
   end
 
   def finished
-    update_order_status('finished', 'Your order is ready for pickup.')
+    update_order_status('finished')
   end
 
   def delivered
-    update_order_status('delivered', 'Your order has been delivered.')
+    update_order_status('delivered')
   end
 
   private
+
+  def orders_by_food_store(items)
+    items.group_by { |item| item['food_store_name'] }
+  end
 
   def authenticate_admin_or_chef
     return if current_user && (current_user.admin? || current_user.chef?)
@@ -95,9 +98,10 @@ class OrdersController < ApplicationController
 
     items.each do |item|
       food_store_name = item['food_store_name']
-      order_group = orders_by_food_store[food_store_name]
-      order = build_order(food_store_name)
-      order_group << order
+      order_items = orders_by_food_store[food_store_name]
+      unless order_items.any? { |order_item| order_item['food_item_name'] == item['food_item_name'] }
+        order_items << item
+      end
     end
 
     orders_by_food_store
@@ -111,37 +115,17 @@ class OrdersController < ApplicationController
     )
   end
 
-  def process_orders_and_send_emails(orders_by_food_store, items)
-    orders_by_food_store.each do |food_store_name, order_group|
-      order_group_total_price = 0
-
-      order_group.each do |order|
-        items_for_food_store = items_for_store(items, food_store_name)
-        update_order_with_items(order, items_for_food_store)
-        order_group_total_price += order.prices.sum
-        order.update(status: 'placed')
-      end
-
-      send_order_confirmation_emails(order_group, order_group_total_price)
-    end
-  end
-
-  def items_for_store(items, food_store_name)
-    items.select { |item| item['food_store_name'] == food_store_name }
-  end
-
   def update_order_with_items(order, items)
-    order.food_item_names = items.map { |item| item['food_item_name'] }
-    order.quantities = items.map { |item| item['quantity'] }
-    order.prices = items.map { |item| (item['quantity'] * item['price']).round(2) }
+    order.food_item_names.concat(items.map { |item| item['food_item_name'] })
+    order.quantities.concat(items.map { |item| item['quantity'] })
+    order.prices.concat(items.map { |item| (item['quantity'] * item['price']).round(2) })
   end
 
-  def send_order_confirmation_emails(order_group, total_price)
-    first_order = order_group.first
-    OrderMailer.order_confirmation_email(order_group, total_price).deliver_later if first_order.status == 'placed'
+  def send_order_confirmation_emails(orders)
+    OrderMailer.order_confirmation_email(orders, orders.map(&:prices).flatten.sum).deliver_later
   end
 
   def employee_needs_distances?
-    current_user.role == 'employee' && current_user.company_id.present?
+    current_user.role == 'employee'
   end
 end

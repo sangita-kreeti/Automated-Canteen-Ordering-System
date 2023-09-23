@@ -17,6 +17,7 @@ document.addEventListener('DOMContentLoaded', function() {
     var alerts = document.querySelectorAll('.alert-dismissible');
 
     alerts.forEach(function(alert) {
+      
       setTimeout(function() {
         alert.remove();
       }, 2000);

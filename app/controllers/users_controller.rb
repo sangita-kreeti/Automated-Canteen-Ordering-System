@@ -52,9 +52,7 @@ class UsersController < ApplicationController
 
   def update
     if @user.update(user_params)
-      if @user.previous_changes.any?
-        flash[:notice] = 'Profile updated successfully.'
-      end
+      flash[:notice] = 'Profile updated successfully.' if @user.previous_changes.any?
       redirect_user_by_role
     else
       render :edit
@@ -91,7 +89,8 @@ class UsersController < ApplicationController
   end
 
   def user_params
-    params.require(:user).permit(:username, :email, :password, :role, :company_id, :food_store_id, :name, :phone_no)
+    params.require(:user).permit(:username, :email, :password, :role, :company_id, :food_store_id, :name, :phone_no,
+                                 :pincode)
   end
 
   def redirect_user_by_role

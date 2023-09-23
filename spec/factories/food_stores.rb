@@ -6,7 +6,6 @@ FactoryBot.define do
     sequence(:name) { |n| "Food Store #{n}" }
     address { 'Address' }
     food_category { association :food_category }
-    latitude { 22.5730705 }
-    longitude { 88.4312256 }
+    pincode { 700_091 }
   end
 end

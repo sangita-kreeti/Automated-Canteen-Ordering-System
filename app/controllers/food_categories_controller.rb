@@ -24,7 +24,7 @@ class FoodCategoriesController < ApplicationController
     @food_category = FoodCategory.find(params[:id])
 
     @food_category.destroy
-    redirect_to food_categories_path, alert: 'Food category deleted successfully.'
+    redirect_to food_categories_path, notice: 'Food category deleted successfully.'
   end
 
   private

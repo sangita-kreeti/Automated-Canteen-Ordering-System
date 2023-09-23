@@ -1,5 +1,4 @@
 <div class="container mt-5">
-  
   <div class="row justify-content-center">
     <div class="col-md-6">
       <div class="card border-dark shadow-lg bg-white text-dark">
@@ -19,10 +18,21 @@
             <div class="form-group mb-4" id="company-field">
               <strong><%= f.label :associated_company_id %></strong>
               <% options = @companies&.map { |company| [company.name, company.id] } || [] %>
-              <%= f.select :company_id, options.push(['other']), { prompt: "Select a company" }, class: "form-control" %>
+              <%= f.select :company_id, options.push(['other']), { prompt: "Select a company" }, class: "form-control", id: "company-select" %>
               <% if @user.errors.has_key?(:company_id) %>
               <p class="text-danger"><%= @user.errors.full_messages_for(:company_id).first %></p>
               <% end %>
+            </div>
+            
+            <div id="other-company-form" style="display: none;">
+              <div class="form-group mb-4">
+                <strong>Company Name:</strong>
+                <%= f.text_field :other_company_name, class: "form-control", placeholder: "Enter company name" %>
+              </div>
+              <div class="form-group mb-4">
+                <strong>Pincode:</strong>
+                <%= f.text_field :pincode, class: "form-control", placeholder: "Enter pincode" %>
+              </div>
             </div>
             <div class="form-group mb-4" id="food-store-field" style="display: none;">
               <strong><%= f.label :food_store_id %></strong>
@@ -60,6 +70,8 @@
     var roleSelect = document.getElementById("role-select");
     var companyField = document.getElementById("company-field");
     var foodStoreField = document.getElementById("food-store-field");
+    var companySelect = document.getElementById("company-select");
+    var otherCompanyForm = document.getElementById("other-company-form");
 
     roleSelect.addEventListener("change", function() {
       if (roleSelect.value === "chef") {
@@ -68,6 +80,14 @@
       } else {
         companyField.style.display = "block";
         foodStoreField.style.display = "none";
+      }
+    });
+
+    companySelect.addEventListener("change", function() {
+      if (companySelect.value === "other") {
+        otherCompanyForm.style.display = "block";
+      } else {
+        otherCompanyForm.style.display = "none";
       }
     });
   });

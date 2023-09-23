@@ -13,9 +13,9 @@ User.create(
 )
 
 # Sample data for Companies
-company1 = Company.create(name: 'Kreeti Technology', address: 'Address', latitude: 22.5730705, longitude: 88.4312256)
-company2 = Company.create(name: 'Kaizen', address: 'Address', latitude: 22.5730705, longitude: 88.4312256)
-company3 = Company.create(name: 'Fujitsu', address: 'Address', latitude: 22.5730705, longitude: 88.4312256)
+company1 = Company.create(name: 'Kreeti Technology', address: 'Address', pincode: '700091')
+company2 = Company.create(name: 'Kaizen', address: 'Address', pincode: '700091')
+company3 = Company.create(name: 'Fujitsu', address: 'Address', pincode: '700091')
 
 # Sample data for FoodCategories
 food_categories_data = [
@@ -32,9 +32,9 @@ end
 
 # Sample data for FoodStores
 food_store1 = FoodStore.create(name: 'Food Store 1', address: 'Address', food_category_id: FoodCategory.first.id,
-                               latitude: 22.5730705, longitude: 88.4312256)
+                               pincode: '700091')
 food_store2 = FoodStore.create(name: 'Food Store 2', address: 'Address', food_category_id: FoodCategory.second.id,
-                               latitude: 22.5730705, longitude: 88.4312256)
+                               pincode: '700091')
 
 # Sample data for Users
 users_data = [
@@ -47,7 +47,11 @@ users_data = [
   { email: 'chef2@gmail.com', password: 'password', role: 'chef', username: 'chef2', name: 'James',
     phone_no: '123456789', company_id: nil, food_store_id: food_store2.id, approved: true },
   { email: 'employee3@gmail.com', password: 'password', role: 'employee', username: 'employee3', name: 'Ethan',
-    phone_no: '6789012345', company_id: company3.id, food_store_id: nil }
+    phone_no: '6789012345', company_id: company3.id, food_store_id: nil },
+  { email: 'olivia@gmail.com', password: 'password', role: 'employee', username: 'olivia1', name: 'Olivia',
+    phone_no: '6789012445', company_id: 0, other_company_name: 'Tata Consultancy Services', pincode: '700156' },
+  { email: 'sarah@gmail.com', password: 'password', role: 'employee', username: 'sarah', name: 'Sarah',
+    phone_no: '6789032445', company_id: 0, other_company_name: 'Cognizant', pincode: '700135' }
 ]
 
 users_data.each do |user_params|
@@ -58,12 +62,15 @@ user_chef1 = User.find_by(username: 'chef1')
 user_chef2 = User.find_by(username: 'chef2')
 
 food_menus_data = [
-  # For chef1 who belongs to food_store1
   { user_id: user_chef1&.id, food_store_id: user_chef1&.food_store&.id,
     food_category_id: user_chef1&.food_store&.food_category_id, title: 'Egg Chowmin', price: 110 },
+  { user_id: user_chef1&.id, food_store_id: user_chef1&.food_store&.id,
+    food_category_id: user_chef1&.food_store&.food_category_id, title: 'Chicken Chowmin', price: 140 },
+  { user_id: user_chef2&.id, food_store_id: user_chef2&.food_store&.id,
+    food_category_id: user_chef2&.food_store&.food_category_id, title: 'Beulir dal', price: 70 },
   { user_id: user_chef2&.id, food_store_id: user_chef2&.food_store&.id,
     food_category_id: user_chef2&.food_store&.food_category_id, title: 'Alu posto', price: 110 }
-  # Add other food menus as per your requirement
+
 ]
 
 food_menus_data.each do |menu_params|

@@ -23,12 +23,12 @@ class CompaniesController < ApplicationController
   def destroy
     @company = Company.find(params[:id])
     @company.destroy
-    redirect_to companies_path, alert: 'Company destroyed successfully.'
+    redirect_to companies_path, notice: 'Company destroyed successfully.'
   end
 
   private
 
   def company_params
-    params.require(:company).permit(:name, :address, :latitude, :longitude)
+    params.require(:company).permit(:name, :address, :pincode)
   end
 end

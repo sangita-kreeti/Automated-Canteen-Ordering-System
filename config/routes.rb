@@ -9,10 +9,14 @@ Rails.application.routes.draw do
   resources :food_stores
   resources :food_categories, only: %i[index new create destroy]
 
-  resources :employees, only: [:index] do
+  resources :employees, only: [] do
     patch 'approved', on: :member
     patch 'reject', on: :member
   end
+
+  get '/select_employees', to: 'employees#select_employees', as: 'select_employees'
+  get 'employees/company_employees', to: 'employees#company_employees', as: 'company_employees'
+  get 'employees/ordinary_employees', to: 'employees#ordinary_employees', as: 'ordinary_employees'
 
   resources :chefs, only: [:index] do
     patch 'approve', on: :member
@@ -79,13 +83,8 @@ Rails.application.routes.draw do
   end
 
   get 'gallery', to: 'gallery#index'
-
   patch '/orders/:id/update_status', to: 'orders#update_status', as: 'update_order_status'
-
-  patch 'mark_notification_read/:id', to: 'notifications#mark_as_read', as: :mark_notification_read
-
   post 'mark_all_notifications_read', to: 'notifications#mark_all_as_read', as: :mark_all_notifications_read
-
   get '/auth/:provider/callback', to: 'sessions#omniauth'
   get '/auth/facebook/callback', to: 'sessions#omniauth'
 

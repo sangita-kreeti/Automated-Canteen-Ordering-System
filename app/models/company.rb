@@ -6,6 +6,5 @@ class Company < ApplicationRecord
 
   validates :name, presence: true, uniqueness: true
   validates :address, presence: true
-  validates :latitude, presence: true
-  validates :longitude, presence: true
+  validates :pincode, presence: true, format: { with: /\A\d{6}\z/, message: 'should be a 6-digit number' }
 end

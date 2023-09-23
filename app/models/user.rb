@@ -25,6 +25,8 @@ class User < ApplicationRecord
                                                                                          company_id.blank?
                                                                                        }
   validate :either_company_or_food_store_present, on: :update
+  validate :pincode_presence_when_company_id_zero, on: :update
+
   validates :name, presence: true, length: { minimum: 4 }, on: :update,
                    format: { with: /\A[A-Za-z ]+\z/, message: '%<value>s is not a valid name' }
   validates :phone_no, presence: true,
@@ -39,5 +41,11 @@ class User < ApplicationRecord
     return unless company_id.blank? && food_store_id.blank?
 
     errors.add(:base, 'Either company or food store must be present')
+  end
+
+  def pincode_presence_when_company_id_zero
+    return unless company_id.zero? && pincode.blank?
+
+    errors.add(:pincode, 'must be present when company id is 0')
   end
 end

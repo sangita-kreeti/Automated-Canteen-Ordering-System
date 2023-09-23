@@ -31,6 +31,6 @@ class FoodStoresController < ApplicationController
   private
 
   def food_store_params
-    params.require(:food_store).permit(:name, :address, :food_category_id, :latitude, :longitude)
+    params.require(:food_store).permit(:name, :address, :food_category_id, :pincode)
   end
 end

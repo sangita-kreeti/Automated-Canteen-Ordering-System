@@ -18,12 +18,19 @@ module OrdersHelper
     RADIUS * c
   end
 
-  def update_order_status(new_status, message)
+  def update_order_status(new_status)
     order = Order.find(params[:id])
-
     if order.update(status: new_status)
       sender = current_user
       receiver = order.user
+      message = "Order items #{order.food_item_names.join(', ')} has been #{new_status}."
+      if order.status == 'approved'
+        chefs = User.where(role: 'chef', food_store_id: FoodStore.find_by(name: order.food_store_name)&.id)
+        chefs.each do |chef|
+          Notification.create_order_notification(sender, chef, message)
+        end
+      end
+
       Notification.create_order_notification(sender, receiver, message) unless receiver.hide_notifications
       redirect_to order_status_path, notice: 'Order status updated successfully.'
     else
@@ -106,11 +113,21 @@ module OrdersHelper
   def calculate_distances_for_employee(food_stores)
     return unless employee_needs_distances?
 
-    company_latitude, company_longitude = user_company_coordinates
-
     @distances = food_stores.map do |food_store|
-      distance = calculate_distances(company_latitude, company_longitude, food_store.latitude, food_store.longitude)
-      [food_store, distance.round(2)]
+      user_pincode = current_user.company_id.zero? ? current_user.pincode : current_user.company&.pincode
+      company_pincode = current_user.company_id.zero? ? current_user.pincode : current_user.company&.pincode
+
+      user_coordinates = Geocoder.coordinates(user_pincode)
+      company_coordinates = Geocoder.coordinates(company_pincode)
+      food_store_coordinates = Geocoder.coordinates(food_store.pincode)
+
+      if user_coordinates.present? && food_store_coordinates.present?
+        user_distance = Geocoder::Calculations.distance_between(user_coordinates, food_store_coordinates)
+        company_distance = Geocoder::Calculations.distance_between(company_coordinates, food_store_coordinates)
+        [food_store, user_distance.round(2), company_distance.round(2)]
+      else
+        [food_store, nil, nil]
+      end
     end
   end
 end
