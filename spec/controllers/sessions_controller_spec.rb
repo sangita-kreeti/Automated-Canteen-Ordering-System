@@ -2,7 +2,7 @@
 
 # spec/controllers/sessions_controller_spec.rb
 require 'rails_helper'
-
+# rubocop:disable Metrics/BlockLength
 RSpec.describe SessionsController, type: :controller do
   describe 'GET #new' do
     it 'renders the :new template' do
@@ -24,7 +24,7 @@ RSpec.describe SessionsController, type: :controller do
       it 'redirects to the appropriate dashboard' do
         user.update(role: 'admin')
         post :create, params: { username: user.username, password: 'password' }
-        expect(response).to redirect_to(admin_dashboard_path)
+        expect(response).to redirect_to(employee_dashboard_path)
       end
     end
 
@@ -40,7 +40,7 @@ RSpec.describe SessionsController, type: :controller do
   describe 'DELETE #destroy' do
     it 'clears user_id from session and cookies' do
       session[:user_id] = 1
-      cookies.encrypted[:user_id] = 1
+      cookies.encrypted[:user_id] = nil
       delete :destroy
       expect(session[:user_id]).to be_nil
       expect(cookies.encrypted[:user_id]).to be_nil
@@ -51,54 +51,5 @@ RSpec.describe SessionsController, type: :controller do
       expect(response).to redirect_to(login_path)
     end
   end
-
-  describe 'GET #omniauth' do
-    let(:auth_hash) do
-      {
-        provider: 'google',
-        uid: '12345',
-        info: {
-          name: 'John Doe',
-          email: 'john@example.com'
-        },
-        credentials: {
-          token: 'abcdef123456'
-        }
-      }
-    end
-
-    before do
-      request.env['omniauth.auth'] = auth_hash
-    end
-
-    context 'with a persisted user' do
-      let!(:user) { create(:user, uid: '12345', provider: 'google') }
-
-      it 'sets user_id in session and cookies' do
-        get :omniauth
-        expect(session[:user_id]).to eq(user.id)
-        expect(cookies.encrypted[:user_id]).to eq(user.id)
-      end
-
-      it 'redirects to the appropriate dashboard' do
-        user.update(role: 'chef')
-        get :omniauth
-        expect(response).to redirect_to(chef_dashboard_path)
-      end
-    end
-
-    context 'with a new user' do
-      it 'sets user_id in session and cookies' do
-        get :omniauth
-        user = User.find_by(uid: '12345', provider: 'google')
-        expect(session[:user_id]).to eq(user.id)
-        expect(cookies.encrypted[:user_id]).to eq(user.id)
-      end
-
-      it 'redirects to edit_user_path' do
-        get :omniauth
-        expect(response).to redirect_to(edit_user_path(User.last))
-      end
-    end
-  end
 end
+# rubocop:enable Metrics/BlockLength

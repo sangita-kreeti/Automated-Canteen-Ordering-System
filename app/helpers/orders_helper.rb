@@ -75,12 +75,11 @@ module OrdersHelper
     per_page = 10
     page = (params[:page] || 1).to_i
 
-    total_orders = orders.count
-    total_pages = (total_orders / per_page.to_f).ceil
+    total_pages = (orders.count / per_page.to_f).ceil
 
     start_index = (page - 1) * per_page
     end_index = start_index + per_page - 1
-    end_index = total_orders - 1 if end_index >= total_orders
+    end_index = orders.count - 1 if end_index >= orders.count
 
     paged_orders = orders[start_index..end_index]
 
@@ -95,8 +94,8 @@ module OrdersHelper
     Math.sin(dlat / 2)**2 + Math.cos(lat1_rad) * Math.cos(lat2_rad) * Math.sin(dlon / 2)**2
   end
 
-  def calculate_c(a)
-    2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
+  def calculate_c(arc_length_squared)
+    2 * Math.atan2(Math.sqrt(arc_length_squared), Math.sqrt(1 - arc_length_squared))
   end
 
   def valid_user_for_distances?
@@ -116,8 +115,6 @@ module OrdersHelper
 
   # rubocop:disable Metrics/CyclomaticComplexity, Metrics/MethodLength, Metrics/PerceivedComplexity, Metrics/AbcSize
   def calculate_distances_for_employee(food_stores)
-    return unless employee_needs_distances?
-
     @distances = food_stores.map do |food_store|
       user_pincode = current_user.company_id.zero? ? current_user.pincode : current_user.company&.pincode
       company_pincode = current_user.company_id.zero? ? current_user.pincode : current_user.company&.pincode

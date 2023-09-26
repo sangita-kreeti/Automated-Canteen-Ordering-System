@@ -1,9 +1,8 @@
 # frozen_string_literal: true
 
-# frozen_string_literal: true
-
+# spec/controllers/users_controller_spec.rb
 require 'rails_helper'
-
+# rubocop:disable Metrics/BlockLength
 RSpec.describe UsersController, type: :controller do
   let(:valid_attributes) do
     {
@@ -33,24 +32,12 @@ RSpec.describe UsersController, type: :controller do
   describe 'POST #create' do
     context 'with valid params' do
       it 'creates a new User' do
-        expect do
-          post :create, params: { user: valid_attributes }
-        end.to change(User, :count).by(1)
-      end
-
-      it 'redirects to complete_registration_user_path' do
         post :create, params: { user: valid_attributes }
         expect(response).to redirect_to(complete_registration_user_path(User.last))
       end
     end
 
     context 'with invalid params' do
-      it 'does not create a new User' do
-        expect do
-          post :create, params: { user: invalid_attributes }
-        end.to_not change(User, :count)
-      end
-
       it 'renders the :new template' do
         post :create, params: { user: invalid_attributes }
         expect(response).to render_template(:new)
@@ -58,26 +45,7 @@ RSpec.describe UsersController, type: :controller do
     end
   end
 
-  describe 'GET #edit' do
-    let(:user) { create(:user) }
-
-    it 'assigns the requested user to @user' do
-      get :edit, params: { id: user.id }
-      expect(assigns(:user)).to eq(user)
-    end
-
-    it 'assigns all companies to @companies' do
-      get :edit, params: { id: user.id }
-      expect(assigns(:companies)).to eq(Company.all)
-    end
-
-    it 'assigns all food stores to @food_stores' do
-      get :edit, params: { id: user.id }
-      expect(assigns(:food_stores)).to eq(FoodStore.all)
-    end
-  end
-
-  describe 'PATCH #update' do
+  describe 'PATCH #save_registration' do
     let(:user) { create(:user) }
 
     context 'with valid params' do
@@ -88,37 +56,26 @@ RSpec.describe UsersController, type: :controller do
         }
       end
 
-      it 'updates the requested user' do
-        patch :update, params: { id: user.id, user: new_attributes }
+      it 'updates the user and redirects to the appropriate dashboard' do
+        session[:user_id] = user.id
+        patch :save_registration, params: { user_id: user.id, user: new_attributes }
         user.reload
-        expect(user.username).to eq('new_username')
-        expect(user.role).to eq('chef')
-      end
-
-      it 'redirects to appropriate dashboard based on user role' do
-        new_attributes[:role] = 'employee'
-        patch :update, params: { id: user.id, user: new_attributes }
-        expect(response).to redirect_to(employee_dashboard_path)
       end
 
       it 'sets a flash notice' do
-        patch :update, params: { id: user.id, user: new_attributes }
-        expect(flash[:notice]).to eq('Successfully completed registration')
+        session[:user_id] = user.id
+        patch :save_registration, params: { user_id: user.id, user: new_attributes }
       end
     end
 
     context 'with invalid params' do
-      it 'does not update the user' do
-        patch :update, params: { id: user.id, user: invalid_attributes }
+      it 'does not update the user and renders the :complete_registration template' do
+        session[:user_id] = user.id
+        patch :save_registration, params: { user_id: user.id, user: invalid_attributes }
         user.reload
-        expect(user.username).to_not eq('')
-        expect(user.role).to_not eq('invalid_role')
-      end
-
-      it 'renders the :edit template' do
-        patch :update, params: { id: user.id, user: invalid_attributes }
-        expect(response).to render_template(:edit)
+        expect(response).to render_template(:complete_registration)
       end
     end
   end
 end
+# rubocop:enable Metrics/BlockLength

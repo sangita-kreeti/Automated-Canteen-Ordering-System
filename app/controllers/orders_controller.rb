@@ -3,7 +3,6 @@
 # This is a controller
 class OrdersController < ApplicationController
   include OrdersHelper
-
   before_action :authenticate_chef, only: %i[received_orders]
   before_action :authenticate_employee, only: %i[index place_order order_history search]
   before_action :authenticate_admin_or_chef, only: %i[order_status]
@@ -13,12 +12,12 @@ class OrdersController < ApplicationController
     @order = find_order_by_session || Order.new
     @food_stores = FoodStore.all
     @food_categories = FoodCategory.all
-    calculate_distances_for_employee(@food_stores) if employee_needs_distances?
+    calculate_distances_for_employee(@food_stores)
   end
 
   def place_order
     items = params[:items]
-    return render(json: { error: 'Cart is empty.' }, status: :unprocessable_entity) if items.empty?
+    return render(json: { error: 'Cart is empty.' }, status: :unprocessable_entity) if items.nil? || items.empty?
 
     orders_by_food_store_result = orders_by_food_store(items)
 
@@ -35,12 +34,9 @@ class OrdersController < ApplicationController
   def search
     @food_menus = FoodMenu.includes(:food_store)
     apply_search_filters
-
     @food_stores = FoodStore.all
     @food_categories = FoodCategory.all
-
     @distances = calculate_distances_for_employee(@food_stores)
-
     render partial: 'search_results'
   end
 
@@ -117,17 +113,19 @@ class OrdersController < ApplicationController
     )
   end
 
+  # rubocop:disable Metrics/AbcSize
   def update_order_with_items(order, items)
     order.food_item_names.concat(items.map { |item| item['food_item_name'] })
-    order.quantities.concat(items.map { |item| item['quantity'] })
-    order.prices.concat(items.map { |item| (item['quantity'] * item['price']).round(2) })
+    order.quantities.concat(items.map { |item| item['quantity'].to_i })
+    order.prices.concat(
+      items.map do |item|
+        (item['quantity'].to_i * item['price'].to_f).round(2)
+      end
+    )
   end
+  # rubocop:enable Metrics/AbcSize
 
   def send_order_confirmation_emails(orders)
     OrderMailer.order_confirmation_email(orders, orders.map(&:prices).flatten.sum).deliver_later
-  end
-
-  def employee_needs_distances?
-    current_user.role == 'employee'
   end
 end

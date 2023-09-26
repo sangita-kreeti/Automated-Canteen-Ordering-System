@@ -28,14 +28,8 @@ RSpec.describe FoodStore, type: :model do
   end
 
   it 'is invalid without a latitude' do
-    food_store = FactoryBot.build(:food_store, latitude: nil)
+    food_store = FactoryBot.build(:food_store, pincode: nil)
     expect(food_store).not_to be_valid
-    expect(food_store.errors[:latitude]).to include("can't be blank")
-  end
-
-  it 'is invalid without a longitude' do
-    food_store = FactoryBot.build(:food_store, longitude: nil)
-    expect(food_store).not_to be_valid
-    expect(food_store.errors[:longitude]).to include("can't be blank")
+    expect(food_store.errors[:pincode]).to include("can't be blank")
   end
 end

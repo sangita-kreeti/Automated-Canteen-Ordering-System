@@ -25,6 +25,8 @@ class User < ApplicationRecord
                                                                                          company_id.blank?
                                                                                        }
   validate :either_company_or_food_store_present, on: :update
+
+  validate :other_company_name_presence_when_company_id_zero, on: :update
   validate :pincode_presence_when_company_id_zero, on: :update
 
   validates :name, presence: true, length: { minimum: 4 }, on: :update,
@@ -41,12 +43,12 @@ class User < ApplicationRecord
   scope :ordinary_employees, -> { where(role: 'employee', company_id: 0) }
   scope :chefs, -> { where(role: 'chef') }
   scope :employees, -> { where(role: 'employee') }
-  scope :chefs_for_food_store, -> (food_store_name) {
+  scope :chefs_for_food_store, lambda { |food_store_name|
     where(role: 'chef')
       .joins(:food_store)
       .where(food_stores: { name: food_store_name })
   }
-                                                                                
+
   enum role: { employee: 0, chef: 1, admin: 2 }
 
   def either_company_or_food_store_present
@@ -55,9 +57,25 @@ class User < ApplicationRecord
     errors.add(:base, 'Either company or food store must be present')
   end
 
-  def pincode_presence_when_company_id_zero
-    return unless role == 'employee' && company_id.zero? && pincode.blank?
+  def other_company_name_presence_when_company_id_zero
+    return unless role == 'employee' && company_id.zero?
 
-    errors.add(:pincode, 'must be present when company id is 0')
+    if other_company_name.blank?
+      errors.add(:other_company_name, "can't be blank")
+    elsif !other_company_name.match(/\A[A-Za-z]+\z/)
+      errors.add(:other_company_name, 'should only contain letters (uppercase and lowercase)')
+    end
+  end
+
+  def pincode_presence_when_company_id_zero
+    return unless role == 'employee' && company_id.zero?
+
+    pincode_str = pincode.to_s
+
+    if pincode.blank?
+      errors.add(:pincode, 'must be present')
+    elsif pincode_str.length != 6 || !pincode_str.match(/\A\d{6}\z/)
+      errors.add(:pincode, 'should be exactly 6 digits')
+    end
   end
 end

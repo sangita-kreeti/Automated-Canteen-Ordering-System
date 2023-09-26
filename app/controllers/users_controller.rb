@@ -90,7 +90,7 @@ class UsersController < ApplicationController
 
   def user_params
     params.require(:user).permit(:username, :email, :password, :role, :company_id, :food_store_id, :name, :phone_no,
-                                 :pincode)
+                                 :pincode, :other_company_name)
   end
 
   def redirect_user_by_role

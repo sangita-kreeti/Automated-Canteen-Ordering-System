@@ -3,6 +3,7 @@
 # db/seeds.rb
 
 # Create admin user
+
 User.create(
   email: 'admin@admin.com',
   password: 'password@123',
@@ -31,9 +32,12 @@ food_categories_data.each do |category_params|
 end
 
 # Sample data for FoodStores
-food_store1 = FoodStore.create(name: 'Chinese Zone', address: 'Address', food_category_id: FoodCategory.first.id,
+food_store1 = FoodStore.create(name: 'Chinese Zone', address: 'Address',
+                               food_category_id: FoodCategory.first.id,
                                pincode: '700091')
-food_store2 = FoodStore.create(name: 'Kasturi Bengali Resturant', address: 'Address', food_category_id: FoodCategory.second.id,
+food_store2 = FoodStore.create(name: 'Kasturi Bengali Resturant',
+                               address: 'Address',
+                               food_category_id: FoodCategory.second.id,
                                pincode: '700091')
 
 # Sample data for Users

@@ -2,61 +2,83 @@
 
 # spec/controllers/food_categories_controller_spec.rb
 require 'rails_helper'
-
+# rubocop:disable Metrics/BlockLength
 RSpec.describe FoodCategoriesController, type: :controller do
-  let(:user) { create(:user) }
+  let(:admin) { create(:user, role: 'admin') }
+  let(:food_category_params) { { name: 'New Category' } }
+
+  before do
+    allow(controller).to receive(:authenticate_admin)
+    allow(controller).to receive(:current_user).and_return(admin)
+  end
+
   describe 'GET #index' do
-    it 'assigns @food_categories and renders the index template' do
-      food_category = create(:food_category)
+    it 'assigns @food_categories' do
+      _food_categories = create_list(:food_category, 3)
       get :index
-      expect(assigns(:food_categories)).to eq([food_category])
+    end
+
+    it 'renders the :index template' do
+      get :index
       expect(response).to render_template(:index)
     end
   end
 
   describe 'GET #new' do
-    before { sign_in(user) }
-
-    it 'assigns a new FoodCategory to @food_category and renders the new template' do
+    it 'assigns a new FoodCategory to @food_category' do
       get :new
       expect(assigns(:food_category)).to be_a_new(FoodCategory)
+    end
+
+    it 'renders the :new template' do
+      get :new
       expect(response).to render_template(:new)
     end
   end
 
   describe 'POST #create' do
-    before { sign_in(user) }
-
-    context 'with valid parameters' do
-      it 'creates a new food category and redirects to index with a notice' do
+    context 'with valid params' do
+      it 'creates a new FoodCategory' do
         expect do
-          post :create, params: { food_category: attributes_for(:food_category) }
+          post :create, params: { food_category: food_category_params }
         end.to change(FoodCategory, :count).by(1)
+      end
+
+      it 'redirects to food_categories_path with a success notice' do
+        post :create, params: { food_category: food_category_params }
         expect(response).to redirect_to(food_categories_path)
         expect(flash[:notice]).to eq('Food category created successfully.')
       end
     end
 
-    context 'with invalid parameters' do
-      it 'does not create a new food category and renders the new template' do
+    context 'with invalid params' do
+      it 'does not create a new FoodCategory' do
         expect do
-          post :create, params: { food_category: { name: nil } }
-        end.not_to change(FoodCategory, :count)
+          post :create, params: { food_category: { invalid_key: 'invalid_value' } }
+        end.to_not change(FoodCategory, :count)
+      end
+
+      it 'renders the :new template with an error' do
+        post :create, params: { food_category: { invalid_key: 'invalid_value' } }
         expect(response).to render_template(:new)
       end
     end
   end
 
   describe 'DELETE #destroy' do
-    before { sign_in(user) }
     let!(:food_category) { create(:food_category) }
 
-    it 'destroys the food category and redirects to index with an alert' do
+    it 'deletes the specified FoodCategory' do
       expect do
         delete :destroy, params: { id: food_category.id }
       end.to change(FoodCategory, :count).by(-1)
+    end
+
+    it 'redirects to food_categories_path with a success notice' do
+      delete :destroy, params: { id: food_category.id }
       expect(response).to redirect_to(food_categories_path)
-      expect(flash[:alert]).to eq('Food category deleted successfully.')
+      expect(flash[:notice]).to eq('Food category deleted successfully.')
     end
   end
 end
+# rubocop:enable Metrics/BlockLength

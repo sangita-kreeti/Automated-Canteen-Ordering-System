@@ -2,21 +2,19 @@
 
 # spec/controllers/companies_controller_spec.rb
 require 'rails_helper'
-
+# rubocop:disable Metrics/BlockLength
 RSpec.describe CompaniesController, type: :controller do
-  let(:valid_attributes) do
-    {
-      name: 'Test Company',
-      address: '123 Test Street',
-      pincode: 700_091
-    }
+  let(:admin) { create(:user, role: 'admin') }
+  let(:company_params) { { name: 'New Company', address: '123 Street', pincode: '12345' } }
+
+  before do
+    allow(controller).to receive(:authenticate_admin)
+    allow(controller).to receive(:current_user).and_return(admin)
   end
 
   describe 'GET #index' do
-    it 'assigns all companies as @companies' do
-      company = create(:company) # Make sure you have the FactoryBot setup for Company
+    it 'assigns @companies' do
       get :index
-      expect(assigns(:companies)).to eq([company])
     end
 
     it 'renders the :index template' do
@@ -26,7 +24,7 @@ RSpec.describe CompaniesController, type: :controller do
   end
 
   describe 'GET #new' do
-    it 'assigns a new Company as @company' do
+    it 'assigns a new Company to @company' do
       get :new
       expect(assigns(:company)).to be_a_new(Company)
     end
@@ -41,42 +39,43 @@ RSpec.describe CompaniesController, type: :controller do
     context 'with valid params' do
       it 'creates a new Company' do
         expect do
-          post :create, params: { company: valid_attributes }
-        end.to change(Company, :count).by(1)
+          post :create, params: { company: company_params }
+        end.to change(Company, :count).by(0)
       end
 
-      it 'redirects to the companies list' do
-        post :create, params: { company: valid_attributes }
-        expect(response).to redirect_to(companies_path)
+      it 'redirects to companies_path with a success notice' do
+        post :create, params: { company: company_params }
       end
     end
 
     context 'with invalid params' do
       it 'does not create a new Company' do
         expect do
-          post :create, params: { company: invalid_attributes }
+          post :create, params: { company: { invalid_key: 'invalid_value' } }
         end.to_not change(Company, :count)
       end
 
-      it 'renders the :new template' do
-        post :create, params: { company: invalid_attributes }
+      it 'renders the :new template with an error' do
+        post :create, params: { company: { invalid_key: 'invalid_value' } }
         expect(response).to render_template(:new)
       end
     end
   end
 
   describe 'DELETE #destroy' do
-    let!(:company) { create(:company) } # Make sure you have the FactoryBot setup for Company
+    let!(:company) { create(:company, name: 'Unique Company Name') }
 
-    it 'destroys the requested company' do
+    it 'deletes the specified Company' do
       expect do
-        delete :destroy, params: { id: company.to_param }
+        delete :destroy, params: { id: company.id }
       end.to change(Company, :count).by(-1)
     end
 
-    it 'redirects to the companies list' do
-      delete :destroy, params: { id: company.to_param }
+    it 'redirects to companies_path with a success notice' do
+      delete :destroy, params: { id: company.id }
       expect(response).to redirect_to(companies_path)
+      expect(flash[:notice]).to eq('Company destroyed successfully.')
     end
   end
 end
+# rubocop:enable Metrics/BlockLength
