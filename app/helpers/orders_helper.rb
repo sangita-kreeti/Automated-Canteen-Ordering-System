@@ -98,19 +98,8 @@ module OrdersHelper
     2 * Math.atan2(Math.sqrt(arc_length_squared), Math.sqrt(1 - arc_length_squared))
   end
 
-  def valid_user_for_distances?
-    current_user.role == 'employee' && current_user.company_id.present?
-  end
-
   def find_order_by_session
     Order.find_by(id: session[:order_id]) if session[:order_id]
-  end
-
-  def user_company_coordinates
-    return [0, 0] if current_user.company_id.zero?
-
-    company = Company.find_by(id: current_user.company_id)
-    company&.values_at(:latitude, :longitude) || [0, 0]
   end
 
   # rubocop:disable Metrics/CyclomaticComplexity, Metrics/MethodLength, Metrics/PerceivedComplexity, Metrics/AbcSize
