@@ -62,7 +62,7 @@ class User < ApplicationRecord
 
     if other_company_name.blank?
       errors.add(:other_company_name, "can't be blank")
-    elsif !other_company_name.match(/\A[A-Za-z]+\z/)
+    elsif !other_company_name.match(/\A[A-Za-z\s]+\z/)
       errors.add(:other_company_name, 'should only contain letters (uppercase and lowercase)')
     end
   end
