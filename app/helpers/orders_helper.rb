@@ -2,22 +2,6 @@
 
 # orders_helper.rb
 module OrdersHelper
-  RADIUS = 6371
-  def calculate_distances(lat1, lon1, lat2, lon2)
-    lat1_rad = to_radians(lat1)
-    lon1_rad = to_radians(lon1)
-    lat2_rad = to_radians(lat2)
-    lon2_rad = to_radians(lon2)
-
-    dlat = lat2_rad - lat1_rad
-    dlon = lon2_rad - lon1_rad
-
-    a = calculate_a(dlat, lat1_rad, lat2_rad, dlon)
-    c = calculate_c(a)
-
-    RADIUS * c
-  end
-
   def update_order_status(new_status)
     order = Order.find(params[:id])
 
@@ -44,8 +28,8 @@ module OrdersHelper
 
   def apply_search_filters
     apply_text_search
-    apply_food_store_filter
-    apply_food_category_filter
+    apply_filter('food_store_filter', :food_store_id, :filter_by_food_store)
+    apply_filter('food_category_filter', :food_category_id, :filter_by_food_category)
   end
 
   private
@@ -57,19 +41,55 @@ module OrdersHelper
     @food_menus = @food_menus.merge(search_results)
   end
 
-  def apply_food_store_filter
-    return unless params[:food_store_filter].present?
+  def apply_filter(param_key, _record_key, scope)
+    return unless params[param_key].present?
 
-    food_store_id = params[:food_store_filter].to_i
-    @food_menus = @food_menus.filter_by_food_store(food_store_id)
+    filter_value = params[param_key].to_i
+    @food_menus = @food_menus.send(scope, filter_value)
   end
 
-  def apply_food_category_filter
-    return unless params[:food_category_filter].present?
-
-    food_category_id = params[:food_category_filter].to_i
-    @food_menus = @food_menus.filter_by_food_category(food_category_id)
+  def orders_by_food_store(items)
+    items.group_by { |item| item['food_store_name'] }
   end
+
+  def fetch_food_menus
+    search_results = params[:search].present? ? FoodMenu.search(params[:search]).records : FoodMenu.all
+    search_results.includes(:food_store).page(params[:page]).per(10)
+  end
+
+  def build_order(food_store_name)
+    Order.new(
+      food_store_name: food_store_name,
+      company_name: current_user.company&.name || 'Other',
+      user: current_user
+    )
+  end
+
+  def group_items_by_food_store(items)
+    orders_by_food_store = Hash.new { |hash, key| hash[key] = [] }
+
+    items.each do |item|
+      food_store_name = item['food_store_name']
+      order_items = orders_by_food_store[food_store_name]
+      unless order_items.any? { |order_item| order_item['food_item_name'] == item['food_item_name'] }
+        order_items << item
+      end
+    end
+
+    orders_by_food_store
+  end
+
+  # rubocop:disable Metrics/AbcSize
+  def update_order_with_items(order, items)
+    order.food_item_names.concat(items.map { |item| item['food_item_name'] })
+    order.quantities.concat(items.map { |item| item['quantity'].to_i })
+    order.prices.concat(
+      items.map do |item|
+        (item['quantity'].to_i * item['price'].to_f).round(2)
+      end
+    )
+  end
+  # rubocop:enable Metrics/AbcSize
 
   def paginate_orders(orders)
     per_page = 10
@@ -84,18 +104,6 @@ module OrdersHelper
     paged_orders = orders[start_index..end_index]
 
     [paged_orders, page, total_pages]
-  end
-
-  def to_radians(degrees)
-    degrees.to_f * Math::PI / 180
-  end
-
-  def calculate_a(dlat, lat1_rad, lat2_rad, dlon)
-    Math.sin(dlat / 2)**2 + Math.cos(lat1_rad) * Math.cos(lat2_rad) * Math.sin(dlon / 2)**2
-  end
-
-  def calculate_c(arc_length_squared)
-    2 * Math.atan2(Math.sqrt(arc_length_squared), Math.sqrt(1 - arc_length_squared))
   end
 
   def find_order_by_session

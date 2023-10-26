@@ -76,54 +76,11 @@ class OrdersController < ApplicationController
 
   private
 
-  def orders_by_food_store(items)
-    items.group_by { |item| item['food_store_name'] }
-  end
-
   def authenticate_admin_or_chef
     return if current_user && (current_user.admin? || current_user.chef?)
 
     handle_unauthorized_access
   end
-
-  def fetch_food_menus
-    search_results = params[:search].present? ? FoodMenu.search(params[:search]).records : FoodMenu.all
-    search_results.includes(:food_store).page(params[:page]).per(10)
-  end
-
-  def group_items_by_food_store(items)
-    orders_by_food_store = Hash.new { |hash, key| hash[key] = [] }
-
-    items.each do |item|
-      food_store_name = item['food_store_name']
-      order_items = orders_by_food_store[food_store_name]
-      unless order_items.any? { |order_item| order_item['food_item_name'] == item['food_item_name'] }
-        order_items << item
-      end
-    end
-
-    orders_by_food_store
-  end
-
-  def build_order(food_store_name)
-    Order.new(
-      food_store_name: food_store_name,
-      company_name: current_user.company&.name || 'Other',
-      user: current_user
-    )
-  end
-
-  # rubocop:disable Metrics/AbcSize
-  def update_order_with_items(order, items)
-    order.food_item_names.concat(items.map { |item| item['food_item_name'] })
-    order.quantities.concat(items.map { |item| item['quantity'].to_i })
-    order.prices.concat(
-      items.map do |item|
-        (item['quantity'].to_i * item['price'].to_f).round(2)
-      end
-    )
-  end
-  # rubocop:enable Metrics/AbcSize
 
   def send_order_confirmation_emails(orders)
     OrderMailer.order_confirmation_email(orders, orders.map(&:prices).flatten.sum).deliver_later

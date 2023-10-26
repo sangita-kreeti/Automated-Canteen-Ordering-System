@@ -20,8 +20,7 @@
                   <td><%= employee.name %></td>
                   <td><%= employee.email %></td>
                   <td><%= employee.phone_no %></td>
-                  <td><%= Company.find_by(id: employee.company_id)&.name %>
-                     <% if employee.company_id.zero? %>
+                  <td><% if employee.company_id.zero? %>
                      Other
                      <% else %>
                      <%= employee.company.name %>

@@ -6,9 +6,9 @@ class CreateMessages < ActiveRecord::Migration[6.1]
     create_table :messages do |t|
       t.text :content
 
-      t.integer :sender_id
-      t.integer :recipient_id
-      t.integer :channel_id
+      t.references :sender, foreign_key: { to_table: :users }
+      t.references :recipient, foreign_key: { to_table: :users }
+      t.references :channel, foreign_key: true
       t.timestamps
     end
   end

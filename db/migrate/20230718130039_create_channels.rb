@@ -4,8 +4,8 @@
 class CreateChannels < ActiveRecord::Migration[6.1]
   def change
     create_table :channels do |t|
-      t.integer :chef_id
-      t.integer :employee_id
+      t.references :chef, foreign_key: { to_table: :users }
+      t.references :employee, foreign_key: { to_table: :users }
 
       t.timestamps
     end

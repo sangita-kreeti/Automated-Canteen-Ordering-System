@@ -2,6 +2,7 @@
 
 # This is controller
 class UsersController < ApplicationController
+  include UsersHelper
   before_action :set_user
   before_action :authenticate_employee_or_chef, only: %i[edit update]
 
@@ -30,7 +31,7 @@ class UsersController < ApplicationController
     @user = User.find(params[:user_id])
 
     if @user.update(user_params)
-      redirect_user_by_role
+      redirect_user_by_role(@user)
       flash[:notice] = 'Successfully completed registration'
     else
       @companies = Company.all
@@ -53,21 +54,9 @@ class UsersController < ApplicationController
   def update
     if @user.update(user_params)
       flash[:notice] = 'Profile updated successfully.' if @user.previous_changes.any?
-      redirect_user_by_role
+      redirect_user_by_role(@user)
     else
       render :edit
-    end
-  end
-
-  def redirect_to_dashboard
-    user = User.find(params[:user_id])
-
-    if user.employee?
-      redirect_to employee_dashboard_path
-    elsif user.chef?
-      redirect_to chef_dashboard_path
-    else
-      redirect_to admin_dashboard_path
     end
   end
 
@@ -91,18 +80,5 @@ class UsersController < ApplicationController
   def user_params
     params.require(:user).permit(:username, :email, :password, :role, :company_id, :food_store_id, :name, :phone_no,
                                  :pincode, :other_company_name)
-  end
-
-  def redirect_user_by_role
-    case @user.role
-    when 'admin'
-      redirect_to admin_dashboard_path
-    when 'employee'
-      redirect_to employee_dashboard_path
-    when 'chef'
-      redirect_to chef_dashboard_path
-    else
-      redirect_to root_path
-    end
   end
 end

@@ -55,10 +55,14 @@ Rails.application.routes.draw do
     get 'messages', on: :member
   end
 
-  get '/login', to: 'sessions#new'
-  post '/login', to: 'sessions#create'
-  delete '/logout', to: 'sessions#destroy'
-  post '/logout', to: 'sessions#destroy'
+  resources :sessions, only: %i[new create destroy]
+
+  # get '/login', to: 'sessions#new', as: :login
+
+  # get '/login', to: 'sessions#new'
+  # post '/login', to: 'sessions#create'
+  # delete '/logout', to: 'sessions#destroy'
+  # post '/logout', to: 'sessions#destroy'
 
   resources :users, only: %i[new create edit update]
 

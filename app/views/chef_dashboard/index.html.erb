@@ -19,15 +19,11 @@
                </div>
                <div class="d-flex justify-content-center mt-3">
                   <div class="p-1">
-                  <%= link_to edit_user_path(current_user), class: 'btn btn-primary mr-3' do %>
-                  <i class="bi bi-pencil-fill"></i> Edit
-                  <% end %>
-                  </div>
+                  <%= link_to 'Edit', edit_user_path(current_user), class: 'btn btn-primary mr-2' %></div>
                   <div class="p-1">
-                  <%= button_to logout_path, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-success' do %>
-                  <i class="bi bi-box-arrow-right"></i> Logout
-                  <% end %>
+                  <%= button_to 'Logout', session_path(current_user), method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-success' %>
                   </div>
+               </div>
                </div>
             </div>
          </div>

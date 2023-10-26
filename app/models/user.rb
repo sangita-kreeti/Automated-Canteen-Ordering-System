@@ -25,7 +25,8 @@ class User < ApplicationRecord
                                                                                          company_id.blank?
                                                                                        }
   validate :either_company_or_food_store_present, on: :update
-
+  validate :company_id_presence_when_role_employee,
+           on: :update
   validate :other_company_name_presence_when_company_id_zero, on: :update
   validate :pincode_presence_when_company_id_zero, on: :update
 
@@ -57,8 +58,14 @@ class User < ApplicationRecord
     errors.add(:base, 'Either company or food store must be present')
   end
 
+  def company_id_presence_when_role_employee
+    return unless role == 'employee' && company_id.nil?
+
+    errors.add(:company_id, 'must be present for employees') unless company_id&.zero?
+  end
+
   def other_company_name_presence_when_company_id_zero
-    return unless role == 'employee' && company_id.zero?
+    return unless role == 'employee' && !company_id.nil? && company_id.zero?
 
     if other_company_name.blank?
       errors.add(:other_company_name, "can't be blank")
@@ -68,14 +75,16 @@ class User < ApplicationRecord
   end
 
   def pincode_presence_when_company_id_zero
-    return unless role == 'employee' && company_id.zero?
-
-    pincode_str = pincode.to_s
+    return unless role == 'employee' && !company_id.nil? && company_id.zero?
 
     if pincode.blank?
       errors.add(:pincode, 'must be present')
-    elsif pincode_str.length != 6 || !pincode_str.match(/\A\d{6}\z/)
+    elsif !valid_pincode_format?
       errors.add(:pincode, 'should be exactly 6 digits')
     end
+  end
+
+  def valid_pincode_format?
+    pincode.to_s.match?(/\A\d{6}\z/) && pincode.to_s.length == 6
   end
 end
