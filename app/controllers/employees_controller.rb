@@ -2,9 +2,10 @@
 
 # This is a controller
 class EmployeesController < ApplicationController
-  before_action :authenticate_admin
+  before_action :authenticate_admin, except: [:dashboard]
+  before_action :authenticate_employee, only: [:dashboard]
 
-  def select_employees; end
+  def select; end
 
   def company_employees
     @employees = User.company_employees.page(params[:page]).per(15)
@@ -32,10 +33,14 @@ class EmployeesController < ApplicationController
     employee = find_employee_by_id
     employee.destroy
     if employee.company_id.zero?
-      redirect_to ordinary_employees_path, notice: 'Employee rejected and removed.'
+      redirect_to ordinary_employees_employees_path, notice: 'Employee rejected and removed.'
     else
       redirect_to company_employees_path, notice: 'Employee rejected and removed.'
     end
+  end
+
+  def dashboard
+    @notifications = current_user.notifications.order(created_at: :desc)
   end
 
   def manage_notifications
@@ -47,10 +52,10 @@ class EmployeesController < ApplicationController
 
     if employee.hide_notifications?
       if employee.update(hide_notifications: false)
-        redirect_to manage_notifications_employee_path, notice: 'Notifications shown for the employee.'
+        redirect_to manage_notifications_employees_path, notice: 'Notifications shown for the employee.'
       end
     elsif employee.update(hide_notifications: true)
-      redirect_to manage_notifications_employee_path, notice: 'Notifications hidden for the employee.'
+      redirect_to manage_notifications_employees_path, notice: 'Notifications hidden for the employee.'
     end
   end
 

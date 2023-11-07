@@ -19,7 +19,7 @@
       </tbody>
    </table>
    <%= link_to 'New Food Category', new_food_category_path, class: 'btn btn-primary' %>
-   <%= link_to 'Back to Admin Dashboard', admin_dashboard_path, class: 'btn btn-secondary' %>
+   <%= link_to 'Back to Admin Dashboard', admin_dashboard_index_path, class: 'btn btn-secondary' %>
 </div>
 <ul class="pagination justify-content-center mt-3">
    <% if @food_categories.current_page > 1 %>

@@ -11,9 +11,9 @@ module UsersHelper
 
   def choose_redirect_path(user)
     case user.role
-    when 'admin' then admin_dashboard_path
-    when 'employee' then employee_dashboard_path
-    when 'chef' then chef_dashboard_path
+    when 'admin' then admin_dashboard_index_path
+    when 'employee' then dashboard_employees_path
+    when 'chef' then dashboard_chefs_path
     else root_path
     end
   end

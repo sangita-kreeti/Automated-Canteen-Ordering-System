@@ -30,9 +30,9 @@ module SessionsHelper
   def redirect_user_by_role(user)
     redirect_path =
       case user.role
-      when 'admin' then admin_dashboard_path
-      when 'employee' then employee_dashboard_path
-      when 'chef' then chef_dashboard_path
+      when 'admin' then admin_dashboard_index_path
+      when 'employee' then dashboard_employees_path
+      when 'chef' then dashboard_chefs_path
       else
         flash[:alert] = 'Unable to login with the given credentials.'
         create_session_path

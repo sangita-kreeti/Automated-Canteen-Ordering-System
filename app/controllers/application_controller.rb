@@ -30,6 +30,11 @@ class ApplicationController < ActionController::Base
     handle_unauthorized_access
   end
 
+  def mark_all_as_read
+    current_user.notifications.update_all(read: true)
+    render json: { status: 'success' }
+  end
+
   def not_found_method
     render file: "#{Rails.public_path}/404.html", status: :not_found, layout: false
   end

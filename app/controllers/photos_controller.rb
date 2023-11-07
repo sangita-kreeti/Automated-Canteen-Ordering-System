@@ -2,7 +2,9 @@
 
 # This is controller
 class PhotosController < ApplicationController
-  before_action :authenticate_chef
+  before_action :authenticate_employee, only: :gallery
+  before_action :authenticate_chef, except: :gallery
+
   def index
     @photos = current_user.food_store.photos.page(params[:page]).per(15)
   end
@@ -26,6 +28,10 @@ class PhotosController < ApplicationController
     @photo = Photo.find(params[:id])
     @photo.destroy
     redirect_to photos_path, notice: 'Photo deleted successfully.'
+  end
+
+  def gallery
+    @photos = Photo.page(params[:page]).per(10)
   end
 
   private

@@ -28,7 +28,7 @@ class UsersController < ApplicationController
   end
 
   def save_registration
-    @user = User.find(params[:user_id])
+    @user = User.find(params[:id])
 
     if @user.update(user_params)
       redirect_user_by_role(@user)
@@ -61,7 +61,7 @@ class UsersController < ApplicationController
   end
 
   def redirect_to_complete_registration
-    user_id = params[:user_id]
+    user_id = params[:id]
     redirect_to complete_registration_user_path(user_id)
   end
 

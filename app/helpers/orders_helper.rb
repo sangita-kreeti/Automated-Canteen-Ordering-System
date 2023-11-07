@@ -11,9 +11,9 @@ module OrdersHelper
       message = "Order items #{order.food_item_names.join(', ')} has been #{new_status}."
 
       send_notifications(order, sender, receiver, message)
-      redirect_to order_status_path, notice: 'Order status updated successfully.'
+      redirect_to order_status_orders_path, notice: 'Order status updated successfully.'
     else
-      redirect_to order_status_path, alert: 'Failed to update order status.'
+      redirect_to order_status_orders_path, alert: 'Failed to update order status.'
     end
   end
 

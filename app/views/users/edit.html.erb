@@ -35,9 +35,9 @@
          <div class="form-group mt-3 d-flex justify-content-between">
             <%= f.submit "Update Profile", class: "btn btn-primary" %>
             <% if current_user.employee? %>
-               <%= link_to "Back to Dashboard", employee_dashboard_path, class: "btn btn-secondary" %>
+               <%= link_to "Back to Dashboard", dashboard_employees_path, class: "btn btn-secondary" %>
             <% else current_user.chef? %>
-               <%= link_to "Back to Dashboard", chef_dashboard_path, class: "btn btn-secondary" %>
+               <%= link_to "Back to Dashboard", dashboard_chefs_path, class: "btn btn-secondary" %>
             <% end %>
          </div>
          <% end %>
