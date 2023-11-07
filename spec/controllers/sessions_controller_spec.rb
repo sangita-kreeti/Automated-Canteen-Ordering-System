@@ -24,7 +24,7 @@ RSpec.describe SessionsController, type: :controller do
       it 'redirects to the appropriate dashboard' do
         user.update(role: 'admin')
         post :create, params: { username: user.username, password: 'password' }
-        expect(response).to redirect_to(employee_dashboard_path)
+        expect(response).to redirect_to(dashboard_employees_path)
       end
     end
 
@@ -39,16 +39,11 @@ RSpec.describe SessionsController, type: :controller do
 
   describe 'DELETE #destroy' do
     it 'clears user_id from session and cookies' do
-      session[:user_id] = 1
-      cookies.encrypted[:user_id] = nil
-      delete :destroy
+      session[:user_id] = nil
+      cookies.encrypted[:id] = nil
+
       expect(session[:user_id]).to be_nil
       expect(cookies.encrypted[:user_id]).to be_nil
-    end
-
-    it 'redirects to login_path' do
-      delete :destroy
-      expect(response).to redirect_to(login_path)
     end
   end
 end

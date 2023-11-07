@@ -10,60 +10,79 @@ Rails.application.routes.draw do
   resources :food_categories, only: %i[index new create destroy]
 
   resources :employees, only: [] do
-    patch 'approved', on: :member
-    patch 'reject', on: :member
-    get 'dashboard', on: :collection
-    get 'select', on: :collection
-    get 'company_employees', on: :collection, as: 'company'
-    get 'ordinary_employees', on: :collection, as: 'ordinary'
-    get 'manage_notifications', on: :collection
-    patch 'update_notifications', on: :member
+    member do
+      patch 'approved'
+      patch 'reject'
+      patch 'update_notifications'
+    end
+
+    collection do
+      get 'dashboard'
+      get 'select'
+      get 'company_employees', as: 'company'
+      get 'ordinary_employees', as: 'ordinary'
+      get 'manage_notifications'
+    end
   end
 
   resources :chefs, only: [:index] do
-    patch 'approve', on: :member
-    patch 'reject', on: :member
-    get 'dashboard', on: :collection
+    member do
+      patch 'approve'
+      patch 'reject'
+    end
+
+    collection do
+      get 'dashboard'
+    end
   end
 
   resources :photos, only: %i[index new create destroy] do
-    get 'gallery', on: :collection
+    collection do
+      get 'gallery'
+    end
   end
 
   resources :food_menus
 
-  resources :orders, only: [:index] do
-    post 'place_order', on: :collection
-    get 'search', on: :collection
-  end
+  resources :orders, only: %i[index show] do
+    collection do
+      post 'place_order'
+      get 'search'
+      get 'order_history'
+      get 'order_status'
+      get 'received_orders'
+      get 'confirm_order'
+    end
 
-  resources :orders, only: [:show] do
     member do
       patch :approved
       patch :preparing
       patch :finished
       patch :delivered
     end
-    get 'order_history', on: :collection
-    get 'order_status', on: :collection
-    get 'received_orders', on: :collection
-    get 'confirm_order', on: :collection
   end
 
   resources :channels, only: %i[show create] do
-    get 'select_users', on: :collection
-    post 'send_message', on: :member
-    resources :messages, only: [:create]
-    get 'messages', on: :member
+    collection do
+      get 'select_users'
+    end
+
+    member do
+      post 'send_message'
+      get 'messages'
+
+      resources :messages, only: [:create]
+    end
   end
 
   resources :sessions, only: %i[new create destroy]
 
   resources :users, only: %i[new create edit update] do
-    get 'complete_registration', on: :member
-    post 'save_registration', as: :save_registration, on: :member
-    get 'save_registration', on: :member, to: 'users#redirect_to_complete_registration',
-                             as: 'save_registration_to_complete'
+    member do
+      get 'complete_registration'
+      post 'save_registration', as: :save_registration
+      get 'save_registration', to: 'users#redirect_to_complete_registration', as: 'save_registration_to_complete'
+    end
   end
 
   resources :admin_dashboard, only: [:index]

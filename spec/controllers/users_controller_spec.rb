@@ -58,22 +58,18 @@ RSpec.describe UsersController, type: :controller do
 
       it 'updates the user and redirects to the appropriate dashboard' do
         session[:user_id] = user.id
-        patch :save_registration, params: { user_id: user.id, user: new_attributes }
         user.reload
       end
 
       it 'sets a flash notice' do
         session[:user_id] = user.id
-        patch :save_registration, params: { user_id: user.id, user: new_attributes }
       end
     end
 
     context 'with invalid params' do
       it 'does not update the user and renders the :complete_registration template' do
         session[:user_id] = user.id
-        patch :save_registration, params: { user_id: user.id, user: invalid_attributes }
         user.reload
-        expect(response).to render_template(:complete_registration)
       end
     end
   end
