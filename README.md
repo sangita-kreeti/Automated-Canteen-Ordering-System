@@ -41,13 +41,13 @@ The purpose of this application is to provide a convenient way for employees and
     https://github.com/sangita-kreeti/Automated-Canteen-Ordering-System.git
    ```
 
-Application Versions
-Rails -> 6.1.7.3
-Ruby -> 3.0.2
-Node -> 16.20.2
-Yarn -> 1.22.19
-NPM -> 8.19.4
-Elastic Search -> 7.2.1
+##Application Versions
+*Rails -> 6.1.7.3
+*Ruby -> 3.0.2
+*Node -> 16.20.2
+*Yarn -> 1.22.19
+*NPM -> 8.19.4
+*Elastic Search -> 7.2.1
 
 2. Install dependencies:
    ```
