@@ -64,7 +64,7 @@ The purpose of this application is to provide a convenient way for employees and
 5. Access the application in your web browser at http://localhost:3000.
 6. Tech Stack
    * Ruby on Rails 6
-   * HTML, CSS
+   * HTML, CSS, Bootstrap
    * JavaScript
    * Elastic Search
    * Google Authentication
