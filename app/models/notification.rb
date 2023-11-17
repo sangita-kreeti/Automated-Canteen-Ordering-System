@@ -9,19 +9,12 @@ class Notification < ApplicationRecord
   enum notification_type: {
     employee_approved: 0,
     order_status_update: 1
-  }
-
-  enum order_status: {
-    approved: 0,
-    preparing: 1,
-    finished: 2,
-    delivered: 3
-  }
+  } 
 
   scope :unread, -> { where(read: false) }
 
   def self.create_employee_approved_notification(admin, employee, message)
-    notification = Notification.new(sender: admin, receiver: employee, notification_type: 'employee_approved',
+    notification = Notification.new(sender: admin, receiver: employee, notification_type: 0,
                                     message: message)
 
     return unless notification.save
@@ -30,7 +23,7 @@ class Notification < ApplicationRecord
   end
 
   def self.create_order_notification(sender, receiver, message)
-    notification = Notification.new(sender: sender, receiver: receiver, notification_type: 'order_status_update',
+    notification = Notification.new(sender: sender, receiver: receiver, notification_type: 1,
                                     message: message)
 
     return unless notification.save

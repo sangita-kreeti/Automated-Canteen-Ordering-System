@@ -7,7 +7,7 @@ class OrdersController < ApplicationController
   before_action :authenticate_employee, only: %i[index place_order order_history search]
   before_action :authenticate_admin_or_chef, only: %i[order_status]
 
-  def index
+  def menus_list
     @food_menus = fetch_food_menus
     @order = find_order_by_session || Order.new
     @food_stores = FoodStore.all
@@ -58,20 +58,8 @@ class OrdersController < ApplicationController
     render 'order_status', locals: { orders: @orders, page: page, total_pages: total_pages }
   end
 
-  def approved
-    update_order_status('approved')
-  end
-
-  def preparing
-    update_order_status('preparing')
-  end
-
-  def finished
-    update_order_status('finished')
-  end
-
-  def delivered
-    update_order_status('delivered')
+  def change_status
+    update_order_status(params[:status_key])
   end
 
   private

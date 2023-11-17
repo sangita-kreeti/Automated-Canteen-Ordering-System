@@ -73,7 +73,7 @@
             <div class="card-body">
                <h3 class="card-title">Order Here</h3>
                <% if @current_user.approved? %>
-               <%= link_to orders_path, method: :get, class: 'btn btn-primary', id: 'order-food-button' do %>
+               <%= link_to menus_list_orders_path, method: :get, class: 'btn btn-primary', id: 'order-food-button' do %>
                <i class="bi bi-cart-plus-fill"></i> Order Food
                <% end %>
                <% else %>

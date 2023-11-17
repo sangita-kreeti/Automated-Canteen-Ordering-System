@@ -7,13 +7,10 @@ class EmployeesController < ApplicationController
 
   def select; end
 
-  def company_employees
-    @employees = User.company_employees.page(params[:page]).per(15)
+  def all_employees
+    @employees = User.employees_by_type(params[:employee_type]).page(params[:page]).per(15)
   end
-
-  def ordinary_employees
-    @employees = User.ordinary_employees.page(params[:page]).per(15)
-  end
+  
 
   def approved
     employee = find_employee_by_id
@@ -25,8 +22,10 @@ class EmployeesController < ApplicationController
                                                          'You have been successfully approved by an admin.')
     end
     notice_message = 'Employee approved successfully.'
-    redirect_path = employee.company_id.zero? ? ordinary_employees_path : company_employees_path
+    
+    redirect_path = employee.company_id.zero? ? all_employees_employees_path(employee_type: 'ordinary') : all_employees_employees_path(employee_type: 'company')
     redirect_to redirect_path, notice: notice_message
+
   end
 
   def reject

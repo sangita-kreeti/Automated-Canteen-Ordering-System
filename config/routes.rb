@@ -19,8 +19,7 @@ Rails.application.routes.draw do
     collection do
       get 'dashboard'
       get 'select'
-      get 'company_employees', as: 'company'
-      get 'ordinary_employees', as: 'ordinary'
+      get 'all_employees'
       get 'manage_notifications'
     end
   end
@@ -44,9 +43,10 @@ Rails.application.routes.draw do
 
   resources :food_menus
 
-  resources :orders, only: %i[index show] do
+  resources :orders, only: [] do
     collection do
       post 'place_order'
+      get 'menus_list'
       get 'search'
       get 'order_history'
       get 'order_status'
@@ -55,10 +55,7 @@ Rails.application.routes.draw do
     end
 
     member do
-      patch :approved
-      patch :preparing
-      patch :finished
-      patch :delivered
+      patch :change_status
     end
   end
 

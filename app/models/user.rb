@@ -40,8 +40,15 @@ class User < ApplicationRecord
 
   scope :approved_chefs, -> { where(role: 'chef', approved: true) }
   scope :approved_employees, -> { where(role: 'employee', approved: true) }
-  scope :company_employees, -> { where(role: 'employee').where.not(company_id: 0) }
-  scope :ordinary_employees, -> { where(role: 'employee', company_id: 0) }
+
+  scope :employees_by_type, ->(employee_type) do
+    if employee_type == 'ordinary'
+      where(role: 'employee', company_id: 0)
+    else
+      where(role: 'employee').where.not(company_id: 0)
+    end
+  end
+  
   scope :chefs, -> { where(role: 'chef') }
   scope :employees, -> { where(role: 'employee') }
   scope :chefs_for_food_store, lambda { |food_store_name|

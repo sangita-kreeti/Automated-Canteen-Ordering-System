@@ -6,7 +6,7 @@
         <i class="far fa-user fa-10x border border-secondary p-3 text-success"></i>
         <div class="card-body d-flex flex-column align-items-center">
           <h4 class="card-text mt-3 border border-2 p-2">Click the button to view and manage employees from associated companies</h4>
-          <%= link_to company_employees_path, class: 'btn btn-success btn-block mt-3' do %>
+          <%= link_to all_employees_employees_path(employee_type: 'company'), class: 'btn btn-success btn-block mt-3' do %>
             <span class="text-blue">Company Employees</span>
           <% end %>
         </div>
@@ -17,7 +17,7 @@
         <i class="far fa-user fa-10x border border-secondary p-3 text-danger"></i>
         <div class="card-body d-flex flex-column align-items-center">
           <h4 class="card-text mt-3 border border-2 p-2">Click the button to view and manage employees from non-associated companies</h4>
-          <%= link_to ordinary_employees_path, class: 'btn btn-danger btn-block mt-3' do %>
+          <%= link_to all_employees_employees_path(employee_type: 'ordinary'), class: 'btn btn-danger btn-block mt-3' do %>
             <span class="text-red">Ordinary Employees</span>
           <% end %>
         </div>

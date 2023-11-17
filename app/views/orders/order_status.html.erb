@@ -34,7 +34,7 @@
                           <td><%= order.quantities.join(", ") %></td>
                           <td><%= order.prices.join(", ") %></td>
                           <td><%= order.status %></td>
-                          <td><%= link_to 'Approve', approved_order_path(order), method: :patch, class: 'btn btn-success btn-sm' %></td>
+                          <td><%= link_to 'Approve', change_status_order_path(order,status_key: 'approved'), method: :patch, class: 'btn btn-success btn-sm' %></td>
                         </tr>
                       <% elsif (order.status == 'approved' || order.status == 'preparing' || order.status == 'finished' || order.status == 'delivered') && (current_user.admin? || food_store_match) %>
                         <tr>
@@ -48,11 +48,11 @@
                           <td><%= order.status %></td>
                           <td>
                             <% if order.status == 'approved' %>
-                              <%= link_to 'Prepare', preparing_order_path(order), method: :patch, class: 'btn btn-success btn-sm' %>
+                              <%= link_to 'Prepare', change_status_order_path(order,status_key: 'preparing'), method: :patch, class: 'btn btn-success btn-sm' %>
                             <% elsif order.status == 'preparing' %>
-                              <%= link_to 'Finish', finished_order_path(order), method: :patch, class: 'btn btn-success btn-sm' %>
+                              <%= link_to 'Finish', change_status_order_path(order,status_key: 'finished'), method: :patch, class: 'btn btn-success btn-sm' %>
                             <% elsif order.status == 'finished' %>
-                              <%= link_to 'Deliver', delivered_order_path(order), method: :patch, class: 'btn btn-success btn-sm' %>
+                              <%= link_to 'Deliver', change_status_order_path(order,status_key: 'delivered'), method: :patch, class: 'btn btn-success btn-sm' %>
                             <% else %>
                               <button class="btn btn-sm btn-success" disabled>Not Available</button>
                             <% end %>

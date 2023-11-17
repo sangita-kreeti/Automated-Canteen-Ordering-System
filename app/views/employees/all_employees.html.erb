@@ -1,0 +1,82 @@
+<div class="container mt-4">
+  <h1 class="text-center">Details of Registered Employees</h1>
+  <div class="table-responsive">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Phone Number</th>
+          <th>Associated Company</th>
+          <% if @employees.any? { |employee| employee.company_id.zero? } %>
+            <th>Pincode</th>
+          <% end %>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @employees.each do |employee| %>
+          <tr>
+            <td><%= employee.name %></td>
+            <td><%= employee.email %></td>
+            <td><%= employee.phone_no %></td>
+            <td>
+              <% if employee.company_id.zero? %>
+                Other
+              <% else %>
+                <%= Company.find_by(id: employee.company_id)&.name %>
+              <% end %>
+            </td>
+            <% if employee.company_id.zero? %>
+              <td><%= employee.pincode %></td>
+            <% end %>
+            <td>
+              <% if employee.approved? %>
+                <span class="badge bg-success">Approved</span>
+              <% else %>
+                <span class="badge bg-warning text-dark">Pending</span>
+              <% end %>
+            </td>
+            <td>
+              <% if employee.approved? %>
+                <button class="btn btn-sm btn-secondary" disabled>Approve</button>
+                <button class="btn btn-sm btn-danger" disabled>Reject</button>
+              <% else %>
+                <%= link_to "Approve", approved_employee_path(employee), method: :patch, data: { confirm: 'Are you sure?' }, class: "btn btn-sm btn-primary" %>
+                <%= link_to "Reject", reject_employee_path(employee), method: :patch, data: { confirm: 'Are you sure?' }, class: 'btn btn-danger btn-sm' %>
+              <% end %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+  <%= link_to 'Back to select employees', select_employees_path, class: 'btn btn-secondary' %>
+</div>
+<ul class="pagination justify-content-center mt-3">
+  <% if @employees.current_page > 1 %>
+    <li class="page-item">
+      <%= link_to '&laquo; Previous'.html_safe, { page: @employees.current_page - 1 }, class: 'page-link' %>
+    </li>
+  <% end %>
+  <% (1..@employees.total_pages).each do |page| %>
+    <% if page == @employees.current_page %>
+      <li class="page-item active">
+        <span class="page-link">
+          <%= page %>
+          <span class="visually-hidden">(current)</span>
+        </span>
+      </li>
+    <% else %>
+      <li class="page-item">
+        <%= link_to page, { page: page }, class: 'page-link' %>
+      </li>
+    <% end %>
+  <% end %>
+  <% if @employees.current_page < @employees.total_pages %>
+    <li class="page-item">
+      <%= link_to 'Next &raquo;'.html_safe, { page: @employees.current_page + 1 }, class: 'page-link' %>
+    </li>
+  <% end %>
+</ul>
