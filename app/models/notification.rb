@@ -9,7 +9,7 @@ class Notification < ApplicationRecord
   enum notification_type: {
     employee_approved: 0,
     order_status_update: 1
-  } 
+  }
 
   scope :unread, -> { where(read: false) }
 

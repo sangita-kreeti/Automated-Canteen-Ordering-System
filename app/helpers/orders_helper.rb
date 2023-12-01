@@ -4,12 +4,10 @@
 module OrdersHelper
   def update_order_status(new_status)
     order = Order.find(params[:id])
-
     if order.update(status: new_status)
       sender = current_user
       receiver = order.user
-      message = "Order items #{order.food_item_names.join(', ')} has been #{new_status}."
-
+      message = "Order items #{order.food_item_name} has been #{new_status}."
       send_notifications(order, sender, receiver, message)
       redirect_to order_status_orders_path, notice: 'Order status updated successfully.'
     else
@@ -22,7 +20,6 @@ module OrdersHelper
       chefs = User.chefs_for_food_store(order.food_store_name)
       chefs.each { |chef| Notification.create_order_notification(sender, chef, message) }
     end
-
     Notification.create_order_notification(sender, receiver, message) unless receiver.hide_notifications
   end
 
@@ -48,48 +45,31 @@ module OrdersHelper
     @food_menus = @food_menus.send(scope, filter_value)
   end
 
-  def orders_by_food_store(items)
-    items.group_by { |item| item['food_store_name'] }
-  end
-
   def fetch_food_menus
     search_results = params[:search].present? ? FoodMenu.search(params[:search]).records : FoodMenu.all
     search_results.includes(:food_store).page(params[:page]).per(10)
   end
 
-  def build_order(food_store_name)
-    Order.new(
+  def build_order(food_store_name, items)
+    order = Order.new(
       food_store_name: food_store_name,
       company_name: current_user.company&.name || 'Other',
       user: current_user
     )
+    update_order_with_items(order, items)
+    order
   end
 
-  def group_items_by_food_store(items)
-    orders_by_food_store = Hash.new { |hash, key| hash[key] = [] }
-
-    items.each do |item|
-      food_store_name = item['food_store_name']
-      order_items = orders_by_food_store[food_store_name]
-      unless order_items.any? { |order_item| order_item['food_item_name'] == item['food_item_name'] }
-        order_items << item
-      end
-    end
-
-    orders_by_food_store
-  end
-
-  # rubocop:disable Metrics/AbcSize
   def update_order_with_items(order, items)
-    order.food_item_names.concat(items.map { |item| item['food_item_name'] })
-    order.quantities.concat(items.map { |item| item['quantity'].to_i })
-    order.prices.concat(
-      items.map do |item|
-        (item['quantity'].to_i * item['price'].to_f).round(2)
-      end
-    )
+    items.each do |item|
+      order.update(
+        food_item_name: item['food_item_name'],
+        quantity: item['quantity'].to_i,
+        price: (item['quantity'].to_i * item['price'].to_f).round(2)
+      )
+      order.save
+    end
   end
-  # rubocop:enable Metrics/AbcSize
 
   def paginate_orders(orders)
     per_page = 10

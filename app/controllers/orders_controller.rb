@@ -15,21 +15,23 @@ class OrdersController < ApplicationController
     calculate_distances_for_employee(@food_stores)
   end
 
+  # rubocop:disable Metrics/MethodLength
   def place_order
     items = params[:items]
     return render(json: { error: 'Cart is empty.' }, status: :unprocessable_entity) if items.nil? || items.empty?
 
-    orders_by_food_store_result = orders_by_food_store(items)
-
-    orders_by_food_store_result.each do |food_store_name, order_items|
-      order = build_order(food_store_name)
-      update_order_with_items(order, order_items)
+    orders = items.map do |item|
+      food_store_name = item['food_store_name']
+      order = build_order(food_store_name, [item])
       order.update(status: 'placed')
+      order
     end
-
-    send_order_confirmation_emails(Order.where(status: 'placed').last(orders_by_food_store_result.size))
+    orders.each do |order|
+      OrderMailer.order_confirmation_email(order).deliver_later
+    end
     render json: { success: true }
   end
+  # rubocop:enable Metrics/MethodLength
 
   def search
     @food_menus = FoodMenu.includes(:food_store)
@@ -54,6 +56,7 @@ class OrdersController < ApplicationController
     orders = Order.all.sort_by do |order|
       [order.company_name == 'Other' ? 1 : 0, order.company_name]
     end
+    
     @orders, page, total_pages = paginate_orders(orders)
     render 'order_status', locals: { orders: @orders, page: page, total_pages: total_pages }
   end
@@ -68,9 +71,5 @@ class OrdersController < ApplicationController
     return if current_user && (current_user.admin? || current_user.chef?)
 
     handle_unauthorized_access
-  end
-
-  def send_order_confirmation_emails(orders)
-    OrderMailer.order_confirmation_email(orders, orders.map(&:prices).flatten.sum).deliver_later
   end
 end

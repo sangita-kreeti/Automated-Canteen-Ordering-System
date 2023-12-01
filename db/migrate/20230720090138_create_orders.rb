@@ -5,11 +5,11 @@ class CreateOrders < ActiveRecord::Migration[6.0]
   # rubocop:disable Metrics/MethodLength
   def change
     create_table :orders do |t|
-      t.text :food_item_names, array: true, default: []
-      t.integer :quantities, array: true, default: []
+      t.text :food_item_name
+      t.integer :quantity
       t.string :food_store_name
-      t.integer :prices, array: true, default: []
-      t.text :special_ingredients, array: true, default: []
+      t.integer :price
+      t.text :special_ingredient
       t.references :user, foreign_key: true
       t.string :company_name
       t.string :status

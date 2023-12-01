@@ -70,10 +70,18 @@ food_menus_data = [
     food_category_id: user_chef1&.food_store&.food_category_id, title: 'Egg Chowmin', price: 110 },
   { user_id: user_chef1&.id, food_store_id: user_chef1&.food_store&.id,
     food_category_id: user_chef1&.food_store&.food_category_id, title: 'Chicken Chowmin', price: 140 },
+  { user_id: user_chef1&.id, food_store_id: user_chef1&.food_store&.id,
+    food_category_id: user_chef1&.food_store&.food_category_id, title: 'Fried Rice', price: 70 },
+  { user_id: user_chef1&.id, food_store_id: user_chef1&.food_store&.id,
+    food_category_id: user_chef1&.food_store&.food_category_id, title: 'Chilli Chicken', price: 90 },
   { user_id: user_chef2&.id, food_store_id: user_chef2&.food_store&.id,
     food_category_id: user_chef2&.food_store&.food_category_id, title: 'Mishti Doi', price: 70 },
   { user_id: user_chef2&.id, food_store_id: user_chef2&.food_store&.id,
-    food_category_id: user_chef2&.food_store&.food_category_id, title: 'Alu posto', price: 110 }
+    food_category_id: user_chef2&.food_store&.food_category_id, title: 'Alu posto', price: 110 },
+  { user_id: user_chef2&.id, food_store_id: user_chef2&.food_store&.id,
+    food_category_id: user_chef2&.food_store&.food_category_id, title: 'Plane Rice', price: 40 },
+  { user_id: user_chef2&.id, food_store_id: user_chef2&.food_store&.id,
+    food_category_id: user_chef2&.food_store&.food_category_id, title: 'Ruhi Fish', price: 70 }
 
 ]
 

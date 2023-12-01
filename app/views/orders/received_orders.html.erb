@@ -26,9 +26,9 @@
               <% @orders.each do |order| %>
                 <tr>
                   <td><%= order.user.name %></td>
-                  <td><%= order.food_item_names.join(", ") %></td>
-                  <td><%= order.quantities.join(", ") %></td>
-                  <td><%= order.prices.join(", ") %></td>
+                  <td><%= order.food_item_name %></td>
+                  <td><%= order.quantity %></td>
+                  <td><%= order.price %></td>
                   <td><%= order.created_at.strftime('%d/%m/%Y %H:%M %p') %></td>
                 </tr>
               <% end %>
