@@ -8,7 +8,7 @@
 # migrations from scratch. Old migrations may fail to apply correctly if those
 # migrations use external dependencies or application code.
 #
-# It's strongly recommended that you check this file into your version control system.
+# It's stronglsy recommended that you check this file into your version control system.
 
 ActiveRecord::Schema.define(version: 2023_07_21_045336) do
 
